@@ -74,6 +74,7 @@ Versión *{1.0}*
 1. <span id="_Toc52661346" class="anchor"></span>**Descripción del Proyecto**
 
     1.1. Nombre del proyecto
+   
        Desarrollo de un sistema básico de detección de intrusos (IDS) para monitoreo de tráfico de red
 
     1.2. Duración del proyecto
