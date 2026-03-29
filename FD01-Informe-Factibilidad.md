@@ -14,7 +14,7 @@
 
 Curso: *CALIDAD Y PRUEBAS DE SOFTWARE*
 
-Docente: *{MAG.PATRICK CUADROS QUIROGA}*
+Docente: *MAG.PATRICK CUADROS QUIROGA*
 
 Integrantes:
 
@@ -22,14 +22,12 @@ Integrantes:
 
 **Tacna – Perú**
 
-***{2026}***
+***2026***
 
-**  
-**
 </center>
 <div style="page-break-after: always; visibility: hidden">\pagebreak</div>
 
-Sistema *{LAGO DE DATOS DE SISTEMA DE MONITOREO AMBIENTAL}*
+Sistema *LAGO DE DATOS DE SISTEMA DE MONITOREO AMBIENTAL*
 
 Informe de Factibilidad
 
