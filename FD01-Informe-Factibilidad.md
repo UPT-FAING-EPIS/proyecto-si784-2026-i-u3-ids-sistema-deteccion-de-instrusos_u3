@@ -475,4 +475,18 @@ Sin embargo, al tratarse de un proyecto académico, se prioriza la evaluación m
 
 6. <span id="_Toc52661357" class="anchor"></span>**Conclusiones**
 
-Explicar los resultados del análisis de factibilidad que nos indican si el proyecto es viable y factible.
+El análisis de factibilidad realizado sobre el proyecto **Sistema de Detección de Intrusos (IDS) para monitoreo de tráfico de red** arroja resultados positivos en todas las dimensiones evaluadas:
+
+1. **Factibilidad Técnica:** El proyecto es técnicamente viable. El stack tecnológico utilizado (Python, Scapy, Visual Studio Code, GitHub) es accesible, open-source y ampliamente documentado. No se requiere inversión en infraestructura adicional, ya que el sistema puede ejecutarse en equipos de cómputo convencionales.
+
+2. **Factibilidad Económica:** El costo total del proyecto asciende a **S/. 2025.00**, correspondiente principalmente a costos de desarrollo y recursos básicos. Los beneficios obtenidos, tanto en ahorro de herramientas de seguridad como en prevención de incidentes, superan los costos, lo que demuestra la viabilidad económica del sistema.
+
+3. **Factibilidad Operativa:** El sistema responde a una necesidad real en entornos académicos, permitiendo el monitoreo del tráfico de red y la detección de actividades sospechosas. Su implementación es sencilla y puede ser utilizada por estudiantes con conocimientos básicos, facilitando su adopción y mantenimiento.
+
+4. **Factibilidad Legal:** No existen impedimentos legales. Todas las tecnologías utilizadas cuentan con licencias open-source compatibles. El sistema opera en entornos controlados, sin comprometer datos personales ni infringir normativas de privacidad.
+
+5. **Factibilidad Social y Ambiental:** El proyecto tiene un impacto social positivo al fomentar la cultura de seguridad informática y el desarrollo de soluciones tecnológicas accesibles. El impacto ambiental es mínimo, ya que se trata de software puro distribuido digitalmente sin generación de residuos físicos.
+
+6. **Análisis Financiero:** Los indicadores evaluados (**B/C = 1.42 y VAN = S/. 675.00**) superan los criterios de aceptación. La TIR es positiva, aunque de carácter referencial debido al enfoque académico del proyecto.
+
+**En conclusión, el proyecto IDS es viable y factible desde todas las perspectivas analizadas, y se recomienda su desarrollo e implementación como una solución funcional y formativa en el ámbito de la seguridad informática.**
