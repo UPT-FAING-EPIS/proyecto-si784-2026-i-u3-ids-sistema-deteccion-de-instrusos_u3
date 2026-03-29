@@ -192,33 +192,81 @@ Ante esta problemática, surge la necesidad de desarrollar un sistema básico de
 
         4.2.1. Costos Generales
 
-                Los costos generales son todos los gastos realizados en accesorios y material de oficina y de uso diario, necesarios para los procesos, tales como, papeles, plumas, cartuchos de impresora, marcadores, computadora etc. Colocar tabla de costos.
 
+| Ítem                     | Descripción                              | Cantidad | Costo Unitario (S/.) | Costo Total (S/.) |
+|--------------------------|------------------------------------------|----------|----------------------|------------------|
+| Laptop / Computadora     | Equipo de desarrollo (recurso propio)    | 1        | 0.00                 | 0.00             |
+| Cuadernos / hojas        | Material para apuntes y documentación    | 2        | 15.00                | 30.00            |
+| Lapiceros                | Material de escritura                    | 5        | 2.00                 | 10.00            |
+| Impresiones              | Documentos del proyecto                  | 100      | 0.10                 | 10.00            |
+| Cartucho de tinta        | Impresora                               | 1        | 80.00                | 80.00            |
+| Marcadores               | Presentaciones y esquemas                | 3        | 5.00                 | 15.00            |
+| Internet                 | Servicio mensual                        | 1        | 80.00                | 80.00            |
+| Energía eléctrica        | Consumo durante desarrollo              | 1        | 50.00                | 50.00            |
+| **TOTAL**                |                                          |          |                      | **275.00**       |
         4.2.2. Costos operativos durante el desarrollo 
         
                 Evaluar costos necesarios para la operatividad de las actividades de la empresa durante el periodo en el que se realizara el proyecto. Los costos de operación pueden ser renta de oficina, agua, luz, teléfono, etc.
 
         4.2.3. Costos del ambiente
 
-                Evaluar si se cuenta con los requerimientos técnicos para la implantación del software como el dominio, infraestructura de red, acceso a internet, etc.
+| Ítem                | Descripción                              | Cantidad | Costo Mensual (S/.) | Costo Total (S/.) |
+|---------------------|------------------------------------------|----------|---------------------|------------------|
+| Internet            | Servicio de conexión a internet          | 1        | 80.00               | 80.00            |
+| Energía eléctrica   | Consumo durante desarrollo               | 1        | 50.00               | 50.00            |
+| Agua                | Consumo básico                           | 1        | 20.00               | 20.00            |
+| Espacio de trabajo  | Uso de ambiente propio (sin alquiler)    | 1        | 0.00                | 0.00             |
+| **TOTAL**           |                                          |          |                     | **150.00**       |
+
 
         4.2.4. Costos de personal
 
-                Aquí se incluyen los gastos generados por el recurso humano que se necesita para el desarrollo del sistema únicamente.
-
-                No se considerará personal para la operación y funcionamiento del sistema.
-
-                Incluir tabla que muestra los gastos correspondientes al personal.
-
-                Indicar organización y roles. Indicar horario de trabajo del personal.
+| Rol              | Cantidad | Horas Totales | Costo por Hora (S/.) | Costo Total (S/.) |
+|------------------|----------|---------------|----------------------|------------------|
+| Desarrollador 1  | 1        | 80            | 10.00                | 800.00           |
+| Desarrollador 2  | 1        | 80            | 10.00                | 800.00           |
+| **TOTAL**        |          |               |                      | **1600.00**      |
 
         4.2.5.  Costos totales del desarrollo del sistema
 
-                {Totalizar costos y realizar resumen de costo final del proyecto y la forma de pago.
+| Tipo de Costo        | Descripción                                      | Costo Total (S/.) |
+|----------------------|--------------------------------------------------|------------------|
+| Costos Generales     | Materiales de oficina y recursos básicos         | 275.00           |
+| Costos Operativos    | Servicios básicos durante 1 mes                  | 150.00           |
+| Costos de Personal   | Desarrollo del sistema (2 personas)              | 1600.00          |
+| **TOTAL GENERAL**    |                                                  | **2025.00**      |
 
     4.3. <span id="_Toc52661352" class="anchor"></span>Factibilidad Operativa
 
-        Describir los beneficios del producto y si se tiene la capacidad por parte del cliente para mantener el sistema funcionando y garantizar el buen funcionamiento y su impacto en los usuarios. Lista de interesados.
+En el presente proyecto, el sistema básico de detección de intrusos (IDS) será implementado en modo de prueba en la Universidad Privada de Tacna, específicamente en un entorno académico controlado. Esta implementación permitirá evaluar su funcionamiento sin afectar la operatividad real de la red institucional.
+
+Beneficios del Sistema
+
+La implementación del IDS en un entorno de prueba proporcionará los siguientes beneficios:
+
+-Mejora en la detección de posibles amenazas en la red
+-Generación de alertas ante actividades sospechosas
+-Monitoreo del tráfico de red en tiempo real
+-Apoyo en el aprendizaje práctico de seguridad informática
+-Reducción de costos al utilizar herramientas de código abierto
+
+Capacidad Operativa del Usuario
+
+El sistema será utilizado por estudiantes y desarrollado con fines académicos, por lo que:
+
+Puede ser operado con conocimientos básicos de redes
+No requiere personal altamente especializado
+Su uso será supervisado por el docente del curso
+Se ejecutará en equipos personales dentro de la red de prueba
+
+Mantenimiento del Sistema
+
+El mantenimiento del sistema durante la fase de prueba será mínimo y estará a cargo de los desarrolladores (estudiantes), incluyendo:
+
+Actualización de reglas de detección
+Revisión de registros (logs)
+Verificación del correcto funcionamiento
+
 
     4.4. <span id="_Toc52661353" class="anchor"></span>Factibilidad Legal
 
