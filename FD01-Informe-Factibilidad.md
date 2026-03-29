@@ -12,7 +12,7 @@
 
 **Proyecto *{Nombre de Proyecto}***
 
-Curso: *{CALIDAD Y PRUEBAS DE SOFTWARE}*
+Curso: *CALIDAD Y PRUEBAS DE SOFTWARE*
 
 Docente: *{MAG.PATRICK CUADROS QUIROGA}*
 
