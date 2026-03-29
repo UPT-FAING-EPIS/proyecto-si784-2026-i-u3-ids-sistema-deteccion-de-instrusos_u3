@@ -345,11 +345,41 @@ No existen impedimentos legales para el desarrollo, implementación ni uso del s
 
     4.5.Factibilidad Social 
 
-        Evaluar influencias y asuntos de índole social y cultural como el clima político, códigos de conducta y ética*
+El proyecto tiene un impacto social positivo en el ámbito académico y en la comunidad de desarrollo de software. Al tratarse de una herramienta open-source, cualquier estudiante, desarrollador o institución puede utilizar el sistema IDS sin costo, contribuyendo a mejorar la cultura de seguridad informática.
+
+En el contexto global, el proyecto promueve el aprendizaje en ciberseguridad, un área de alta demanda, permitiendo a los desarrolladores comprender cómo detectar amenazas en redes mediante herramientas accesibles como Python y Scapy.
+
+En el contexto local, el proyecto representa una aplicación práctica de los conocimientos adquiridos durante la formación universitaria, sirviendo como referencia para futuros estudiantes de Ingeniería de Sistemas. La publicación del proyecto en GitHub fomenta buenas prácticas como:
+
+- Desarrollo colaborativo  
+- Documentación técnica  
+- Uso de control de versiones  
+- Gestión de tareas mediante Issues  
+
+No se identifican impactos negativos de índole social, cultural o ético, ya que:
+
+- No se recopilan datos personales sensibles  
+- No se restringe el acceso a usuarios  
+- No promueve prácticas discriminatorias  
+- Se utiliza únicamente en entornos controlados con fines académicos  
+
+**Evaluación:** El proyecto tiene un impacto social positivo y no presenta conflictos éticos.**La factibilidad social es ALTA.**
 
     4.6.Factibilidad Ambiental
 
-        Evaluar influencias y asuntos de índole ambiental como el impacto y repercusión en el medio ambiente.
+El proyecto consiste en una herramienta de software sin componentes físicos ni procesos industriales, por lo que su impacto ambiental es mínimo.
+
+Se consideran los siguientes aspectos:
+
+- **Consumo energético:** El desarrollo y ejecución del sistema se realizan en equipos personales. El consumo adicional de energía es bajo y no representa un impacto significativo.
+
+- **Infraestructura digital:** El uso de plataformas como GitHub para almacenamiento y control de versiones implica el uso de servicios en la nube, los cuales operan bajo políticas de eficiencia energética y sostenibilidad.
+
+- **Distribución digital:** El sistema IDS se distribuye exclusivamente en formato digital (código fuente en GitHub), evitando el uso de materiales físicos y la generación de residuos.
+
+- **Ausencia de impacto industrial:** El proyecto no involucra procesos de manufactura, transporte ni uso de recursos naturales.
+
+**Evaluación:** El impacto ambiental del proyecto es mínimo y no presenta conflictos ambientales.**La factibilidad ambiental es ALTA.**
 
 
 5. **Análisis Financiero**
