@@ -117,6 +117,20 @@ Desarrollar un sistema básico de detección de intrusos (IDS) capaz de monitore
 
 El sistema puede presentar dificultades para capturar y analizar correctamente el tráfico de red en tiempo real, especialmente si no se cuenta con experiencia previa en herramientas como Python o librerías de redes.
 
+2.2. Falsos positivos y falsos negativos
+El sistema podría generar alertas incorrectas:
+Falsos positivos: detectar amenazas inexistentes
+Falsos negativos: no detectar ataques reales
+Esto afectaría la confiabilidad del IDS.
+
+2.3. Limitaciones de tiempo
+
+El tiempo asignado para el desarrollo puede no ser suficiente para implementar todas las funcionalidades previstas o realizar pruebas exhaustivas.
+
+2.4. Recursos limitados
+
+La falta de equipos adecuados o acceso restringido a redes reales puede dificultar las pruebas del sistema en escenarios reales.
+
 <div style="page-break-after: always; visibility: hidden">\pagebreak</div>
 
 3. <span id="_Toc52661348" class="anchor"></span>**Análisis de la Situación actual**
