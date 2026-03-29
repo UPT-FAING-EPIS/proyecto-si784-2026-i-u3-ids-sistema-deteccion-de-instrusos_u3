@@ -12,9 +12,9 @@
 
 **Proyecto *{Nombre de Proyecto}***
 
-Curso: *{Nombre de Asignatura}*
+Curso: *{CALIDAD Y PRUEBAS DE SOFTWARE}*
 
-Docente: *{Nombre de Docente}*
+Docente: *{MAG.PATRICK CUADROS QUIROGA}*
 
 Integrantes:
 
@@ -22,14 +22,14 @@ Integrantes:
 
 **Tacna – Perú**
 
-***{Año}***
+***{2026}***
 
 **  
 **
 </center>
 <div style="page-break-after: always; visibility: hidden">\pagebreak</div>
 
-Sistema *{Nombre del Sistema}*
+Sistema *{LAGO DE DATOS DE SISTEMA DE MONITOREO AMBIENTAL}*
 
 Informe de Factibilidad
 
