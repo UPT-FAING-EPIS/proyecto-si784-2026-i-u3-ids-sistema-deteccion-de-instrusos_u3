@@ -81,14 +81,13 @@ Versión *{1.0}*
 
     1.3. Descripción
 
-        En que consiste el proyecto/importancia del mismo, contexto en que se va desenvolver
-           En la actualidad, el uso de redes informáticas se ha incrementado significativamente en entornos académicos, empresariales y personales, lo que ha generado también un aumento en las amenazas de seguridad               informática, como accesos no autorizados, ataques de denegación de servicio y escaneo de puertos.
+En la actualidad, el uso de redes informáticas se ha incrementado significativamente en entornos académicos, empresariales y personales, lo que ha generado también un aumento en las amenazas de seguridad informática, como accesos no autorizados, ataques de denegación de servicio y escaneo de puertos.
 
-           Muchas redes, especialmente en entornos pequeños o educativos, no cuentan con mecanismos adecuados para detectar actividades sospechosas en tiempo real. Esta falta de monitoreo permite que posibles                     intrusiones pasen desapercibidas, comprometiendo la integridad, confidencialidad y disponibilidad de la información.
+Muchas redes, especialmente en entornos pequeños o educativos, no cuentan con mecanismos adecuados para detectar actividades sospechosas en tiempo real. Esta falta de monitoreo permite que posibles intrusiones pasen desapercibidas, comprometiendo la integridad, confidencialidad y disponibilidad de la información.
 
-           además, las soluciones comerciales de detección de intrusos suelen ser complejas y costosas, lo que limita su implementación en contextos académicos o de bajo presupuesto. Esto genera la necesidad de                   desarrollar herramientas accesibles que permitan analizar el tráfico de red y detectar comportamientos anómalos de manera eficiente.
+Además, las soluciones comerciales de detección de intrusos suelen ser complejas y costosas, lo que limita su implementación en contextos académicos o de bajo presupuesto. Esto genera la necesidad de desarrollar herramientas accesibles que permitan analizar el tráfico de red y detectar comportamientos anómalos de manera eficiente.
 
-           Por lo tanto, surge la necesidad de diseñar e implementar un sistema básico de detección de intrusos (IDS) que permita monitorear el tráfico de red, identificar posibles amenazas mediante reglas simples y              generar alertas oportunas, contribuyendo así a mejorar la seguridad y el control en redes locales.
+Por lo tanto, surge la necesidad de diseñar e implementar un sistema básico de detección de intrusos (IDS) que permita monitorear el tráfico de red, identificar posibles amenazas mediante reglas simples y generar alertas oportunas, contribuyendo así a mejorar la seguridad y el control en redes locales.
 
     1.4. Objetivos
 
