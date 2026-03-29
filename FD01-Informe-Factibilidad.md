@@ -422,7 +422,6 @@ Dado que el sistema IDS es una herramienta open-source de uso académico, el ret
 Dado el carácter académico del proyecto, el análisis financiero se basa en el ahorro generado frente al uso de herramientas comerciales de seguridad.
 Se considera un escenario de referencia con 2 usuarios que podrían utilizar herramientas equivalentes de pago.
 
----
 
 ### Parámetros del análisis
 
