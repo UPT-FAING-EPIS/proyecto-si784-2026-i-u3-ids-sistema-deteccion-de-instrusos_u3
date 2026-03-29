@@ -18,8 +18,8 @@ Docente: *MAG.PATRICK CUADROS QUIROGA*
 
 Integrantes:
 
-Edgar Diego Chara Apaza        (2019065026)  
-Abel Fernando Pacompía Ortiz   (2023076797)
+***Edgar Diego Chara Apaza        (2019065026)***  
+***Abel Fernando Pacompía Ortiz   (2023076797)***
 
 **Tacna – Perú**
 
