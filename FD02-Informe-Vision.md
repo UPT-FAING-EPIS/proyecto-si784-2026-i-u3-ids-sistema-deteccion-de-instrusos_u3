@@ -156,6 +156,7 @@ Asimismo, sirve como base para la planificación, desarrollo y validación del s
 
 El sistema TrafficWatch IDS está orientado al monitoreo de redes locales en entornos académicos o de pequeña escala, permitiendo identificar actividades sospechosas mediante el análisis del tráfico de red en tiempo real.
 
+        
 El sistema incluirá funcionalidades como:
 
 - Captura de paquetes de red
@@ -166,12 +167,26 @@ El sistema incluirá funcionalidades como:
 
         1.3	Definiciones, Siglas y Abreviaturas
 
-- IDS (Intrusion Detection System): Sistema que permite detectar actividades sospechosas en una red.
-- Tráfico de red: Conjunto de datos que circulan por una red informática.
-- Paquete: Unidad básica de información transmitida en una red.
-- IP: Dirección que identifica un dispositivo en la red.
-- Puerto: Punto lógico de comunicación en un sistema.
-- Scapy: Librería de Python para manipulación y análisis de paquetes de red.
+        1.3.1. Definiciones
+        -Intrusión: Acceso no autorizado a un sistema o red informática con fines maliciosos o indebidos.
+        -Tráfico de red: Conjunto de datos que circulan a través de una red de computadoras.
+        -Paquete de red: Unidad básica de datos que se transmite a través de una red.
+        -Reglas de detección: Conjunto de condiciones utilizadas para identificar comportamientos sospechosos en el tráfico de red.
+        -Alerta: Notificación generada por el sistema cuando se detecta una posible amenaza o actividad inusual.
+        -Escaneo de puertos: Técnica utilizada para identificar puertos abiertos en un sistema, comúnmente empleada en ataques informáticos.
+        -Monitoreo: Proceso de observación continua del tráfico de red para detectar anomalías.
+
+        1.3.2. Siglas y Abreviaturas
+        -IDS (Intrusion Detection System): Sistema de detección de intrusos.
+        -IP (Internet Protocol): Protocolo que permite la identificación de dispositivos en una red.
+        -TCP (Transmission Control Protocol): Protocolo de comunicación orientado a conexión.
+        -UDP (User Datagram Protocol): Protocolo de comunicación sin conexión.
+        -LAN (Local Area Network): Red de área local.
+        -DoS (Denial of Service): Ataque de denegación de servicio.
+        -Scapy: Librería de Python utilizada para la captura y análisis de paquetes de red.
+        -Socket: Interfaz para la comunicación entre procesos a través de una red.
+
+
 
 
         1.4	Referencias
@@ -195,11 +210,16 @@ El documento está organizado en secciones que describen el contexto del proyect
 
         2.1	Oportunidad de negocio
 
-En la actualidad, la seguridad informática se ha convertido en una necesidad fundamental debido al incremento de ataques en redes. Sin embargo, muchas instituciones educativas y pequeñas organizaciones no cuentan con herramientas accesibles para monitorear su red.
+En la ciudad de Tacna, muchas instituciones, tanto del sector público como privado, presentan un bajo nivel de inversión en seguridad informática, especialmente en la protección y monitoreo de redes. Entidades del Estado, instituciones educativas como colegios, así como pequeñas organizaciones, no cuentan con herramientas adecuadas para detectar intrusiones o actividades sospechosas.
 
-Las soluciones comerciales de seguridad suelen ser costosas y complejas, lo que limita su implementación en entornos académicos.
+Ante esta problemática, surge la oportunidad de introducir TrafficWatch, un sistema básico de detección de intrusos (IDS) diseñado como una solución accesible, económica y fácil de implementar.
+
+TrafficWatch permitirá a estas instituciones monitorear el tráfico de red en tiempo real, detectar comportamientos anómalos y generar alertas, sin necesidad de invertir en soluciones comerciales costosas.
+
+De esta manera, el proyecto no solo responde a una necesidad tecnológica, sino que también abre una oportunidad de negocio orientada a la mejora de la seguridad informática en entornos académicos y organizaciones con recursos limitados en la ciudad de Tacna..
 
 El desarrollo de TrafficWatch IDS representa una oportunidad para ofrecer una solución accesible, educativa y funcional que permita:
+
 - Mejorar la seguridad en redes locales
 - Facilitar el aprendizaje en ciberseguridad
 - Reducir costos al utilizar software open-source
@@ -208,22 +228,17 @@ El desarrollo de TrafficWatch IDS representa una oportunidad para ofrecer una so
 
         2.2	Definición del problema
 
-Actualmente, muchas redes no cuentan con mecanismos adecuados para detectar intrusiones en tiempo real.
+En la ciudad de Tacna, muchas instituciones públicas, incluyendo entidades del gobierno regional, presentan serias deficiencias en la implementación de medidas básicas de seguridad informática. En varios casos, estas organizaciones no cuentan siquiera con mecanismos fundamentales como firewalls para proteger sus sistemas, debido a que la inversión requerida es percibida como costosa o innecesaria.
 
-Esto genera problemas como:
-- Accesos no autorizados sin detección
-- Falta de control sobre el tráfico de red
-- Dificultad para identificar ataques
-- Dependencia de herramientas costosas
+Adicionalmente, estas instituciones manejan información sensible, como datos administrativos, información de ciudadanos y registros internos, los cuales deberían contar con niveles adecuados de protección. Sin embargo, la falta de herramientas de seguridad incrementa el riesgo de accesos no autorizados, filtraciones de información y posibles incidentes que pueden afectar tanto a la institución como a la población.
 
-¿Cómo detectar actividades sospechosas en una red sin utilizar soluciones complejas o costosas?
-El proyecto propone resolver este problema mediante un sistema IDS básico, capaz de monitorear tráfico y generar alertas de manera eficiente.
+Esta situación genera una alta exposición a amenazas informáticas, como escaneo de puertos, ataques de denegación de servicio y vulnerabilidades en la red. La ausencia de sistemas de monitoreo y detección impide identificar estos riesgos de manera oportuna, comprometiendo la seguridad, integridad y disponibilidad de los sistemas.
 
+Asimismo, las soluciones comerciales de ciberseguridad suelen implicar altos costos de implementación y mantenimiento, lo que dificulta aún más su adopción en instituciones con presupuestos limitados, como colegios, entidades públicas y pequeñas organizaciones.
 
+En este contexto, se evidencia la necesidad de una solución accesible, económica y funcional que permita mejorar la seguridad de red sin requerir grandes inversiones. La falta de este tipo de herramientas representa el problema principal que el sistema TrafficWatch busca solucionar.
 
-<div style="page-break-after: always; visibility: hidden">\pagebreak</div>
-
-3. <span id="_Toc52661348" class="anchor"></span>**Vista General del Producto**
+3. **Vista General del Producto**
 
         3.1	Resumen de los interesados
 
@@ -295,10 +310,7 @@ El sistema será utilizado en un entorno académico controlado:
 
 
 
-<div style="page-break-after: always; visibility: hidden">\pagebreak</div>
-
-4. <span id="_Toc52661349" class="anchor"></span>**Estudio de
-    Factibilidad**
+4. >**Estudio de Factibilidad**
 
             4.1	Perspectiva del producto
 
@@ -396,14 +408,8 @@ Dependencias:
 
 
 
+5. **Características del producto**
 
-
-
-<div style="page-break-after: always; visibility: hidden">\pagebreak</div>
-
-5. <span id="_Toc52661350" class="anchor"></span>**Características del producto**
-
-<div style="page-break-after: always; visibility: hidden">\pagebreak</div>
 
 El sistema **TrafficWatch IDS** contará con un conjunto de funcionalidades orientadas al monitoreo, análisis y detección de intrusiones en redes académicas. Estas características han sido definidas considerando la simplicidad, accesibilidad y utilidad educativa del sistema.
 
@@ -438,7 +444,7 @@ El usuario podrá ajustar parámetros como:
 - Frecuencia de monitoreo
 
 
-6. <span id="_Toc52661351" class="anchor"></span>**Restricciones**
+6. **Restricciones**
 
 El desarrollo e implementación del sistema **TrafficWatch IDS** está sujeto a diversas restricciones técnicas, académicas y operativas:
 
@@ -449,10 +455,8 @@ El desarrollo e implementación del sistema **TrafficWatch IDS** está sujeto a 
 - Requiere permisos de administrador para la captura de paquetes.
 - Limitaciones en precisión y cobertura en comparación con sistemas IDS comerciales.
 - Uso restringido a entornos académicos y controlados.
-<div style="page-break-after: always; visibility: hidden">\pagebreak</div>
 
-
-7. <span id="_Toc52661352" class="anchor"></span>**Rangos de Calidad**
+7. **Rangos de Calidad**
 
 Para el desarrollo del sistema, se consideran las siguientes suposiciones:
 
@@ -463,9 +467,8 @@ Para el desarrollo del sistema, se consideran las siguientes suposiciones:
 - El sistema será utilizado con fines educativos y no críticos.
 - Existirá disponibilidad de conexión de red para las pruebas.
 
-<div style="page-break-after: always; visibility: hidden">\pagebreak</div>
 
-8. <span id="_Toc52661353" class="anchor"></span>**Precedencia y Prioridad**
+8. **Precedencia y Prioridad**
 
 El sistema **TrafficWatch IDS** deberá cumplir con los siguientes atributos de calidad:
 
@@ -530,9 +533,7 @@ El sistema **TrafficWatch IDS** deberá cumplir con los siguientes atributos de 
 
 
 
-<div style="page-break-after: always; visibility: hidden">\pagebreak</div>
-
-9. <span id="_Toc52661354" class="anchor"></span>**Otros requerimientos del producto**
+9. **Otros requerimientos del producto**
 
         9.1 Requisitos legales
    
@@ -567,32 +568,27 @@ El sistema deberá ser validado mediante pruebas básicas que permitan verificar
 - Generación de alertas
 - Registro de eventos
 
-<div style="page-break-after: always; visibility: hidden">\pagebreak</div>
+**CONCLUSIONES**
+
+El desarrollo del sistema TrafficWatch, como una solución básica de detección de intrusos (IDS), responde a una necesidad real en la ciudad de Tacna, donde muchas instituciones, especialmente del sector público y educativo, carecen de medidas adecuadas de seguridad informática.
+
+A lo largo del estudio realizado, se ha identificado que la falta de inversión en herramientas de protección, como firewalls y sistemas de monitoreo, expone a estas organizaciones a múltiples riesgos, incluyendo accesos no autorizados, pérdida de información y vulnerabilidades en sus redes.
+
+En este contexto, TrafficWatch se presenta como una alternativa viable, accesible y económica, basada en tecnologías de código abierto, que permite monitorear el tráfico de red, detectar actividades sospechosas y generar alertas en tiempo real, sin requerir grandes inversiones.
+
+Asimismo, el análisis de factibilidad demuestra que el proyecto es técnicamente realizable, económicamente sostenible y operativamente aplicable en entornos académicos y organizacionales con recursos limitados. Además, no presenta restricciones legales ni impactos negativos a nivel social o ambiental.
+
+Finalmente, el proyecto no solo contribuye a mejorar la seguridad informática, sino que también fortalece el aprendizaje práctico en ciberseguridad, promoviendo el desarrollo de soluciones tecnológicas accesibles y adaptadas al contexto local.
+
+En conclusión, TrafficWatch es un proyecto factible, necesario y con alto potencial de impacto en la mejora de la seguridad de redes en instituciones de Tacna, recomendándose su desarrollo e implementación.
 
 
-
-<span id="_Toc52661355" class="anchor"></span>**CONCLUSIONES**
-
-El desarrollo del sistema **TrafficWatch IDS** permitió aplicar conceptos fundamentales de seguridad informática y análisis de tráfico de red en un entorno práctico y académico. A través de la implementación del sistema, se logró comprender el funcionamiento básico de un sistema de detección de intrusos (IDS), así como la importancia del monitoreo continuo en la identificación de actividades sospechosas.
-
-Asimismo, el uso de herramientas como Python y la biblioteca Scapy demostró que es posible desarrollar soluciones funcionales de bajo costo, accesibles y adaptadas a contextos educativos. El sistema cumple con los objetivos planteados, permitiendo la captura de paquetes, el análisis de tráfico y la generación de alertas ante posibles intrusiones.
-
-Por otro lado, el proyecto evidenció las limitaciones propias de una solución académica, tales como la precisión en la detección, la escalabilidad y la falta de integración con sistemas más complejos. Sin embargo, estas limitaciones no afectan su valor como herramienta de aprendizaje.
-
-En conclusión, **TrafficWatch IDS** constituye una base sólida para futuros desarrollos en el área de seguridad de redes, promoviendo el aprendizaje práctico y el interés en la ciberseguridad.
-
-<div style="page-break-after: always; visibility: hidden">\pagebreak</div>
-
-
-<span id="_Toc52661356" class="anchor"></span>**RECOMENDACIONES**
+**RECOMENDACIONES**
 
 Se recomienda continuar con el desarrollo del sistema **TrafficWatch IDS**, incorporando mejoras que incrementen su funcionalidad, precisión y aplicabilidad en entornos más complejos.
 
-<div style="page-break-after: always; visibility: hidden">\pagebreak</div>
 
-
-
-<span id="_Toc52661357" class="anchor"></span>**BIBLIOGRAFIA**
+**BIBLIOGRAFIA**
 
 - Sommerville, I. (2011). *Ingeniería de software* (9ª ed.). Pearson Educación.
 
