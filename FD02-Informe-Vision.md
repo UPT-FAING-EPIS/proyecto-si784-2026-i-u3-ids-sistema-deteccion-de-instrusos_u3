@@ -586,7 +586,7 @@ En conclusión, **TrafficWatch IDS** constituye una base sólida para futuros de
 
 <span id="_Toc52661356" class="anchor"></span>**RECOMENDACIONES**
 
-e recomienda continuar con el desarrollo del sistema **TrafficWatch IDS**, incorporando mejoras que incrementen su funcionalidad, precisión y aplicabilidad en entornos más complejos.
+Se recomienda continuar con el desarrollo del sistema **TrafficWatch IDS**, incorporando mejoras que incrementen su funcionalidad, precisión y aplicabilidad en entornos más complejos.
 
 <div style="page-break-after: always; visibility: hidden">\pagebreak</div>
 
