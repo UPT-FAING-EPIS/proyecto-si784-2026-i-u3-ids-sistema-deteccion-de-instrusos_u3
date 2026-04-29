@@ -37,7 +37,7 @@ Versión *1.0*
 | CONTROL DE VERSIONES |           |              |               |            |                 |
 |:--------------------:|:----------|:-------------|:--------------|:-----------|:----------------|
 |       Versión        | Hecha por | Revisada por | Aprobada por  | Fecha      | Motivo          |
-|         1.0          | APO, ECA  | APO, ECA     | P. Cuadros Q. | 2026-04-27 | Versión inicial |
+|         1.0          | APO, ECA  | APO, ECA     | P. Cuadros Q. | 2026-04-28 | Versión inicial |
 
 # ÍNDICE GENERAL
 
