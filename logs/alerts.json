@@ -1,0 +1,520 @@
+[
+    {
+        "timestamp": "2026-05-01 19:09:18",
+        "level": "ALTO",
+        "type": "ESCANEO_DE_PUERTOS",
+        "source_ip": "192.168.1.6",
+        "description": "Acceso a 10 puertos diferentes en 10 segundos"
+    },
+    {
+        "timestamp": "2026-05-01 19:09:28",
+        "level": "ALTO",
+        "type": "ESCANEO_DE_PUERTOS",
+        "source_ip": "192.168.1.6",
+        "description": "Acceso a 10 puertos diferentes en 10 segundos"
+    },
+    {
+        "timestamp": "2026-05-01 19:09:36",
+        "level": "ALTO",
+        "type": "ESCANEO_DE_PUERTOS",
+        "source_ip": "192.168.1.6",
+        "description": "Acceso a 10 puertos diferentes en 10 segundos"
+    },
+    {
+        "timestamp": "2026-05-01 19:09:44",
+        "level": "ALTO",
+        "type": "ESCANEO_DE_PUERTOS",
+        "source_ip": "192.168.1.6",
+        "description": "Acceso a 10 puertos diferentes en 10 segundos"
+    },
+    {
+        "timestamp": "2026-05-01 19:09:48",
+        "level": "ALTO",
+        "type": "ESCANEO_DE_PUERTOS",
+        "source_ip": "192.168.1.6",
+        "description": "Acceso a 10 puertos diferentes en 10 segundos"
+    },
+    {
+        "timestamp": "2026-05-01 19:09:52",
+        "level": "ALTO",
+        "type": "ESCANEO_DE_PUERTOS",
+        "source_ip": "192.168.1.6",
+        "description": "Acceso a 10 puertos diferentes en 10 segundos"
+    },
+    {
+        "timestamp": "2026-05-01 19:10:03",
+        "level": "ALTO",
+        "type": "ESCANEO_DE_PUERTOS",
+        "source_ip": "43.152.20.157",
+        "description": "Acceso a 10 puertos diferentes en 10 segundos"
+    },
+    {
+        "timestamp": "2026-05-01 19:10:03",
+        "level": "ALTO",
+        "type": "SYN_FLOOD",
+        "source_ip": "192.168.1.6",
+        "description": "30 paquetes SYN en 5 segundos"
+    },
+    {
+        "timestamp": "2026-05-01 19:10:03",
+        "level": "ALTO",
+        "type": "ESCANEO_DE_PUERTOS",
+        "source_ip": "43.152.20.157",
+        "description": "Acceso a 10 puertos diferentes en 10 segundos"
+    },
+    {
+        "timestamp": "2026-05-01 19:10:03",
+        "level": "ALTO",
+        "type": "ESCANEO_DE_PUERTOS",
+        "source_ip": "43.152.20.157",
+        "description": "Acceso a 10 puertos diferentes en 10 segundos"
+    },
+    {
+        "timestamp": "2026-05-01 19:10:03",
+        "level": "ALTO",
+        "type": "ESCANEO_DE_PUERTOS",
+        "source_ip": "43.152.20.157",
+        "description": "Acceso a 10 puertos diferentes en 10 segundos"
+    },
+    {
+        "timestamp": "2026-05-01 19:10:03",
+        "level": "ALTO",
+        "type": "ESCANEO_DE_PUERTOS",
+        "source_ip": "43.152.20.157",
+        "description": "Acceso a 10 puertos diferentes en 10 segundos"
+    },
+    {
+        "timestamp": "2026-05-01 19:10:03",
+        "level": "ALTO",
+        "type": "ESCANEO_DE_PUERTOS",
+        "source_ip": "43.152.20.157",
+        "description": "Acceso a 10 puertos diferentes en 10 segundos"
+    },
+    {
+        "timestamp": "2026-05-01 19:10:03",
+        "level": "ALTO",
+        "type": "ESCANEO_DE_PUERTOS",
+        "source_ip": "43.152.20.157",
+        "description": "Acceso a 10 puertos diferentes en 10 segundos"
+    },
+    {
+        "timestamp": "2026-05-01 19:10:03",
+        "level": "ALTO",
+        "type": "ESCANEO_DE_PUERTOS",
+        "source_ip": "43.152.20.157",
+        "description": "Acceso a 10 puertos diferentes en 10 segundos"
+    },
+    {
+        "timestamp": "2026-05-01 19:10:03",
+        "level": "ALTO",
+        "type": "ESCANEO_DE_PUERTOS",
+        "source_ip": "43.152.20.157",
+        "description": "Acceso a 10 puertos diferentes en 10 segundos"
+    },
+    {
+        "timestamp": "2026-05-01 19:10:03",
+        "level": "ALTO",
+        "type": "SYN_FLOOD",
+        "source_ip": "192.168.1.6",
+        "description": "30 paquetes SYN en 5 segundos"
+    },
+    {
+        "timestamp": "2026-05-01 19:10:03",
+        "level": "ALTO",
+        "type": "ESCANEO_DE_PUERTOS",
+        "source_ip": "43.152.20.157",
+        "description": "Acceso a 10 puertos diferentes en 10 segundos"
+    },
+    {
+        "timestamp": "2026-05-01 19:10:03",
+        "level": "ALTO",
+        "type": "ESCANEO_DE_PUERTOS",
+        "source_ip": "43.152.20.157",
+        "description": "Acceso a 10 puertos diferentes en 10 segundos"
+    },
+    {
+        "timestamp": "2026-05-01 19:10:03",
+        "level": "ALTO",
+        "type": "ESCANEO_DE_PUERTOS",
+        "source_ip": "43.152.20.157",
+        "description": "Acceso a 10 puertos diferentes en 10 segundos"
+    },
+    {
+        "timestamp": "2026-05-01 19:10:03",
+        "level": "ALTO",
+        "type": "ESCANEO_DE_PUERTOS",
+        "source_ip": "43.152.20.157",
+        "description": "Acceso a 10 puertos diferentes en 10 segundos"
+    },
+    {
+        "timestamp": "2026-05-01 19:10:03",
+        "level": "ALTO",
+        "type": "ESCANEO_DE_PUERTOS",
+        "source_ip": "43.152.20.157",
+        "description": "Acceso a 10 puertos diferentes en 10 segundos"
+    },
+    {
+        "timestamp": "2026-05-01 19:10:03",
+        "level": "ALTO",
+        "type": "ESCANEO_DE_PUERTOS",
+        "source_ip": "43.152.20.157",
+        "description": "Acceso a 10 puertos diferentes en 10 segundos"
+    },
+    {
+        "timestamp": "2026-05-01 19:10:03",
+        "level": "ALTO",
+        "type": "ESCANEO_DE_PUERTOS",
+        "source_ip": "43.152.20.157",
+        "description": "Acceso a 10 puertos diferentes en 10 segundos"
+    },
+    {
+        "timestamp": "2026-05-01 19:10:03",
+        "level": "ALTO",
+        "type": "ESCANEO_DE_PUERTOS",
+        "source_ip": "43.152.20.157",
+        "description": "Acceso a 10 puertos diferentes en 10 segundos"
+    },
+    {
+        "timestamp": "2026-05-01 19:10:03",
+        "level": "ALTO",
+        "type": "SYN_FLOOD",
+        "source_ip": "192.168.1.6",
+        "description": "30 paquetes SYN en 5 segundos"
+    },
+    {
+        "timestamp": "2026-05-01 19:10:03",
+        "level": "ALTO",
+        "type": "ESCANEO_DE_PUERTOS",
+        "source_ip": "43.152.20.157",
+        "description": "Acceso a 10 puertos diferentes en 10 segundos"
+    },
+    {
+        "timestamp": "2026-05-01 19:10:03",
+        "level": "ALTO",
+        "type": "ESCANEO_DE_PUERTOS",
+        "source_ip": "43.152.20.157",
+        "description": "Acceso a 10 puertos diferentes en 10 segundos"
+    },
+    {
+        "timestamp": "2026-05-01 19:10:03",
+        "level": "ALTO",
+        "type": "ESCANEO_DE_PUERTOS",
+        "source_ip": "43.152.20.157",
+        "description": "Acceso a 10 puertos diferentes en 10 segundos"
+    },
+    {
+        "timestamp": "2026-05-01 19:10:03",
+        "level": "ALTO",
+        "type": "ESCANEO_DE_PUERTOS",
+        "source_ip": "43.152.20.157",
+        "description": "Acceso a 10 puertos diferentes en 10 segundos"
+    },
+    {
+        "timestamp": "2026-05-01 19:10:03",
+        "level": "ALTO",
+        "type": "ESCANEO_DE_PUERTOS",
+        "source_ip": "43.152.20.157",
+        "description": "Acceso a 10 puertos diferentes en 10 segundos"
+    },
+    {
+        "timestamp": "2026-05-01 19:10:03",
+        "level": "ALTO",
+        "type": "ESCANEO_DE_PUERTOS",
+        "source_ip": "43.152.20.157",
+        "description": "Acceso a 10 puertos diferentes en 10 segundos"
+    },
+    {
+        "timestamp": "2026-05-01 19:10:04",
+        "level": "ALTO",
+        "type": "ESCANEO_DE_PUERTOS",
+        "source_ip": "43.152.20.157",
+        "description": "Acceso a 10 puertos diferentes en 10 segundos"
+    },
+    {
+        "timestamp": "2026-05-01 19:10:04",
+        "level": "ALTO",
+        "type": "ESCANEO_DE_PUERTOS",
+        "source_ip": "43.152.20.157",
+        "description": "Acceso a 10 puertos diferentes en 10 segundos"
+    },
+    {
+        "timestamp": "2026-05-01 19:10:04",
+        "level": "ALTO",
+        "type": "SYN_FLOOD",
+        "source_ip": "192.168.1.6",
+        "description": "30 paquetes SYN en 5 segundos"
+    },
+    {
+        "timestamp": "2026-05-01 19:10:04",
+        "level": "ALTO",
+        "type": "ESCANEO_DE_PUERTOS",
+        "source_ip": "43.152.20.157",
+        "description": "Acceso a 10 puertos diferentes en 10 segundos"
+    },
+    {
+        "timestamp": "2026-05-01 19:10:04",
+        "level": "ALTO",
+        "type": "ESCANEO_DE_PUERTOS",
+        "source_ip": "43.152.20.157",
+        "description": "Acceso a 10 puertos diferentes en 10 segundos"
+    },
+    {
+        "timestamp": "2026-05-01 19:10:06",
+        "level": "ALTO",
+        "type": "ESCANEO_DE_PUERTOS",
+        "source_ip": "43.152.20.157",
+        "description": "Acceso a 10 puertos diferentes en 10 segundos"
+    },
+    {
+        "timestamp": "2026-05-01 19:10:29",
+        "level": "ALTO",
+        "type": "ESCANEO_DE_PUERTOS",
+        "source_ip": "192.168.1.6",
+        "description": "Acceso a 10 puertos diferentes en 10 segundos"
+    },
+    {
+        "timestamp": "2026-05-01 19:10:36",
+        "level": "ALTO",
+        "type": "ESCANEO_DE_PUERTOS",
+        "source_ip": "192.168.1.6",
+        "description": "Acceso a 10 puertos diferentes en 10 segundos"
+    },
+    {
+        "timestamp": "2026-05-01 19:10:42",
+        "level": "ALTO",
+        "type": "ESCANEO_DE_PUERTOS",
+        "source_ip": "192.168.1.6",
+        "description": "Acceso a 10 puertos diferentes en 10 segundos"
+    },
+    {
+        "timestamp": "2026-05-01 19:10:51",
+        "level": "ALTO",
+        "type": "ESCANEO_DE_PUERTOS",
+        "source_ip": "192.168.1.6",
+        "description": "Acceso a 10 puertos diferentes en 10 segundos"
+    },
+    {
+        "timestamp": "2026-05-01 19:10:54",
+        "level": "ALTO",
+        "type": "ESCANEO_DE_PUERTOS",
+        "source_ip": "192.168.1.6",
+        "description": "Acceso a 10 puertos diferentes en 10 segundos"
+    },
+    {
+        "timestamp": "2026-05-01 19:10:58",
+        "level": "ALTO",
+        "type": "ESCANEO_DE_PUERTOS",
+        "source_ip": "192.168.1.6",
+        "description": "Acceso a 10 puertos diferentes en 10 segundos"
+    },
+    {
+        "timestamp": "2026-05-01 19:11:33",
+        "level": "ALTO",
+        "type": "ESCANEO_DE_PUERTOS",
+        "source_ip": "43.152.20.157",
+        "description": "Acceso a 10 puertos diferentes en 10 segundos"
+    },
+    {
+        "timestamp": "2026-05-01 19:11:33",
+        "level": "ALTO",
+        "type": "ESCANEO_DE_PUERTOS",
+        "source_ip": "43.152.20.157",
+        "description": "Acceso a 10 puertos diferentes en 10 segundos"
+    },
+    {
+        "timestamp": "2026-05-01 19:11:33",
+        "level": "ALTO",
+        "type": "SYN_FLOOD",
+        "source_ip": "192.168.1.6",
+        "description": "30 paquetes SYN en 5 segundos"
+    },
+    {
+        "timestamp": "2026-05-01 19:11:33",
+        "level": "ALTO",
+        "type": "ESCANEO_DE_PUERTOS",
+        "source_ip": "43.152.20.157",
+        "description": "Acceso a 10 puertos diferentes en 10 segundos"
+    },
+    {
+        "timestamp": "2026-05-01 19:11:33",
+        "level": "ALTO",
+        "type": "ESCANEO_DE_PUERTOS",
+        "source_ip": "43.152.20.157",
+        "description": "Acceso a 10 puertos diferentes en 10 segundos"
+    },
+    {
+        "timestamp": "2026-05-01 19:11:33",
+        "level": "ALTO",
+        "type": "ESCANEO_DE_PUERTOS",
+        "source_ip": "43.152.20.157",
+        "description": "Acceso a 10 puertos diferentes en 10 segundos"
+    },
+    {
+        "timestamp": "2026-05-01 19:11:33",
+        "level": "ALTO",
+        "type": "ESCANEO_DE_PUERTOS",
+        "source_ip": "43.152.20.157",
+        "description": "Acceso a 10 puertos diferentes en 10 segundos"
+    },
+    {
+        "timestamp": "2026-05-01 19:11:33",
+        "level": "ALTO",
+        "type": "ESCANEO_DE_PUERTOS",
+        "source_ip": "43.152.20.157",
+        "description": "Acceso a 10 puertos diferentes en 10 segundos"
+    },
+    {
+        "timestamp": "2026-05-01 19:11:33",
+        "level": "ALTO",
+        "type": "ESCANEO_DE_PUERTOS",
+        "source_ip": "43.152.20.157",
+        "description": "Acceso a 10 puertos diferentes en 10 segundos"
+    },
+    {
+        "timestamp": "2026-05-01 19:11:33",
+        "level": "ALTO",
+        "type": "ESCANEO_DE_PUERTOS",
+        "source_ip": "43.152.20.157",
+        "description": "Acceso a 10 puertos diferentes en 10 segundos"
+    },
+    {
+        "timestamp": "2026-05-01 19:11:33",
+        "level": "ALTO",
+        "type": "SYN_FLOOD",
+        "source_ip": "192.168.1.6",
+        "description": "30 paquetes SYN en 5 segundos"
+    },
+    {
+        "timestamp": "2026-05-01 19:11:33",
+        "level": "ALTO",
+        "type": "ESCANEO_DE_PUERTOS",
+        "source_ip": "43.152.20.157",
+        "description": "Acceso a 10 puertos diferentes en 10 segundos"
+    },
+    {
+        "timestamp": "2026-05-01 19:11:33",
+        "level": "ALTO",
+        "type": "ESCANEO_DE_PUERTOS",
+        "source_ip": "43.152.20.157",
+        "description": "Acceso a 10 puertos diferentes en 10 segundos"
+    },
+    {
+        "timestamp": "2026-05-01 19:11:33",
+        "level": "ALTO",
+        "type": "ESCANEO_DE_PUERTOS",
+        "source_ip": "43.152.20.157",
+        "description": "Acceso a 10 puertos diferentes en 10 segundos"
+    },
+    {
+        "timestamp": "2026-05-01 19:11:33",
+        "level": "ALTO",
+        "type": "ESCANEO_DE_PUERTOS",
+        "source_ip": "43.152.20.157",
+        "description": "Acceso a 10 puertos diferentes en 10 segundos"
+    },
+    {
+        "timestamp": "2026-05-01 19:11:33",
+        "level": "ALTO",
+        "type": "ESCANEO_DE_PUERTOS",
+        "source_ip": "43.152.20.157",
+        "description": "Acceso a 10 puertos diferentes en 10 segundos"
+    },
+    {
+        "timestamp": "2026-05-01 19:11:33",
+        "level": "ALTO",
+        "type": "ESCANEO_DE_PUERTOS",
+        "source_ip": "43.152.20.157",
+        "description": "Acceso a 10 puertos diferentes en 10 segundos"
+    },
+    {
+        "timestamp": "2026-05-01 19:11:33",
+        "level": "ALTO",
+        "type": "ESCANEO_DE_PUERTOS",
+        "source_ip": "43.152.20.157",
+        "description": "Acceso a 10 puertos diferentes en 10 segundos"
+    },
+    {
+        "timestamp": "2026-05-01 19:11:33",
+        "level": "ALTO",
+        "type": "ESCANEO_DE_PUERTOS",
+        "source_ip": "43.152.20.157",
+        "description": "Acceso a 10 puertos diferentes en 10 segundos"
+    },
+    {
+        "timestamp": "2026-05-01 19:11:33",
+        "level": "ALTO",
+        "type": "SYN_FLOOD",
+        "source_ip": "192.168.1.6",
+        "description": "30 paquetes SYN en 5 segundos"
+    },
+    {
+        "timestamp": "2026-05-01 19:11:33",
+        "level": "ALTO",
+        "type": "ESCANEO_DE_PUERTOS",
+        "source_ip": "43.152.20.157",
+        "description": "Acceso a 10 puertos diferentes en 10 segundos"
+    },
+    {
+        "timestamp": "2026-05-01 19:11:33",
+        "level": "ALTO",
+        "type": "ESCANEO_DE_PUERTOS",
+        "source_ip": "43.152.20.157",
+        "description": "Acceso a 10 puertos diferentes en 10 segundos"
+    },
+    {
+        "timestamp": "2026-05-01 19:11:33",
+        "level": "ALTO",
+        "type": "ESCANEO_DE_PUERTOS",
+        "source_ip": "43.152.20.157",
+        "description": "Acceso a 10 puertos diferentes en 10 segundos"
+    },
+    {
+        "timestamp": "2026-05-01 19:11:33",
+        "level": "ALTO",
+        "type": "ESCANEO_DE_PUERTOS",
+        "source_ip": "43.152.20.157",
+        "description": "Acceso a 10 puertos diferentes en 10 segundos"
+    },
+    {
+        "timestamp": "2026-05-01 19:11:33",
+        "level": "ALTO",
+        "type": "ESCANEO_DE_PUERTOS",
+        "source_ip": "43.152.20.157",
+        "description": "Acceso a 10 puertos diferentes en 10 segundos"
+    },
+    {
+        "timestamp": "2026-05-01 19:11:34",
+        "level": "ALTO",
+        "type": "ESCANEO_DE_PUERTOS",
+        "source_ip": "43.152.20.157",
+        "description": "Acceso a 10 puertos diferentes en 10 segundos"
+    },
+    {
+        "timestamp": "2026-05-01 19:11:34",
+        "level": "ALTO",
+        "type": "ESCANEO_DE_PUERTOS",
+        "source_ip": "43.152.20.157",
+        "description": "Acceso a 10 puertos diferentes en 10 segundos"
+    },
+    {
+        "timestamp": "2026-05-01 19:11:34",
+        "level": "ALTO",
+        "type": "ESCANEO_DE_PUERTOS",
+        "source_ip": "43.152.20.157",
+        "description": "Acceso a 10 puertos diferentes en 10 segundos"
+    },
+    {
+        "timestamp": "2026-05-01 19:11:37",
+        "level": "ALTO",
+        "type": "SYN_FLOOD",
+        "source_ip": "192.168.1.6",
+        "description": "30 paquetes SYN en 5 segundos"
+    },
+    {
+        "timestamp": "2026-05-01 19:11:47",
+        "level": "ALTO",
+        "type": "ESCANEO_DE_PUERTOS",
+        "source_ip": "192.168.1.6",
+        "description": "Acceso a 10 puertos diferentes en 10 segundos"
+    }
+]

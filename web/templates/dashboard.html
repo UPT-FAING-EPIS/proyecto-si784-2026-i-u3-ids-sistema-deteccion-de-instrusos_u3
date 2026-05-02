@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>IDS PRO Dashboard</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #0f172a;
+            color: #e5e7eb;
+            margin: 0;
+            padding: 0;
+        }
+
+        header {
+            background: #111827;
+            padding: 20px;
+            border-bottom: 2px solid #ef4444;
+        }
+
+        h1 {
+            margin: 0;
+            color: #f87171;
+        }
+
+        main {
+            padding: 20px;
+        }
+
+        .cards {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 15px;
+            margin-bottom: 25px;
+        }
+
+        .card {
+            background: #1f2937;
+            padding: 18px;
+            border-radius: 12px;
+            box-shadow: 0 0 8px rgba(0,0,0,0.3);
+        }
+
+        .card h2 {
+            margin: 0;
+            font-size: 15px;
+            color: #93c5fd;
+        }
+
+        .card p {
+            font-size: 28px;
+            margin: 10px 0 0 0;
+            font-weight: bold;
+        }
+
+        button {
+            background: #ef4444;
+            color: white;
+            border: none;
+            padding: 10px 14px;
+            border-radius: 8px;
+            cursor: pointer;
+            margin-bottom: 15px;
+        }
+
+        button:hover {
+            background: #dc2626;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background: #1f2937;
+            border-radius: 12px;
+            overflow: hidden;
+        }
+
+        th, td {
+            padding: 12px;
+            border-bottom: 1px solid #374151;
+            text-align: left;
+        }
+
+        th {
+            background: #111827;
+            color: #93c5fd;
+        }
+
+        .alto {
+            color: #f87171;
+            font-weight: bold;
+        }
+
+        .medio {
+            color: #facc15;
+            font-weight: bold;
+        }
+
+        .bajo {
+            color: #60a5fa;
+            font-weight: bold;
+        }
+
+        .empty {
+            padding: 20px;
+            text-align: center;
+            color: #9ca3af;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>🚨 IDS PRO Dashboard</h1>
+        <p>Monitoreo de alertas de seguridad en tiempo real</p>
+    </header>
+
+    <main>
+        <section class="cards">
+            <div class="card">
+                <h2>Total de alertas</h2>
+                <p id="totalAlerts">0</p>
+            </div>
+            <div class="card">
+                <h2>Alertas altas</h2>
+                <p id="highAlerts">0</p>
+            </div>
+            <div class="card">
+                <h2>IP más sospechosa</h2>
+                <p id="topIp">-</p>
+            </div>
+            <div class="card">
+                <h2>Tipos detectados</h2>
+                <p id="typeCount">0</p>
+            </div>
+        </section>
+
+        <button onclick="clearAlerts()">Limpiar alertas</button>
+
+        <table>
+            <thead>
+                <tr>
+                    <th>Fecha/Hora</th>
+                    <th>Riesgo</th>
+                    <th>Tipo</th>
+                    <th>IP Origen</th>
+                    <th>Descripción</th>
+                </tr>
+            </thead>
+            <tbody id="alertsTable">
+                <tr>
+                    <td colspan="5" class="empty">Sin alertas registradas</td>
+                </tr>
+            </tbody>
+        </table>
+    </main>
+
+    <script>
+        async function loadAlerts() {
+            const response = await fetch("/api/alerts");
+            const alerts = await response.json();
+            const table = document.getElementById("alertsTable");
+
+            table.innerHTML = "";
+
+            if (alerts.length === 0) {
+                table.innerHTML = '<tr><td colspan="5" class="empty">Sin alertas registradas</td></tr>';
+                return;
+            }
+
+            alerts.slice().reverse().forEach(alert => {
+                const levelClass = alert.level.toLowerCase();
+                table.innerHTML += `
+                    <tr>
+                        <td>${alert.timestamp}</td>
+                        <td class="${levelClass}">${alert.level}</td>
+                        <td>${alert.type}</td>
+                        <td>${alert.source_ip}</td>
+                        <td>${alert.description}</td>
+                    </tr>
+                `;
+            });
+        }
+
+        async function loadStats() {
+            const response = await fetch("/api/stats");
+            const stats = await response.json();
+
+            document.getElementById("totalAlerts").textContent = stats.total_alerts;
+            document.getElementById("highAlerts").textContent = stats.by_level.ALTO || 0;
+            document.getElementById("typeCount").textContent = Object.keys(stats.by_type).length;
+
+            const topIps = Object.keys(stats.top_ips);
+            document.getElementById("topIp").textContent = topIps.length > 0 ? topIps[0] : "-";
+        }
+
+        async function clearAlerts() {
+            await fetch("/api/clear", { method: "POST" });
+            await refresh();
+        }
+
+        async function refresh() {
+            await loadAlerts();
+            await loadStats();
+        }
+
+        setInterval(refresh, 2000);
+        refresh();
+    </script>
+</body>
+</html>

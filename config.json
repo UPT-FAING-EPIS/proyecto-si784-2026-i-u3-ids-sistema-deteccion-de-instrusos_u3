@@ -1,0 +1,38 @@
+{
+    "interface": "",
+    "log_file": "logs/alerts.json",
+    "rules": {
+        "port_scan": {
+            "enabled": true,
+            "time_window_seconds": 10,
+            "unique_ports_threshold": 10
+        },
+        "icmp_flood": {
+            "enabled": true,
+            "time_window_seconds": 5,
+            "packet_threshold": 20
+        },
+        "syn_flood": {
+            "enabled": true,
+            "time_window_seconds": 5,
+            "packet_threshold": 30
+        },
+        "repeated_ssh": {
+            "enabled": true,
+            "time_window_seconds": 30,
+            "attempt_threshold": 8,
+            "ssh_port": 22
+        },
+        "suspicious_ports": {
+            "enabled": true,
+            "ports": [
+                21,
+                22,
+                23,
+                3389,
+                4444,
+                5900
+            ]
+        }
+    }
+}
