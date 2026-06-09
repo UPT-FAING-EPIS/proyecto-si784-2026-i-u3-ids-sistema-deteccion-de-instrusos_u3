@@ -1,11 +1,13 @@
 import json
 from pathlib import Path
 from threading import Lock
+from typing import Optional
 
 
 class AlertStorage:
-    def __init__(self, file_path: str):
+    def __init__(self, file_path: str, max_records: Optional[int] = None):
         self.file_path = Path(file_path)
+        self.max_records = max_records
         self.file_path.parent.mkdir(parents=True, exist_ok=True)
         self.lock = Lock()
 
@@ -16,6 +18,10 @@ class AlertStorage:
         with self.lock:
             data = self.read()
             data.append(alert)
+
+            if self.max_records and len(data) > self.max_records:
+                data = data[-self.max_records:]
+
             with open(self.file_path, "w", encoding="utf-8") as file:
                 json.dump(data, file, indent=4, ensure_ascii=False)
 

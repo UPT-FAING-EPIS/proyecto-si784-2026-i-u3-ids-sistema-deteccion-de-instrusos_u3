@@ -2,8 +2,12 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <title>IDS PRO Dashboard</title>
+    <title>TrafficWatch IDS</title>
     <style>
+        * {
+            box-sizing: border-box;
+        }
+
         body {
             font-family: Arial, sans-serif;
             background: #0f172a;
@@ -12,19 +16,91 @@
             padding: 0;
         }
 
+        .app-layout {
+            display: grid;
+            grid-template-columns: 260px 1fr;
+            min-height: 100vh;
+        }
+
+        .sidebar {
+            background: #0b1220;
+            border-right: 1px solid #263244;
+            padding: 22px 18px;
+        }
+
+        .brand {
+            border-bottom: 1px solid #263244;
+            padding-bottom: 18px;
+            margin-bottom: 18px;
+        }
+
+        .brand h1 {
+            margin: 0;
+            color: #f87171;
+            font-size: 24px;
+        }
+
+        .brand p {
+            margin: 8px 0 0 0;
+            color: #9ca3af;
+            line-height: 1.4;
+        }
+
+        .nav {
+            display: grid;
+            gap: 10px;
+        }
+
+        .nav button {
+            width: 100%;
+            background: transparent;
+            color: #cbd5e1;
+            border: 1px solid #263244;
+            padding: 11px 12px;
+            border-radius: 8px;
+            cursor: pointer;
+            text-align: left;
+            font-weight: bold;
+            margin: 0;
+        }
+
+        .nav button:hover,
+        .nav button.active {
+            background: #1f2937;
+            color: #93c5fd;
+            border-color: #3b82f6;
+        }
+
+        .content {
+            min-width: 0;
+        }
+
         header {
             background: #111827;
             padding: 20px;
             border-bottom: 2px solid #ef4444;
         }
 
-        h1 {
+        header h2 {
             margin: 0;
             color: #f87171;
+            font-size: 34px;
+        }
+
+        header p {
+            margin: 12px 0 0 0;
         }
 
         main {
             padding: 20px;
+        }
+
+        .view {
+            display: none;
+        }
+
+        .view.active {
+            display: block;
         }
 
         .cards {
@@ -37,7 +113,7 @@
         .card {
             background: #1f2937;
             padding: 18px;
-            border-radius: 12px;
+            border-radius: 8px;
             box-shadow: 0 0 8px rgba(0,0,0,0.3);
         }
 
@@ -51,6 +127,85 @@
             font-size: 28px;
             margin: 10px 0 0 0;
             font-weight: bold;
+        }
+
+        .status-grid {
+            display: grid;
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .status-card {
+            background: #1f2937;
+            border: 1px solid #374151;
+            border-radius: 8px;
+            padding: 16px;
+        }
+
+        .status-card h3 {
+            margin: 0 0 8px 0;
+            color: #93c5fd;
+            font-size: 15px;
+        }
+
+        .status-card p {
+            margin: 0;
+            font-size: 20px;
+            font-weight: bold;
+            overflow-wrap: anywhere;
+        }
+
+        .status-pill {
+            display: inline-block;
+            border-radius: 999px;
+            padding: 6px 10px;
+            font-weight: bold;
+            font-size: 14px;
+        }
+
+        .status-pill.active {
+            background: #064e3b;
+            color: #6ee7b7;
+        }
+
+        .status-pill.inactive {
+            background: #7f1d1d;
+            color: #fecaca;
+        }
+
+        .status-detail {
+            display: grid;
+            gap: 14px;
+        }
+
+        .chart-grid {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 16px;
+        }
+
+        .chart-panel {
+            background: #1f2937;
+            border: 1px solid #374151;
+            border-radius: 8px;
+            padding: 16px;
+            min-width: 0;
+        }
+
+        .chart-panel h3 {
+            margin: 0 0 12px 0;
+            color: #93c5fd;
+            font-size: 16px;
+        }
+
+        .chart-panel canvas {
+            display: block;
+            width: 100%;
+            height: 260px;
+            background: #111827;
+            border: 1px solid #263244;
+            border-radius: 8px;
         }
 
         button {
@@ -67,11 +222,38 @@
             background: #dc2626;
         }
 
+        .actions {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            margin-bottom: 15px;
+        }
+
+        .actions button {
+            margin-bottom: 0;
+        }
+
+        .secondary-button {
+            background: #2563eb;
+        }
+
+        .secondary-button:hover {
+            background: #1d4ed8;
+        }
+
+        .danger-button {
+            background: #b91c1c;
+        }
+
+        .danger-button:hover {
+            background: #991b1b;
+        }
+
         table {
             width: 100%;
             border-collapse: collapse;
             background: #1f2937;
-            border-radius: 12px;
+            border-radius: 8px;
             overflow: hidden;
         }
 
@@ -106,102 +288,1089 @@
             text-align: center;
             color: #9ca3af;
         }
+
+        .info-section {
+            display: grid;
+            gap: 16px;
+            max-width: 1100px;
+        }
+
+        .info-panel {
+            background: #1f2937;
+            border: 1px solid #374151;
+            border-radius: 8px;
+            padding: 18px;
+        }
+
+        .info-panel h3 {
+            margin: 0 0 10px 0;
+            color: #93c5fd;
+        }
+
+        .info-panel p {
+            margin: 0;
+            color: #d1d5db;
+            line-height: 1.55;
+        }
+
+        .traffic-grid {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 15px;
+        }
+
+        .traffic-item {
+            background: #111827;
+            border: 1px solid #374151;
+            border-radius: 8px;
+            padding: 16px;
+        }
+
+        .traffic-item h3 {
+            margin: 0 0 10px 0;
+            color: #facc15;
+            font-size: 17px;
+        }
+
+        .traffic-item code {
+            display: block;
+            background: #020617;
+            color: #bfdbfe;
+            border: 1px solid #1e293b;
+            border-radius: 6px;
+            padding: 10px;
+            margin-top: 12px;
+            white-space: normal;
+        }
+
+        .filter-panel {
+            background: #1f2937;
+            border: 1px solid #374151;
+            border-radius: 8px;
+            padding: 16px;
+            margin-bottom: 16px;
+        }
+
+        .filter-grid {
+            display: grid;
+            grid-template-columns: repeat(5, minmax(0, 1fr));
+            gap: 12px;
+        }
+
+        .filter-field {
+            display: grid;
+            gap: 6px;
+        }
+
+        .filter-field label {
+            color: #93c5fd;
+            font-size: 14px;
+            font-weight: bold;
+        }
+
+        .filter-field input,
+        .filter-field select {
+            width: 100%;
+            background: #111827;
+            color: #e5e7eb;
+            border: 1px solid #374151;
+            border-radius: 6px;
+            padding: 10px;
+        }
+
+        .pagination {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            flex-wrap: wrap;
+            margin-top: 16px;
+        }
+
+        .pagination p {
+            margin: 0;
+            color: #cbd5e1;
+        }
+
+        .pagination-controls {
+            display: flex;
+            gap: 10px;
+        }
+
+        @media (max-width: 900px) {
+            .app-layout {
+                grid-template-columns: 1fr;
+            }
+
+            .sidebar {
+                border-right: none;
+                border-bottom: 1px solid #263244;
+            }
+
+            .nav {
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+            }
+
+            .cards,
+            .status-grid,
+            .chart-grid,
+            .traffic-grid,
+            .filter-grid {
+                grid-template-columns: 1fr;
+            }
+        }
     </style>
 </head>
 <body>
-    <header>
-        <h1>🚨 IDS PRO Dashboard</h1>
-        <p>Monitoreo de alertas de seguridad en tiempo real</p>
-    </header>
+    <div class="app-layout">
+        <aside class="sidebar">
+            <div class="brand">
+                <h1>TrafficWatch IDS</h1>
+                <p>Sistema basico de deteccion de intrusos para monitoreo de red.</p>
+            </div>
+            <nav class="nav" aria-label="Navegacion principal">
+                <button class="active" id="dashboardNav" onclick="showView('dashboard')">Dashboard</button>
+                <button id="trafficNav" onclick="showView('traffic')">Tipos de trafico</button>
+                <button id="classifiedNav" onclick="showView('classified')">Trafico clasificado</button>
+                <button id="statusNav" onclick="showView('status')">Estado IDS</button>
+                <button id="chartsNav" onclick="showView('charts')">Graficos</button>
+                <button id="historyNav" onclick="showView('history')">Historial</button>
+                <button id="rulesNav" onclick="showView('rules')">Reglas IDS</button>
+            </nav>
+        </aside>
 
-    <main>
-        <section class="cards">
-            <div class="card">
-                <h2>Total de alertas</h2>
-                <p id="totalAlerts">0</p>
-            </div>
-            <div class="card">
-                <h2>Alertas altas</h2>
-                <p id="highAlerts">0</p>
-            </div>
-            <div class="card">
-                <h2>IP más sospechosa</h2>
-                <p id="topIp">-</p>
-            </div>
-            <div class="card">
-                <h2>Tipos detectados</h2>
-                <p id="typeCount">0</p>
-            </div>
-        </section>
+        <div class="content">
+            <section class="view active" id="dashboardView">
+                <header>
+                    <h2>IDS PRO Dashboard</h2>
+                    <p>Monitoreo de alertas de seguridad en tiempo real</p>
+                </header>
 
-        <button onclick="clearAlerts()">Limpiar alertas</button>
+                <main>
+                    <section class="cards">
+                        <div class="card">
+                            <h2>Total de alertas</h2>
+                            <p id="totalAlerts">0</p>
+                        </div>
+                        <div class="card">
+                            <h2>Alertas altas</h2>
+                            <p id="highAlerts">0</p>
+                        </div>
+                        <div class="card">
+                            <h2>IP m&aacute;s sospechosa</h2>
+                            <p id="topIp">-</p>
+                        </div>
+                        <div class="card">
+                            <h2>Tipos detectados</h2>
+                            <p id="typeCount">0</p>
+                        </div>
+                    </section>
 
-        <table>
-            <thead>
-                <tr>
-                    <th>Fecha/Hora</th>
-                    <th>Riesgo</th>
-                    <th>Tipo</th>
-                    <th>IP Origen</th>
-                    <th>Descripción</th>
-                </tr>
-            </thead>
-            <tbody id="alertsTable">
-                <tr>
-                    <td colspan="5" class="empty">Sin alertas registradas</td>
-                </tr>
-            </tbody>
-        </table>
-    </main>
+                    <div class="actions">
+                        <button onclick="clearAlerts()">Limpiar alertas</button>
+                    </div>
+
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Fecha/Hora</th>
+                                <th>Riesgo</th>
+                                <th>Tipo</th>
+                                <th>IP Origen</th>
+                                <th>Descripci&oacute;n</th>
+                            </tr>
+                        </thead>
+                        <tbody id="alertsTable">
+                            <tr>
+                                <td colspan="5" class="empty">Sin alertas registradas</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </main>
+            </section>
+
+            <section class="view" id="trafficView">
+                <header>
+                    <h2>Tipos de trafico</h2>
+                    <p>Referencia rapida para interpretar de donde viene y hacia donde va un paquete.</p>
+                </header>
+
+                <main>
+                    <section class="info-section">
+                        <div class="info-panel">
+                            <h3>Contexto de red</h3>
+                            <p>El IDS detecta la IP local, el gateway y la red local. Con esos datos puede entender mejor si un paquete viene de internet, sale de la PC, pertenece a la red local o se comunica con el router.</p>
+                        </div>
+
+                        <div class="traffic-grid">
+                            <article class="traffic-item">
+                                <h3>Paquete entrante</h3>
+                                <p>Una IP externa envia trafico hacia tu computadora. Puede ser normal, pero si toca puertos sensibles o aparece muchas veces, merece atencion.</p>
+                                <code>45.162.90.157 -> 192.168.1.33</code>
+                            </article>
+
+                            <article class="traffic-item">
+                                <h3>Paquete saliente</h3>
+                                <p>Tu computadora envia trafico hacia internet. Suele pasar al navegar, actualizar programas o usar servicios en linea.</p>
+                                <code>192.168.1.33 -> 8.8.8.8</code>
+                            </article>
+
+                            <article class="traffic-item">
+                                <h3>Paquete local</h3>
+                                <p>Dos dispositivos de la misma red local se comunican entre si. Por ejemplo, otra PC, celular, impresora o servidor dentro de la LAN.</p>
+                                <code>192.168.1.50 -> 192.168.1.33</code>
+                            </article>
+
+                            <article class="traffic-item">
+                                <h3>Paquete hacia el gateway</h3>
+                                <p>Tu computadora se comunica con el router. Es normal cuando consulta servicios de la red o sale hacia internet mediante la puerta de enlace.</p>
+                                <code>192.168.1.33 -> 192.168.1.1</code>
+                            </article>
+                        </div>
+
+                        <div class="info-panel">
+                            <h3>Por que ayuda al IDS</h3>
+                            <p>Esta clasificacion reduce ruido y ayuda a interpretar mejor las alertas. No es lo mismo una conexion al puerto 22 desde internet hacia tu PC que una conexion desde tu PC hacia el router.</p>
+                        </div>
+                    </section>
+                </main>
+            </section>
+
+            <section class="view" id="classifiedView">
+                <header>
+                    <h2>Trafico clasificado</h2>
+                    <p>Ultimos paquetes observados por el IDS, separados por direccion de red.</p>
+                </header>
+
+                <main>
+                    <div class="actions">
+                        <button class="secondary-button" onclick="exportTraffic('json')">Exportar JSON</button>
+                        <button class="secondary-button" onclick="exportTraffic('csv')">Exportar CSV</button>
+                    </div>
+
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Fecha/Hora</th>
+                                <th>Direccion</th>
+                                <th>Protocolo</th>
+                                <th>Origen</th>
+                                <th>Destino</th>
+                                <th>Puerto destino</th>
+                                <th>Flags</th>
+                            </tr>
+                        </thead>
+                        <tbody id="classifiedTrafficTable">
+                            <tr>
+                                <td colspan="7" class="empty">Sin trafico clasificado</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </main>
+            </section>
+
+            <section class="view" id="statusView">
+                <header>
+                    <h2>Estado IDS</h2>
+                    <p>Resumen operativo del proceso de monitoreo y la red detectada.</p>
+                </header>
+
+                <main>
+                    <section class="status-grid">
+                        <div class="status-card">
+                            <h3>IDS</h3>
+                            <p><span class="status-pill inactive" id="idsStatusBadge">Inactivo</span></p>
+                        </div>
+                        <div class="status-card">
+                            <h3>Interfaz usada</h3>
+                            <p id="statusInterface">-</p>
+                        </div>
+                        <div class="status-card">
+                            <h3>IP local</h3>
+                            <p id="statusLocalIp">-</p>
+                        </div>
+                        <div class="status-card">
+                            <h3>Gateway</h3>
+                            <p id="statusGateway">-</p>
+                        </div>
+                        <div class="status-card">
+                            <h3>Red detectada</h3>
+                            <p id="statusNetwork">-</p>
+                        </div>
+                        <div class="status-card">
+                            <h3>Ultimo latido</h3>
+                            <p id="statusHeartbeat">-</p>
+                        </div>
+                    </section>
+
+                    <section class="status-detail">
+                        <div class="info-panel">
+                            <h3>Ultima alerta</h3>
+                            <p id="statusLastAlert">Sin alertas registradas</p>
+                        </div>
+                        <div class="info-panel">
+                            <h3>Ultimo paquete clasificado</h3>
+                            <p id="statusLastTraffic">Sin trafico clasificado</p>
+                        </div>
+                    </section>
+                </main>
+            </section>
+
+            <section class="view" id="chartsView">
+                <header>
+                    <h2>Graficos</h2>
+                    <p>Visualizacion de alertas por tipo, nivel, tiempo e IP sospechosa.</p>
+                </header>
+
+                <main>
+                    <section class="chart-grid">
+                        <article class="chart-panel">
+                            <h3>Alertas por tipo</h3>
+                            <canvas id="alertsByTypeChart" aria-label="Alertas por tipo"></canvas>
+                        </article>
+
+                        <article class="chart-panel">
+                            <h3>Alertas por nivel</h3>
+                            <canvas id="alertsByLevelChart" aria-label="Alertas por nivel"></canvas>
+                        </article>
+
+                        <article class="chart-panel">
+                            <h3>Alertas por minuto</h3>
+                            <canvas id="alertsByMinuteChart" aria-label="Alertas por minuto"></canvas>
+                        </article>
+
+                        <article class="chart-panel">
+                            <h3>Top IPs sospechosas</h3>
+                            <canvas id="topIpsChart" aria-label="Top IPs sospechosas"></canvas>
+                        </article>
+                    </section>
+                </main>
+            </section>
+
+            <section class="view" id="historyView">
+                <header>
+                    <h2>Historial</h2>
+                    <p>Consulta alertas guardadas con filtros, paginacion y exportacion.</p>
+                </header>
+
+                <main>
+                    <section class="filter-panel">
+                        <div class="filter-grid">
+                            <div class="filter-field">
+                                <label for="historyIpFilter">IP origen</label>
+                                <input id="historyIpFilter" type="text" placeholder="Ej. 192.168.1.33">
+                            </div>
+                            <div class="filter-field">
+                                <label for="historyTypeFilter">Tipo</label>
+                                <select id="historyTypeFilter">
+                                    <option value="">Todos</option>
+                                </select>
+                            </div>
+                            <div class="filter-field">
+                                <label for="historyLevelFilter">Nivel</label>
+                                <select id="historyLevelFilter">
+                                    <option value="">Todos</option>
+                                    <option value="ALTO">ALTO</option>
+                                    <option value="MEDIO">MEDIO</option>
+                                    <option value="BAJO">BAJO</option>
+                                </select>
+                            </div>
+                            <div class="filter-field">
+                                <label for="historyFromFilter">Desde</label>
+                                <input id="historyFromFilter" type="date">
+                            </div>
+                            <div class="filter-field">
+                                <label for="historyToFilter">Hasta</label>
+                                <input id="historyToFilter" type="date">
+                            </div>
+                        </div>
+                    </section>
+
+                    <div class="actions">
+                        <button class="secondary-button" onclick="resetHistoryFilters()">Limpiar filtros</button>
+                        <button class="secondary-button" onclick="exportHistory('json')">Exportar JSON</button>
+                        <button class="secondary-button" onclick="exportHistory('csv')">Exportar CSV</button>
+                        <button class="danger-button" onclick="clearHistory()">Borrar historial</button>
+                    </div>
+
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Fecha/Hora</th>
+                                <th>Riesgo</th>
+                                <th>Tipo</th>
+                                <th>IP Origen</th>
+                                <th>Descripci&oacute;n</th>
+                            </tr>
+                        </thead>
+                        <tbody id="historyTable">
+                            <tr>
+                                <td colspan="5" class="empty">Sin alertas registradas</td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <div class="pagination">
+                        <p id="historyCount">0 registros</p>
+                        <div class="pagination-controls">
+                            <button class="secondary-button" onclick="previousHistoryPage()">Anterior</button>
+                            <button class="secondary-button" onclick="nextHistoryPage()">Siguiente</button>
+                        </div>
+                    </div>
+                </main>
+            </section>
+
+            <section class="view" id="rulesView">
+                <header>
+                    <h2>Reglas IDS</h2>
+                    <p>Resumen de reglas activas que generan alertas de seguridad.</p>
+                </header>
+
+                <main>
+                    <section class="info-section">
+                        <div class="traffic-grid">
+                            <article class="traffic-item">
+                                <h3>ESCANEO_DE_PUERTOS</h3>
+                                <p>Detecta cuando una IP intenta acceder a varios puertos diferentes dentro de una ventana corta de tiempo.</p>
+                                <code>Ejemplo: nmap -p 1-100 &lt;gateway&gt;</code>
+                            </article>
+
+                            <article class="traffic-item">
+                                <h3>SYN_FLOOD</h3>
+                                <p>Detecta demasiados paquetes TCP SYN desde una misma IP en pocos segundos.</p>
+                                <code>Riesgo: posible denegacion de servicio</code>
+                            </article>
+
+                            <article class="traffic-item">
+                                <h3>ICMP_FLOOD</h3>
+                                <p>Detecta exceso de paquetes ICMP desde una misma IP, similar a un abuso de solicitudes ping.</p>
+                                <code>Riesgo: trafico ICMP inusual</code>
+                            </article>
+
+                            <article class="traffic-item">
+                                <h3>PUERTO_SOSPECHOSO</h3>
+                                <p>Genera alerta cuando se detecta conexion hacia puertos sensibles definidos en la configuracion.</p>
+                                <code>Puertos: 21, 22, 23, 3389, 4444, 5900</code>
+                            </article>
+
+                            <article class="traffic-item">
+                                <h3>FUERZA_BRUTA_SSH</h3>
+                                <p>Detecta intentos repetidos hacia el servicio SSH, normalmente asociado al puerto 22.</p>
+                                <code>python simular_fuerza_bruta.py --port 22 --count 10</code>
+                            </article>
+
+                            <article class="traffic-item">
+                                <h3>FUERZA_BRUTA_FTP</h3>
+                                <p>Detecta intentos repetidos hacia FTP, normalmente asociado al puerto 21.</p>
+                                <code>python simular_fuerza_bruta.py --port 21 --count 10</code>
+                            </article>
+
+                            <article class="traffic-item">
+                                <h3>FUERZA_BRUTA_TELNET</h3>
+                                <p>Detecta intentos repetidos hacia Telnet, servicio antiguo asociado al puerto 23.</p>
+                                <code>python simular_fuerza_bruta.py --port 23 --count 10</code>
+                            </article>
+
+                            <article class="traffic-item">
+                                <h3>FUERZA_BRUTA_RDP</h3>
+                                <p>Detecta intentos repetidos hacia Escritorio Remoto de Windows, normalmente asociado al puerto 3389.</p>
+                                <code>python simular_fuerza_bruta.py --port 3389 --count 10</code>
+                            </article>
+
+                            <article class="traffic-item">
+                                <h3>ALTA_FRECUENCIA_CONEXIONES</h3>
+                                <p>Detecta demasiadas conexiones TCP desde una misma IP dentro de pocos segundos, aunque no sean a muchos puertos diferentes.</p>
+                                <code>python simular_fuerza_bruta.py --port 80 --count 120 --delay 0.01</code>
+                            </article>
+
+                            <article class="traffic-item">
+                                <h3>PUERTO_RARO</h3>
+                                <p>Detecta conexiones hacia puertos poco comunes definidos en la configuracion, como 31337, 6667 o 9001.</p>
+                                <code>nmap -p 31337 &lt;gateway&gt;</code>
+                            </article>
+                        </div>
+                    </section>
+                </main>
+            </section>
+        </div>
+    </div>
 
     <script>
-        async function loadAlerts() {
-            const response = await fetch("/api/alerts");
-            const alerts = await response.json();
-            const table = document.getElementById("alertsTable");
+        const DASHBOARD_CLEAR_COUNT_KEY = "idsDashboardClearCount";
+        const HISTORY_PAGE_SIZE = 10;
+        let latestAlerts = [];
+        let latestChartData = null;
+        let visibleAlertStartIndex = Number(localStorage.getItem(DASHBOARD_CLEAR_COUNT_KEY) || 0);
+        let historyPage = 1;
 
+        function showView(viewName) {
+            const dashboardView = document.getElementById("dashboardView");
+            const trafficView = document.getElementById("trafficView");
+            const classifiedView = document.getElementById("classifiedView");
+            const statusView = document.getElementById("statusView");
+            const chartsView = document.getElementById("chartsView");
+            const historyView = document.getElementById("historyView");
+            const rulesView = document.getElementById("rulesView");
+            const dashboardNav = document.getElementById("dashboardNav");
+            const trafficNav = document.getElementById("trafficNav");
+            const classifiedNav = document.getElementById("classifiedNav");
+            const statusNav = document.getElementById("statusNav");
+            const chartsNav = document.getElementById("chartsNav");
+            const historyNav = document.getElementById("historyNav");
+            const rulesNav = document.getElementById("rulesNav");
+
+            dashboardView.classList.toggle("active", viewName === "dashboard");
+            trafficView.classList.toggle("active", viewName === "traffic");
+            classifiedView.classList.toggle("active", viewName === "classified");
+            statusView.classList.toggle("active", viewName === "status");
+            chartsView.classList.toggle("active", viewName === "charts");
+            historyView.classList.toggle("active", viewName === "history");
+            rulesView.classList.toggle("active", viewName === "rules");
+            dashboardNav.classList.toggle("active", viewName === "dashboard");
+            trafficNav.classList.toggle("active", viewName === "traffic");
+            classifiedNav.classList.toggle("active", viewName === "classified");
+            statusNav.classList.toggle("active", viewName === "status");
+            chartsNav.classList.toggle("active", viewName === "charts");
+            historyNav.classList.toggle("active", viewName === "history");
+            rulesNav.classList.toggle("active", viewName === "rules");
+
+            if (viewName === "history") {
+                renderHistory();
+            }
+
+            if (viewName === "charts" && latestChartData) {
+                renderCharts(latestChartData);
+            }
+        }
+
+        function renderAlertRows(table, alerts) {
             table.innerHTML = "";
 
             if (alerts.length === 0) {
-                table.innerHTML = '<tr><td colspan="5" class="empty">Sin alertas registradas</td></tr>';
+                const row = document.createElement("tr");
+                const cell = document.createElement("td");
+                cell.colSpan = 5;
+                cell.className = "empty";
+                cell.textContent = "Sin alertas registradas";
+                row.appendChild(cell);
+                table.appendChild(row);
                 return;
             }
 
-            alerts.slice().reverse().forEach(alert => {
-                const levelClass = alert.level.toLowerCase();
-                table.innerHTML += `
-                    <tr>
-                        <td>${alert.timestamp}</td>
-                        <td class="${levelClass}">${alert.level}</td>
-                        <td>${alert.type}</td>
-                        <td>${alert.source_ip}</td>
-                        <td>${alert.description}</td>
-                    </tr>
-                `;
+            alerts.forEach(alert => {
+                const row = document.createElement("tr");
+                const values = [
+                    alert.timestamp,
+                    alert.level,
+                    alert.type,
+                    alert.source_ip,
+                    alert.description
+                ];
+
+                values.forEach((value, index) => {
+                    const cell = document.createElement("td");
+                    cell.textContent = value || "-";
+
+                    if (index === 1 && alert.level) {
+                        cell.className = alert.level.toLowerCase();
+                    }
+
+                    row.appendChild(cell);
+                });
+
+                table.appendChild(row);
             });
         }
 
-        async function loadStats() {
-            const response = await fetch("/api/stats");
-            const stats = await response.json();
+        function getVisibleAlerts() {
+            if (visibleAlertStartIndex > latestAlerts.length) {
+                visibleAlertStartIndex = 0;
+                localStorage.setItem(DASHBOARD_CLEAR_COUNT_KEY, "0");
+            }
 
-            document.getElementById("totalAlerts").textContent = stats.total_alerts;
-            document.getElementById("highAlerts").textContent = stats.by_level.ALTO || 0;
-            document.getElementById("typeCount").textContent = Object.keys(stats.by_type).length;
+            return latestAlerts.slice(visibleAlertStartIndex);
+        }
 
-            const topIps = Object.keys(stats.top_ips);
-            document.getElementById("topIp").textContent = topIps.length > 0 ? topIps[0] : "-";
+        function renderStats(alerts) {
+            const byLevel = {};
+            const byType = {};
+            const byIp = {};
+
+            alerts.forEach(alert => {
+                const level = alert.level || "DESCONOCIDO";
+                const type = alert.type || "DESCONOCIDO";
+                const sourceIp = alert.source_ip || "DESCONOCIDO";
+
+                byLevel[level] = (byLevel[level] || 0) + 1;
+                byType[type] = (byType[type] || 0) + 1;
+                byIp[sourceIp] = (byIp[sourceIp] || 0) + 1;
+            });
+
+            const topIp = Object.entries(byIp).sort((first, second) => second[1] - first[1])[0];
+
+            document.getElementById("totalAlerts").textContent = alerts.length;
+            document.getElementById("highAlerts").textContent = byLevel.ALTO || 0;
+            document.getElementById("typeCount").textContent = Object.keys(byType).length;
+            document.getElementById("topIp").textContent = topIp ? topIp[0] : "-";
+        }
+
+        function renderDashboard() {
+            const table = document.getElementById("alertsTable");
+            const visibleAlerts = getVisibleAlerts();
+
+            renderAlertRows(table, visibleAlerts.slice().reverse());
+            renderStats(visibleAlerts);
+        }
+
+        function renderHistory() {
+            const table = document.getElementById("historyTable");
+            const filteredAlerts = getFilteredHistoryAlerts();
+            const totalPages = Math.max(1, Math.ceil(filteredAlerts.length / HISTORY_PAGE_SIZE));
+
+            if (historyPage > totalPages) {
+                historyPage = totalPages;
+            }
+
+            const startIndex = (historyPage - 1) * HISTORY_PAGE_SIZE;
+            const endIndex = startIndex + HISTORY_PAGE_SIZE;
+            const pageAlerts = filteredAlerts.slice().reverse().slice(startIndex, endIndex);
+            const visibleStart = filteredAlerts.length === 0 ? 0 : startIndex + 1;
+            const visibleEnd = Math.min(endIndex, filteredAlerts.length);
+
+            document.getElementById("historyCount").textContent =
+                `Mostrando ${visibleStart}-${visibleEnd} de ${filteredAlerts.length} registros | Pagina ${historyPage} de ${totalPages}`;
+            renderAlertRows(table, pageAlerts);
+        }
+
+        function getFilteredHistoryAlerts() {
+            const ipFilter = document.getElementById("historyIpFilter").value.trim().toLowerCase();
+            const typeFilter = document.getElementById("historyTypeFilter").value;
+            const levelFilter = document.getElementById("historyLevelFilter").value;
+            const fromFilter = document.getElementById("historyFromFilter").value;
+            const toFilter = document.getElementById("historyToFilter").value;
+
+            return latestAlerts.filter(alert => {
+                const sourceIp = String(alert.source_ip || "").toLowerCase();
+                const type = String(alert.type || "");
+                const level = String(alert.level || "");
+                const alertDate = String(alert.timestamp || "").slice(0, 10);
+
+                if (ipFilter && !sourceIp.includes(ipFilter)) {
+                    return false;
+                }
+
+                if (typeFilter && type !== typeFilter) {
+                    return false;
+                }
+
+                if (levelFilter && level !== levelFilter) {
+                    return false;
+                }
+
+                if (fromFilter && alertDate < fromFilter) {
+                    return false;
+                }
+
+                if (toFilter && alertDate > toFilter) {
+                    return false;
+                }
+
+                return true;
+            });
+        }
+
+        function updateHistoryTypeOptions() {
+            const select = document.getElementById("historyTypeFilter");
+            const selectedValue = select.value;
+            const alertTypes = [...new Set(latestAlerts.map(alert => alert.type).filter(Boolean))].sort();
+
+            select.innerHTML = '<option value="">Todos</option>';
+
+            alertTypes.forEach(type => {
+                const option = document.createElement("option");
+                option.value = type;
+                option.textContent = type;
+                select.appendChild(option);
+            });
+
+            if (alertTypes.includes(selectedValue)) {
+                select.value = selectedValue;
+            }
+        }
+
+        function resetHistoryFilters() {
+            document.getElementById("historyIpFilter").value = "";
+            document.getElementById("historyTypeFilter").value = "";
+            document.getElementById("historyLevelFilter").value = "";
+            document.getElementById("historyFromFilter").value = "";
+            document.getElementById("historyToFilter").value = "";
+            historyPage = 1;
+            renderHistory();
+        }
+
+        function updateHistoryFilters() {
+            historyPage = 1;
+            renderHistory();
+        }
+
+        function nextHistoryPage() {
+            const totalPages = Math.max(1, Math.ceil(getFilteredHistoryAlerts().length / HISTORY_PAGE_SIZE));
+
+            if (historyPage < totalPages) {
+                historyPage += 1;
+                renderHistory();
+            }
+        }
+
+        function previousHistoryPage() {
+            if (historyPage > 1) {
+                historyPage -= 1;
+                renderHistory();
+            }
+        }
+
+        function renderClassifiedTrafficRows(table, trafficEvents) {
+            table.innerHTML = "";
+
+            if (trafficEvents.length === 0) {
+                const row = document.createElement("tr");
+                const cell = document.createElement("td");
+                cell.colSpan = 7;
+                cell.className = "empty";
+                cell.textContent = "Sin trafico clasificado";
+                row.appendChild(cell);
+                table.appendChild(row);
+                return;
+            }
+
+            trafficEvents.forEach(event => {
+                const row = document.createElement("tr");
+                const destinationPort = event.destination_port === null ? "-" : event.destination_port;
+                const values = [
+                    event.timestamp,
+                    event.direction,
+                    event.protocol,
+                    event.source_ip,
+                    event.destination_ip,
+                    destinationPort,
+                    event.flags || "-"
+                ];
+
+                values.forEach(value => {
+                    const cell = document.createElement("td");
+                    cell.textContent = value || "-";
+                    row.appendChild(cell);
+                });
+
+                table.appendChild(row);
+            });
+        }
+
+        async function loadClassifiedTraffic() {
+            const response = await fetch("/api/traffic");
+            const trafficEvents = await response.json();
+            const table = document.getElementById("classifiedTrafficTable");
+
+            renderClassifiedTrafficRows(table, trafficEvents.slice().reverse());
+        }
+
+        function setStatusText(id, value) {
+            document.getElementById(id).textContent = value || "-";
+        }
+
+        function renderIdsStatus(status) {
+            const badge = document.getElementById("idsStatusBadge");
+            const isActive = Boolean(status.ids_active);
+
+            badge.textContent = isActive ? "Activo" : "Inactivo";
+            badge.classList.toggle("active", isActive);
+            badge.classList.toggle("inactive", !isActive);
+
+            setStatusText("statusInterface", status.interface);
+            setStatusText("statusLocalIp", status.local_ip);
+            setStatusText("statusGateway", status.gateway);
+            setStatusText("statusNetwork", status.network);
+            setStatusText("statusHeartbeat", status.last_heartbeat);
+            document.getElementById("statusLastAlert").textContent = formatLastAlert(status.last_alert);
+            document.getElementById("statusLastTraffic").textContent = formatLastTraffic(status.last_traffic);
+        }
+
+        function formatLastAlert(alert) {
+            if (!alert) {
+                return "Sin alertas registradas";
+            }
+
+            return `${alert.timestamp || "-"} | ${alert.level || "-"} | ${alert.type || "-"} | ${alert.source_ip || "-"} | ${alert.description || "-"}`;
+        }
+
+        function formatLastTraffic(event) {
+            if (!event) {
+                return "Sin trafico clasificado";
+            }
+
+            const destinationPort = event.destination_port === null ? "-" : event.destination_port;
+
+            return `${event.timestamp || "-"} | ${event.direction || "-"} | ${event.protocol || "-"} | ${event.source_ip || "-"} -> ${event.destination_ip || "-"} | Puerto ${destinationPort} | Flags ${event.flags || "-"}`;
+        }
+
+        async function loadIdsStatus() {
+            const response = await fetch("/api/status");
+            const status = await response.json();
+
+            renderIdsStatus(status);
+        }
+
+        function getCanvasContext(canvasId) {
+            const canvas = document.getElementById(canvasId);
+            const parentWidth = canvas.parentElement.clientWidth || 520;
+            const dpr = window.devicePixelRatio || 1;
+            const width = Math.max(280, parentWidth - 34);
+            const height = 260;
+
+            canvas.width = Math.floor(width * dpr);
+            canvas.height = Math.floor(height * dpr);
+            canvas.style.height = `${height}px`;
+
+            const context = canvas.getContext("2d");
+            context.setTransform(dpr, 0, 0, dpr, 0, 0);
+            context.clearRect(0, 0, width, height);
+
+            return { context, width, height };
+        }
+
+        function drawNoData(context, width, height) {
+            context.fillStyle = "#9ca3af";
+            context.font = "14px Arial";
+            context.textAlign = "center";
+            context.fillText("Sin datos para mostrar", width / 2, height / 2);
+        }
+
+        function drawHorizontalBarChart(canvasId, data, options = {}) {
+            const { context, width, height } = getCanvasContext(canvasId);
+            const entries = Object.entries(data || {}).filter(([, value]) => value > 0).slice(0, options.limit || 8);
+
+            if (entries.length === 0) {
+                drawNoData(context, width, height);
+                return;
+            }
+
+            const maxValue = Math.max(...entries.map(([, value]) => value));
+            const leftPadding = options.leftPadding || 142;
+            const topPadding = 24;
+            const rowHeight = Math.min(34, (height - topPadding - 18) / entries.length);
+            const barWidth = width - leftPadding - 48;
+
+            context.font = "13px Arial";
+            context.textBaseline = "middle";
+
+            entries.forEach(([label, value], index) => {
+                const y = topPadding + index * rowHeight;
+                const filledWidth = Math.max(4, (value / maxValue) * barWidth);
+                const shortLabel = label.length > 22 ? `${label.slice(0, 19)}...` : label;
+
+                context.fillStyle = "#cbd5e1";
+                context.textAlign = "left";
+                context.fillText(shortLabel, 12, y + rowHeight / 2);
+
+                context.fillStyle = options.color || "#60a5fa";
+                context.fillRect(leftPadding, y + 6, filledWidth, rowHeight - 12);
+
+                context.fillStyle = "#e5e7eb";
+                context.textAlign = "left";
+                context.fillText(String(value), leftPadding + filledWidth + 8, y + rowHeight / 2);
+            });
+        }
+
+        function drawVerticalBarChart(canvasId, data) {
+            const { context, width, height } = getCanvasContext(canvasId);
+            const entries = Object.entries(data || {}).filter(([, value]) => value > 0);
+
+            if (entries.length === 0) {
+                drawNoData(context, width, height);
+                return;
+            }
+
+            const maxValue = Math.max(...entries.map(([, value]) => value));
+            const chartTop = 24;
+            const chartBottom = height - 42;
+            const chartHeight = chartBottom - chartTop;
+            const gap = 14;
+            const barWidth = Math.max(28, (width - 40 - gap * (entries.length - 1)) / entries.length);
+
+            entries.forEach(([label, value], index) => {
+                const barHeight = Math.max(4, (value / maxValue) * chartHeight);
+                const x = 20 + index * (barWidth + gap);
+                const y = chartBottom - barHeight;
+
+                context.fillStyle = levelColor(label);
+                context.fillRect(x, y, barWidth, barHeight);
+
+                context.fillStyle = "#e5e7eb";
+                context.font = "13px Arial";
+                context.textAlign = "center";
+                context.fillText(String(value), x + barWidth / 2, y - 8);
+
+                context.fillStyle = "#cbd5e1";
+                context.fillText(label, x + barWidth / 2, height - 18);
+            });
+        }
+
+        function drawLineChart(canvasId, data) {
+            const { context, width, height } = getCanvasContext(canvasId);
+            const entries = Object.entries(data || {}).filter(([, value]) => value > 0).slice(-12);
+
+            if (entries.length === 0) {
+                drawNoData(context, width, height);
+                return;
+            }
+
+            const values = entries.map(([, value]) => value);
+            const maxValue = Math.max(...values, 1);
+            const left = 42;
+            const right = width - 18;
+            const top = 24;
+            const bottom = height - 46;
+            const chartWidth = right - left;
+            const chartHeight = bottom - top;
+
+            context.strokeStyle = "#334155";
+            context.lineWidth = 1;
+            context.beginPath();
+            context.moveTo(left, top);
+            context.lineTo(left, bottom);
+            context.lineTo(right, bottom);
+            context.stroke();
+
+            context.strokeStyle = "#38bdf8";
+            context.lineWidth = 3;
+            context.beginPath();
+
+            entries.forEach(([, value], index) => {
+                const x = entries.length === 1 ? left + chartWidth / 2 : left + (index / (entries.length - 1)) * chartWidth;
+                const y = bottom - (value / maxValue) * chartHeight;
+
+                if (index === 0) {
+                    context.moveTo(x, y);
+                } else {
+                    context.lineTo(x, y);
+                }
+            });
+
+            context.stroke();
+
+            entries.forEach(([label, value], index) => {
+                const x = entries.length === 1 ? left + chartWidth / 2 : left + (index / (entries.length - 1)) * chartWidth;
+                const y = bottom - (value / maxValue) * chartHeight;
+
+                context.fillStyle = "#38bdf8";
+                context.beginPath();
+                context.arc(x, y, 4, 0, Math.PI * 2);
+                context.fill();
+
+                context.fillStyle = "#e5e7eb";
+                context.font = "12px Arial";
+                context.textAlign = "center";
+                context.fillText(String(value), x, y - 10);
+
+                context.fillStyle = "#94a3b8";
+                context.fillText(label.slice(11), x, height - 18);
+            });
+        }
+
+        function levelColor(level) {
+            const colors = {
+                ALTO: "#f87171",
+                MEDIO: "#facc15",
+                BAJO: "#60a5fa"
+            };
+
+            return colors[level] || "#93c5fd";
+        }
+
+        function renderCharts(chartData) {
+            drawHorizontalBarChart("alertsByTypeChart", chartData.alerts_by_type, {
+                color: "#60a5fa",
+                leftPadding: 190,
+                limit: 8
+            });
+            drawVerticalBarChart("alertsByLevelChart", chartData.alerts_by_level);
+            drawLineChart("alertsByMinuteChart", chartData.alerts_by_minute);
+            drawHorizontalBarChart("topIpsChart", chartData.top_ips, {
+                color: "#f87171",
+                leftPadding: 130,
+                limit: 5
+            });
+        }
+
+        async function loadCharts() {
+            const response = await fetch("/api/charts");
+            latestChartData = await response.json();
+            renderCharts(latestChartData);
         }
 
         async function clearAlerts() {
+            visibleAlertStartIndex = latestAlerts.length;
+            localStorage.setItem(DASHBOARD_CLEAR_COUNT_KEY, String(visibleAlertStartIndex));
+            renderDashboard();
+        }
+
+        async function clearHistory() {
+            if (!confirm("Seguro que quieres borrar todo el historial de alertas?")) {
+                return;
+            }
+
             await fetch("/api/clear", { method: "POST" });
-            await refresh();
+            latestAlerts = [];
+            visibleAlertStartIndex = 0;
+            localStorage.setItem(DASHBOARD_CLEAR_COUNT_KEY, "0");
+            renderDashboard();
+            renderHistory();
+        }
+
+        function exportHistory(format) {
+            if (format === "json") {
+                window.location.href = "/api/export/alerts.json";
+                return;
+            }
+
+            if (format === "csv") {
+                window.location.href = "/api/export/alerts.csv";
+            }
+        }
+
+        function exportTraffic(format) {
+            if (format === "json") {
+                window.location.href = "/api/export/traffic.json";
+                return;
+            }
+
+            if (format === "csv") {
+                window.location.href = "/api/export/traffic.csv";
+            }
         }
 
         async function refresh() {
-            await loadAlerts();
-            await loadStats();
+            const response = await fetch("/api/alerts");
+            latestAlerts = await response.json();
+            updateHistoryTypeOptions();
+            renderDashboard();
+            renderHistory();
+            await loadClassifiedTraffic();
+            await loadIdsStatus();
+            await loadCharts();
         }
+
+        window.addEventListener("resize", () => {
+            if (latestChartData) {
+                renderCharts(latestChartData);
+            }
+        });
+
+        ["historyIpFilter", "historyTypeFilter", "historyLevelFilter", "historyFromFilter", "historyToFilter"]
+            .forEach(filterId => {
+                document.getElementById(filterId).addEventListener("input", updateHistoryFilters);
+                document.getElementById(filterId).addEventListener("change", updateHistoryFilters);
+            });
 
         setInterval(refresh, 2000);
         refresh();

@@ -1,52 +1,106 @@
-# IDS PRO - Sistema Básico de Detección de Intrusos
+# TrafficWatch IDS
 
-Versión PRO del proyecto académico IDS para monitoreo de tráfico de red.
+Sistema basico de deteccion de intrusos para Windows, desarrollado con Python, Scapy y Flask.
 
-## Funciones
+El proyecto captura trafico de red en tiempo real, genera alertas de seguridad y muestra los resultados en un dashboard web local.
 
-- Captura de paquetes en tiempo real con Scapy
-- Detección de escaneo de puertos
-- Detección de ICMP flood
-- Detección de SYN flood
-- Detección de intentos repetidos SSH
-- Detección de puertos sospechosos
-- Alertas en JSON
-- Dashboard web con Flask
-- Estadísticas por tipo de alerta e IP sospechosa
+## Funciones principales
+
+- Captura de paquetes en tiempo real con Scapy.
+- Deteccion de escaneo de puertos.
+- Deteccion de ICMP flood.
+- Deteccion de SYN flood.
+- Deteccion de fuerza bruta hacia FTP, SSH, Telnet y RDP.
+- Deteccion de alta frecuencia de conexiones.
+- Deteccion de puertos sospechosos.
+- Deteccion de puertos raros configurados.
+- Cooldown de alertas repetidas para evitar ruido.
+- Deteccion automatica de IP local, gateway, red e interfaz.
+- Clasificacion de trafico: entrante, saliente, local, gateway y externo.
+- Dashboard web con secciones de alertas, historial, graficos, estado del IDS y trafico clasificado.
+- Exportacion de alertas en JSON y CSV.
+- Exportacion de trafico clasificado en JSON y CSV.
 
 ## Requisitos
 
-- Python 3.9 o superior
-- Permisos de administrador/root para capturar paquetes
-- Descarga de nmap (https://nmap.org/download.html#windows)
+- Windows.
+- Python 3.9 o superior.
+- Nmap instalado.
+- Permisos de administrador para ejecutar el IDS principal.
 
-## Instalación
+Nmap puede instalarse desde:
 
-```bash
-pip install -r requirements.txt
+```text
+https://nmap.org/download.html#windows
 ```
 
-## Ejecutar el IDS
+Tambien puedes usar el script de setup del proyecto para verificar dependencias.
 
-### Windows
+## Instalacion rapida
 
-Abre PowerShell o CMD como administrador:
+Desde la carpeta del proyecto:
 
-```bash
-python main.py
+```powershell
+.\setup_windows.ps1
 ```
 
-### Linux/macOS
+Tambien puedes ejecutarlo desde la terminal integrada de VS Code. Solo abre la terminal dentro del proyecto y escribe el mismo comando.
 
-```bash
-sudo python3 main.py
-```
+Este script:
 
-## Ejecutar el dashboard
+- Verifica Python.
+- Verifica pip.
+- Instala las dependencias desde `requirements.txt` si faltan.
+- Verifica si Nmap esta disponible.
+- Si Nmap no esta instalado, intenta instalarlo automaticamente con `winget`.
 
-En otra terminal:
+## Uso rapido con archivos `.bat`
 
-```bash
+Los archivos `.bat` ya ejecutan los comandos automaticamente. No necesitas escribir `python run_dashboard.py` ni `python main.py` si usas estos accesos.
+
+Para que todo funcione correctamente, abre los archivos o ejecuta los comandos desde el directorio del proyecto.
+
+Si estas en VS Code:
+
+1. Haz clic derecho sobre el archivo `.bat`.
+2. Selecciona `Reveal in File Explorer`.
+3. En el Explorador de archivos de Windows, haz doble clic sobre el `.bat`.
+
+### Orden recomendado
+
+1. Abre `abrir_cmd_proyecto.bat`.
+
+   Inicia automaticamente el dashboard con `python run_dashboard.py`.
+
+   Luego entra en el navegador a:
+
+   ```text
+   http://127.0.0.1:5000
+   ```
+
+2. Abre `abrir_powershell_admin.bat`.
+
+   Windows pedira permisos de administrador. Debes aceptar.
+
+   Despues ejecuta automaticamente `python main.py` y empieza a capturar paquetes. Deja esa ventana abierta mientras quieras monitorear la red.
+
+3. Abre `abrir_powershell_pruebas.bat`.
+
+   No necesita permisos de administrador. Sirve para mostrar ejemplos segun tu red detectada y ejecutar pruebas como Nmap, fuerza bruta simulada, alta frecuencia de conexiones y puertos raros.
+
+Con ese orden:
+
+- El dashboard ya esta disponible.
+- El IDS ya esta capturando paquetes.
+- Las pruebas pueden aparecer como alertas en el dashboard.
+
+## Ejecucion manual opcional
+
+Si prefieres hacerlo manualmente:
+
+### 1. Ejecutar dashboard
+
+```powershell
 python run_dashboard.py
 ```
 
@@ -56,21 +110,58 @@ Luego abre:
 http://127.0.0.1:5000
 ```
 
-## Configurar interfaz de red
+### 2. Ejecutar IDS
 
-Edita `config.json`:
+Abre PowerShell como administrador y ejecuta:
 
-```json
-"interface": "Wi-Fi"
+```powershell
+python main.py
 ```
 
-Si no sabes el nombre de tu interfaz, deja vacío:
+### 3. Ver ejemplos de pruebas
 
-```json
-"interface": ""
+```powershell
+python -m src.network_utils
 ```
 
-## Logs
+Tambien puedes mostrar solo ejemplos:
+
+```powershell
+python -m src.network_utils --examples-only --shell powershell
+```
+
+## Dashboard
+
+El dashboard incluye estas secciones:
+
+- **Dashboard**: resumen de alertas actuales.
+- **Tipos de trafico**: explicacion de trafico entrante, saliente, local y gateway.
+- **Trafico clasificado**: ultimos paquetes observados por el IDS.
+- **Estado IDS**: muestra si el IDS esta activo, interfaz usada, IP local, gateway, red detectada, ultima alerta y ultimo paquete.
+- **Graficos**: alertas por tipo, nivel, minuto y top IPs sospechosas.
+- **Historial**: alertas guardadas con filtros, paginacion y exportacion.
+- **Reglas IDS**: resumen de reglas activas.
+
+## Reglas IDS configuradas
+
+Las reglas estan en `config.json`.
+
+Actualmente el proyecto puede generar alertas como:
+
+```text
+ESCANEO_DE_PUERTOS
+SYN_FLOOD
+ICMP_FLOOD
+PUERTO_SOSPECHOSO
+PUERTO_RARO
+ALTA_FRECUENCIA_CONEXIONES
+FUERZA_BRUTA_FTP
+FUERZA_BRUTA_SSH
+FUERZA_BRUTA_TELNET
+FUERZA_BRUTA_RDP
+```
+
+## Archivos de logs
 
 Las alertas se guardan en:
 
@@ -78,18 +169,71 @@ Las alertas se guardan en:
 logs/alerts.json
 ```
 
-## Pruebas sugeridas en laboratorio
+El trafico clasificado se guarda en:
 
-Generar tráfico normal:
-- Abrir páginas web
-- Hacer ping a una IP autorizada
-
-Simular escaneo de puertos con autorización:
-
-```bash
-nmap -p 1-100 192.168.1.1
+```text
+logs/traffic.json
 ```
 
-## Uso ético
+El estado del IDS se guarda en:
 
-Este sistema debe ejecutarse solo en redes propias, laboratorios académicos o entornos donde tengas autorización.
+```text
+logs/status.json
+```
+
+## Exportaciones
+
+Desde el dashboard puedes exportar:
+
+Alertas:
+
+```text
+/api/export/alerts.json
+/api/export/alerts.csv
+```
+
+Trafico clasificado:
+
+```text
+/api/export/traffic.json
+/api/export/traffic.csv
+```
+
+## Pruebas sugeridas
+
+Primero ejecuta:
+
+```powershell
+python -m src.network_utils
+```
+
+El sistema detectara tu red y mostrara ejemplos para:
+
+- Escaneo de puertos con Nmap.
+- Fuerza bruta simulada.
+- Alta frecuencia de conexiones.
+- Puertos raros.
+
+Ejemplos generales:
+
+```powershell
+nmap -p 1-100 <gateway>
+python simular_fuerza_bruta.py --port 21 --count 10
+python simular_fuerza_bruta.py --port 3389 --count 10
+python simular_fuerza_bruta.py --port 80 --count 120 --delay 0.01
+nmap -p 31337 <gateway>
+```
+
+Si no pasas `--host` en `simular_fuerza_bruta.py`, el script usa automaticamente el gateway detectado.
+
+## Importante sobre permisos
+
+- `python main.py` necesita permisos de administrador porque captura paquetes de red.
+- `python run_dashboard.py` no necesita permisos de administrador.
+- Las pruebas con Nmap deben hacerse solo contra equipos o redes propias/autorizadas.
+
+## Uso etico
+
+Este sistema debe usarse solo en redes propias, laboratorios academicos o entornos donde tengas autorizacion explicita.
+
+No uses este proyecto para escanear, probar o atacar redes de terceros.

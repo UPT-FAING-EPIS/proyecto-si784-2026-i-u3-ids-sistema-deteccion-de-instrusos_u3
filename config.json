@@ -1,6 +1,17 @@
 {
-    "interface": "",
+    "interface": "auto",
+    "network": {
+        "auto_detect": true,
+        "scan_target": "gateway"
+    },
     "log_file": "logs/alerts.json",
+    "status_file": "logs/status.json",
+    "alert_cooldown_seconds": 10,
+    "traffic_monitor": {
+        "enabled": true,
+        "log_file": "logs/traffic.json",
+        "max_records": 20
+    },
     "rules": {
         "port_scan": {
             "enabled": true,
@@ -17,11 +28,21 @@
             "time_window_seconds": 5,
             "packet_threshold": 30
         },
-        "repeated_ssh": {
+        "brute_force": {
             "enabled": true,
             "time_window_seconds": 30,
             "attempt_threshold": 8,
-            "ssh_port": 22
+            "ports": {
+                "FTP": 21,
+                "SSH": 22,
+                "TELNET": 23,
+                "RDP": 3389
+            }
+        },
+        "connection_frequency": {
+            "enabled": true,
+            "time_window_seconds": 10,
+            "packet_threshold": 100
         },
         "suspicious_ports": {
             "enabled": true,
@@ -32,6 +53,17 @@
                 3389,
                 4444,
                 5900
+            ]
+        },
+        "rare_ports": {
+            "enabled": true,
+            "ports": [
+                1337,
+                2323,
+                31337,
+                5555,
+                6667,
+                9001
             ]
         }
     }
