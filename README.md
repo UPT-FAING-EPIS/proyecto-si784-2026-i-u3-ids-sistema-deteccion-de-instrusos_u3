@@ -8,6 +8,27 @@ Tambien puede publicarse como dashboard web en Render para demostracion academic
 En Render se visualiza la interfaz, simulaciones, graficos e historial; la captura real
 de red, Suricata y el bloqueo IPS deben ejecutarse en una maquina dentro de la red local.
 
+## Enlaces del proyecto
+
+Repositorio GitHub:
+
+```text
+https://github.com/diegochara2019065026/proyecto-si784-2026-i-u1-ids
+```
+
+Demo en Render:
+
+```text
+Dashboard: https://proyecto-si784-2026-i-u1-ids.onrender.com/
+Simulador atacante: https://proyecto-si784-2026-i-u1-ids.onrender.com/attack-lab
+```
+
+Ejecutable Windows:
+
+```text
+https://github.com/diegochara2019065026/proyecto-si784-2026-i-u1-ids/releases/tag/v1.0.0-windows
+```
+
 ## Funciones principales
 
 - Captura de paquetes en tiempo real con Scapy.
@@ -82,6 +103,72 @@ La carpeta `logs/` se crea durante la ejecucion, pero esta ignorada por Git para
 - Python 3.9 o superior.
 - Nmap instalado.
 - Permisos de administrador para ejecutar el IDS principal.
+
+## Modos de uso
+
+El proyecto puede usarse de tres formas:
+
+| Modo | Para que sirve | Funciones disponibles |
+|---|---|---|
+| Local con Python | Desarrollo y pruebas completas en tu PC | Dashboard, simulador, Nmap local, Suricata local, escaneo de red local |
+| Ejecutable Windows | Usar el dashboard sin abrir VS Code ni instalar dependencias manualmente | Dashboard, simulador, laboratorio remoto; Nmap/Suricata si estan instalados en esa PC |
+| Render | Demostracion web publica | Dashboard, simulador, historial y graficos; no captura red local ni ejecuta Nmap/Suricata reales |
+
+## Ejecutable Windows
+
+El ejecutable esta publicado como release en GitHub:
+
+```text
+https://github.com/diegochara2019065026/proyecto-si784-2026-i-u1-ids/releases/tag/v1.0.0-windows
+```
+
+Pasos:
+
+1. Descarga `TrafficWatchIDS-Windows.zip`.
+2. Descomprime el archivo ZIP.
+3. Entra a la carpeta `TrafficWatchIDS`.
+4. Ejecuta `TrafficWatchIDS.exe`.
+5. El dashboard abrira automaticamente en:
+
+   ```text
+   http://127.0.0.1:5000/
+   ```
+
+6. El simulador atacante estara en:
+
+   ```text
+   http://127.0.0.1:5000/attack-lab
+   ```
+
+Para que otra PC de la misma red entre al dashboard, usa la IP de la PC donde esta corriendo el ejecutable:
+
+```text
+http://<IP-DE-LA-PC>:5000/
+http://<IP-DE-LA-PC>:5000/attack-lab
+```
+
+Ejemplo:
+
+```text
+http://192.168.100.10:5000/
+http://192.168.100.10:5000/attack-lab
+```
+
+Nota: si Windows Firewall pregunta, permite el acceso en red privada.
+
+### Crear nuevamente el ejecutable
+
+Si se modifica el codigo y se quiere generar otro ejecutable:
+
+```powershell
+CREAR_EJECUTABLE_WINDOWS.bat
+```
+
+El archivo generado queda en:
+
+```text
+dist/TrafficWatchIDS/TrafficWatchIDS.exe
+```
 
 ## Despliegue web en Render
 
