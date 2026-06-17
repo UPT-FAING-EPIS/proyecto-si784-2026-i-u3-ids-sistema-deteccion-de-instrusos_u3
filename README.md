@@ -255,6 +255,7 @@ El instalador:
 - Crea una regla de firewall para el puerto `5000` en red privada.
 - Crea un acceso directo en el escritorio llamado `TrafficWatch IDS`.
 - Verifica si Nmap y Suricata estan disponibles.
+- Si Nmap no esta instalado, pregunta si deseas instalarlo automaticamente con `winget`.
 
 Luego se puede iniciar con:
 

@@ -144,7 +144,31 @@ if (Get-Command nmap -ErrorAction SilentlyContinue) {
 }
 else {
     Write-Warn "Nmap no esta disponible. El escaneo real con Nmap no funcionara hasta instalarlo."
-    Write-Warn "Descarga: https://nmap.org/download.html#windows"
+
+    if (Get-Command winget -ErrorAction SilentlyContinue) {
+        $InstallNmap = Read-Host "Quieres instalar Nmap automaticamente con winget? (S/N)"
+
+        if ($InstallNmap -match "^[sS]") {
+            Write-Info "Instalando Nmap con winget..."
+            winget install --id Insecure.Nmap --exact --accept-package-agreements --accept-source-agreements
+
+            if (Get-Command nmap -ErrorAction SilentlyContinue) {
+                Write-Ok "Nmap instalado correctamente."
+            }
+            else {
+                Write-Warn "Nmap se instalo, pero esta terminal todavia no lo detecta en PATH."
+                Write-Warn "Cierra y vuelve a abrir PowerShell/CMD, luego prueba: nmap --version"
+            }
+        }
+        else {
+            Write-Warn "Instalacion de Nmap omitida por el usuario."
+            Write-Warn "Descarga manual: https://nmap.org/download.html#windows"
+        }
+    }
+    else {
+        Write-Warn "WinGet no esta disponible en esta computadora."
+        Write-Warn "Descarga manual: https://nmap.org/download.html#windows"
+    }
 }
 
 if (Test-Path "C:\Program Files\Suricata\suricata.exe") {
