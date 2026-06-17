@@ -254,8 +254,10 @@ El instalador:
 - Crea carpetas de logs.
 - Crea una regla de firewall para el puerto `5000` en red privada.
 - Crea un acceso directo en el escritorio llamado `TrafficWatch IDS`.
+- Crea un acceso directo `TrafficWatch IDS Captura` para iniciar la captura como administrador.
 - Verifica si Nmap y Suricata estan disponibles.
 - Si Nmap no esta instalado, pregunta si deseas instalarlo automaticamente con `winget`.
+- Verifica Npcap; si falta, pregunta si deseas abrir la pagina oficial de descarga.
 
 Luego se puede iniciar con:
 
@@ -264,6 +266,24 @@ INICIAR_TRAFFICWATCH.bat
 ```
 
 o con el acceso directo del escritorio.
+
+Para captura IDS real con Scapy:
+
+```text
+TrafficWatch IDS Captura
+```
+
+Ese acceso directo abre PowerShell como administrador y ejecuta:
+
+```powershell
+python main.py
+```
+
+La captura real necesita Npcap instalado. Si no esta instalado, el instalador puede abrir:
+
+```text
+https://npcap.com/#download
+```
 
 En la computadora donde corre el dashboard:
 

@@ -61,7 +61,9 @@ function Invoke-Python {
 $ProjectRoot = $PSScriptRoot
 $VenvPython = Join-Path $ProjectRoot ".venv\Scripts\python.exe"
 $LauncherBat = Join-Path $ProjectRoot "INICIAR_TRAFFICWATCH.bat"
+$CaptureBat = Join-Path $ProjectRoot "abrir_powershell_admin.bat"
 $ShortcutPath = Join-Path ([Environment]::GetFolderPath("Desktop")) "TrafficWatch IDS.lnk"
+$CaptureShortcutPath = Join-Path ([Environment]::GetFolderPath("Desktop")) "TrafficWatch IDS Captura.lnk"
 
 Set-Location $ProjectRoot
 
@@ -137,6 +139,13 @@ $Shortcut.Description = "Iniciar TrafficWatch IDS"
 $Shortcut.Save()
 Write-Ok "Acceso directo creado: $ShortcutPath"
 
+$CaptureShortcut = $Shell.CreateShortcut($CaptureShortcutPath)
+$CaptureShortcut.TargetPath = $CaptureBat
+$CaptureShortcut.WorkingDirectory = $ProjectRoot
+$CaptureShortcut.Description = "Iniciar captura IDS como administrador"
+$CaptureShortcut.Save()
+Write-Ok "Acceso directo de captura creado: $CaptureShortcutPath"
+
 Write-Info "Verificando herramientas opcionales..."
 
 if (Get-Command nmap -ErrorAction SilentlyContinue) {
@@ -178,12 +187,31 @@ else {
     Write-Warn "Suricata no esta instalado. El panel Suricata funcionara solo como integracion/demo."
 }
 
+$NpcapInstalled = (Test-Path "C:\Windows\System32\Npcap") -or [bool](Get-Service npcap -ErrorAction SilentlyContinue)
+
+if ($NpcapInstalled) {
+    Write-Ok "Npcap detectado. La captura real con Scapy puede funcionar con permisos de administrador."
+}
+else {
+    Write-Warn "Npcap no esta instalado. La captura IDS real puede no funcionar."
+    $OpenNpcap = Read-Host "Quieres abrir la pagina oficial para instalar Npcap? (S/N)"
+
+    if ($OpenNpcap -match "^[sS]") {
+        Start-Process "https://npcap.com/#download"
+        Write-Warn "Instala Npcap y luego vuelve a ejecutar este instalador o inicia la captura como administrador."
+    }
+    else {
+        Write-Warn "Instalacion de Npcap omitida. Descarga manual: https://npcap.com/#download"
+    }
+}
+
 Write-Host ""
 Write-Ok "Instalacion finalizada."
 Write-Host ""
 Write-Host "Para iniciar:" -ForegroundColor Cyan
 Write-Host "  1. Doble clic en el acceso directo 'TrafficWatch IDS' del escritorio"
 Write-Host "  2. O ejecuta: INICIAR_TRAFFICWATCH.bat"
+Write-Host "  3. Para captura real: doble clic en 'TrafficWatch IDS Captura' y acepta permisos de administrador"
 Write-Host ""
 Write-Host "URLs locales:" -ForegroundColor Cyan
 Write-Host "  Dashboard: http://127.0.0.1:5000/"
