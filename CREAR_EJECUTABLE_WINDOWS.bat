@@ -15,7 +15,7 @@ if errorlevel 1 (
     exit /b 1
 )
 
-pyinstaller ^
+python -m PyInstaller ^
   --noconfirm ^
   --name TrafficWatchIDS ^
   --add-data "web\templates;web\templates" ^

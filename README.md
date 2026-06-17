@@ -227,6 +227,59 @@ Desde la carpeta del proyecto:
 .\setup_windows.ps1
 ```
 
+## Instalacion recomendada en Windows
+
+Para instalar el proyecto en otra computadora Windows:
+
+1. Descargar el repositorio desde GitHub como ZIP o clonarlo con Git.
+2. Descomprimirlo en una carpeta simple, por ejemplo:
+
+   ```text
+   C:\TrafficWatchIDS
+   ```
+
+3. Abrir PowerShell en esa carpeta.
+4. Ejecutar:
+
+   ```powershell
+   Set-ExecutionPolicy -Scope Process -ExecutionPolicy Bypass
+   .\INSTALAR_TRAFFICWATCH_WINDOWS.ps1
+   ```
+
+El instalador:
+
+- Verifica Python 3.
+- Crea un entorno virtual `.venv`.
+- Instala dependencias desde `requirements.txt`.
+- Crea carpetas de logs.
+- Crea una regla de firewall para el puerto `5000` en red privada.
+- Crea un acceso directo en el escritorio llamado `TrafficWatch IDS`.
+- Verifica si Nmap y Suricata estan disponibles.
+
+Luego se puede iniciar con:
+
+```text
+INICIAR_TRAFFICWATCH.bat
+```
+
+o con el acceso directo del escritorio.
+
+En la computadora donde corre el dashboard:
+
+```text
+http://127.0.0.1:5000/
+http://127.0.0.1:5000/attack-lab
+```
+
+Desde otra PC o celular en la misma red:
+
+```text
+http://<IP-DE-LA-PC>:5000/
+http://<IP-DE-LA-PC>:5000/attack-lab
+```
+
+El sistema detecta automaticamente la IP local para mostrar la URL de red y para iniciar Suricata si esta instalado.
+
 Tambien puedes ejecutarlo desde la terminal integrada de VS Code. Solo abre la terminal dentro del proyecto y escribe el mismo comando.
 
 Este script:
