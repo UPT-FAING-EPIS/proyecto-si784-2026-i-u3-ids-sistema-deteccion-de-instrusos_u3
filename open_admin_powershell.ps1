@@ -11,20 +11,22 @@ Write-Host 'Iniciando IDS PRO como administrador' -ForegroundColor Green
 Write-Host 'Ubicacion del proyecto:' -ForegroundColor Cyan
 Write-Host '$EscapedProjectRoot'
 Write-Host ''
-`$PythonCmd = 'python'
+`$PythonExe = 'python'
+`$PythonArgs = @()
 
 if (Test-Path '.venv\Scripts\python.exe') {
-    `$PythonCmd = '.venv\Scripts\python.exe'
+    `$PythonExe = (Resolve-Path '.venv\Scripts\python.exe').Path
 }
 elseif (Get-Command py -ErrorAction SilentlyContinue) {
-    `$PythonCmd = 'py -3'
+    `$PythonExe = 'py'
+    `$PythonArgs = @('-3')
 }
 
-Write-Host "Ejecutando: `$PythonCmd main.py" -ForegroundColor Cyan
+Write-Host "Ejecutando: `$PythonExe `$(`$PythonArgs -join ' ') main.py" -ForegroundColor Cyan
 Write-Host ''
 
 try {
-    Invoke-Expression "`$PythonCmd main.py"
+    & `$PythonExe @PythonArgs 'main.py'
 
     if (`$LASTEXITCODE -ne 0) {
         Write-Host ''
