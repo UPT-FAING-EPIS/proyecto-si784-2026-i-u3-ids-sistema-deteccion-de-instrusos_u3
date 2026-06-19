@@ -107,3 +107,67 @@ class ActiveResponse:
             "status": "BLOQUEO_APLICADO",
             "applied_at": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
         }
+
+    def block_ip_temporarily(
+        self,
+        source_ip: str,
+        alert_type: str = "FUERZA_BRUTA_SSH",
+        minutes: Optional[int] = None,
+    ) -> dict:
+        """Block one remote IP and start an independent timer to remove the rule."""
+        clean_ip = self._validate_ip(source_ip)
+        duration = max(1, int(minutes or self.block_minutes))
+        rule_name = self._rule_name("MANUAL_" + alert_type, clean_ip)
+
+        if platform.system().lower() != "windows":
+            return {
+                "status": "NO_APLICADO",
+                "error": "El bloqueo temporal solo esta implementado para Windows Firewall.",
+            }
+
+        # The IP and generated display name are validated before entering PowerShell.
+        create_command = (
+            f'Remove-NetFirewallRule -DisplayName "{rule_name}" -ErrorAction SilentlyContinue; '
+            f'New-NetFirewallRule -DisplayName "{rule_name}" '
+            f'-Direction Inbound -RemoteAddress {clean_ip} -Action Block -ErrorAction Stop'
+        )
+        powershell = [
+            "powershell.exe", "-NoProfile", "-ExecutionPolicy", "Bypass", "-Command", create_command
+        ]
+
+        try:
+            subprocess.run(powershell, capture_output=True, text=True, check=True)
+        except FileNotFoundError:
+            return {
+                "status": "NO_APLICADO",
+                "error": "No se encontro powershell.exe para aplicar Windows Firewall.",
+            }
+        except subprocess.CalledProcessError as error:
+            message = (error.stderr or error.stdout or str(error)).strip()
+            return {
+                "status": "NO_APLICADO",
+                "error": message or "No se pudo crear la regla. Ejecuta TrafficWatch como administrador.",
+            }
+
+        remove_command = (
+            f"Start-Sleep -Seconds {duration * 60}; "
+            f'Remove-NetFirewallRule -DisplayName "{rule_name}" -ErrorAction SilentlyContinue'
+        )
+        subprocess.Popen(
+            [
+                "powershell.exe", "-NoProfile", "-WindowStyle", "Hidden",
+                "-ExecutionPolicy", "Bypass", "-Command", remove_command,
+            ],
+            creationflags=getattr(subprocess, "CREATE_NO_WINDOW", 0),
+        )
+
+        block_until = datetime.now() + timedelta(minutes=duration)
+        return {
+            "status": "BLOQUEO_APLICADO",
+            "action": "BLOQUEO_TEMPORAL_IP",
+            "source_ip": clean_ip,
+            "duration_minutes": duration,
+            "block_until": block_until.strftime("%Y-%m-%d %H:%M:%S"),
+            "windows_rule_name": rule_name,
+            "applied_at": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
+        }

@@ -11,6 +11,7 @@ from flask import Flask, Response, jsonify, render_template, request
 
 from src.network_scanner import scan_local_network
 from src.real_scan import run_local_nmap_scan
+from src.response_actions import ActiveResponse
 from src.status_manager import read_status
 from src.storage import AlertStorage
 from src.suricata_integration import (
@@ -640,10 +641,81 @@ def _suricata_config() -> dict:
     }
 
 
+def _active_response_config() -> dict:
+    if not CONFIG_FILE.exists():
+        return {}
+
+    try:
+        config = json.loads(CONFIG_FILE.read_text(encoding="utf-8"))
+    except json.JSONDecodeError:
+        return {}
+
+    return config.get("active_response", {})
+
+
+def _has_ssh_brute_force_alert(source_ip: str) -> bool:
+    return any(
+        alert.get("type") == "FUERZA_BRUTA_SSH"
+        and alert.get("source_ip") == source_ip
+        for alert in storage.read()
+    )
+
+
 @app.route("/api/clear", methods=["POST"])
 def api_clear():
     storage.clear()
     return jsonify({"status": "ok", "message": "Alertas eliminadas"})
+
+
+@app.route("/api/firewall/block-ssh-ip", methods=["POST"])
+def api_firewall_block_ssh_ip():
+    data = request.get_json(silent=True) or {}
+
+    try:
+        source_ip = str(ipaddress.ip_address(str(data.get("ip", "")).strip()))
+    except ValueError:
+        return jsonify({"status": "error", "message": "Ingresa una IP valida."}), 400
+
+    if not _has_ssh_brute_force_alert(source_ip):
+        return jsonify({
+            "status": "error",
+            "message": "Solo se puede bloquear una IP que tenga una alerta FUERZA_BRUTA_SSH registrada."
+        }), 400
+
+    response = ActiveResponse(_active_response_config()).block_ip_temporarily(
+        source_ip,
+        alert_type="FUERZA_BRUTA_SSH",
+    )
+
+    if response.get("status") != "BLOQUEO_APLICADO":
+        return jsonify({
+            "status": "error",
+            "message": response.get("error", "No se pudo aplicar el bloqueo."),
+        }), 500
+
+    storage.save({
+        "timestamp": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
+        "level": "ALTO",
+        "category": "RESPUESTA_ACTIVA",
+        "type": "BLOQUEO_TEMPORAL_SSH",
+        "source_ip": source_ip,
+        "target_ip": "Este equipo",
+        "target_port": 22,
+        "evidence_count": 1,
+        "response_action": response,
+        "description": (
+            f"Firewall de Windows bloqueo conexiones entrantes desde {source_ip} "
+            f"por {response['duration_minutes']} minutos tras alerta de fuerza bruta SSH."
+        ),
+    })
+
+    return jsonify({
+        "status": "ok",
+        "message": (
+            f"IP {source_ip} bloqueada en este equipo hasta {response['block_until']}."
+        ),
+        "response_action": response,
+    })
 
 
 @app.route("/api/simulate/<attack_type>", methods=["POST"])

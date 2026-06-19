@@ -249,6 +249,19 @@
             background: #991b1b;
         }
 
+        .table-action-button {
+            background: #b91c1c;
+            font-size: 12px;
+            font-weight: bold;
+            margin: 0;
+            padding: 8px 10px;
+            white-space: nowrap;
+        }
+
+        .table-action-button:hover {
+            background: #991b1b;
+        }
+
         table {
             width: 100%;
             border-collapse: collapse;
@@ -575,12 +588,13 @@
                                 <th>IP Origen</th>
                                 <th>Objetivo</th>
                                 <th>Respuesta</th>
+                                <th>Accion</th>
                                 <th>Descripci&oacute;n</th>
                             </tr>
                         </thead>
                         <tbody id="alertsTable">
                             <tr>
-                                <td colspan="8" class="empty">Sin alertas registradas</td>
+                                <td colspan="9" class="empty">Sin alertas registradas</td>
                             </tr>
                         </tbody>
                     </table>
@@ -856,12 +870,13 @@
                                 <th>IP Origen</th>
                                 <th>Objetivo</th>
                                 <th>Respuesta</th>
+                                <th>Accion</th>
                                 <th>Descripci&oacute;n</th>
                             </tr>
                         </thead>
                         <tbody id="historyTable">
                             <tr>
-                                <td colspan="8" class="empty">Sin alertas registradas</td>
+                                <td colspan="9" class="empty">Sin alertas registradas</td>
                             </tr>
                         </tbody>
                     </table>
@@ -1220,7 +1235,7 @@
             if (alerts.length === 0) {
                 const row = document.createElement("tr");
                 const cell = document.createElement("td");
-                cell.colSpan = 8;
+                cell.colSpan = 9;
                 cell.className = "empty";
                 cell.textContent = "Sin alertas registradas";
                 row.appendChild(cell);
@@ -1238,12 +1253,17 @@
                     alert.source_ip,
                     formatAlertTarget(alert),
                     formatAlertResponse(alert),
-                    alert.description
+                    null,
+                    alert.description,
                 ];
 
                 values.forEach((value, index) => {
                     const cell = document.createElement("td");
-                    cell.textContent = value || "-";
+                    if (index === 7) {
+                        appendAlertAction(cell, alert);
+                    } else {
+                        cell.textContent = value || "-";
+                    }
 
                     if (index === 1 && alert.level) {
                         cell.className = alert.level.toLowerCase();
@@ -1282,6 +1302,49 @@
             }
 
             return status;
+        }
+
+        function appendAlertAction(cell, alert) {
+            if (alert.type !== "FUERZA_BRUTA_SSH" || !alert.source_ip) {
+                cell.textContent = "-";
+                return;
+            }
+
+            const button = document.createElement("button");
+            button.className = "table-action-button";
+            button.textContent = "Bloquear 10 min";
+            button.title = `Bloquear conexiones entrantes desde ${alert.source_ip} en este equipo`;
+            button.onclick = () => blockSshIp(alert.source_ip, button);
+            cell.appendChild(button);
+        }
+
+        async function blockSshIp(sourceIp, button) {
+            if (!confirm(`Bloquear conexiones entrantes desde ${sourceIp} durante 10 minutos en este equipo?`)) {
+                return;
+            }
+
+            button.disabled = true;
+            button.textContent = "Bloqueando...";
+
+            try {
+                const response = await fetch("/api/firewall/block-ssh-ip", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ ip: sourceIp }),
+                });
+                const payload = await response.json();
+
+                if (!response.ok) {
+                    throw new Error(payload.message || "No se pudo aplicar el bloqueo.");
+                }
+
+                alert(payload.message);
+                await refresh();
+            } catch (error) {
+                alert(`${error.message}\n\nEjecuta TrafficWatch como administrador para modificar Windows Firewall.`);
+                button.disabled = false;
+                button.textContent = "Bloquear 10 min";
+            }
         }
 
         function getVisibleAlerts() {

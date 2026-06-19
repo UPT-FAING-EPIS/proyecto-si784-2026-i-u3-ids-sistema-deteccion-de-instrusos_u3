@@ -483,6 +483,13 @@ Respuesta: RECOMENDADO (10 min)
 Con `auto_block_enabled` en `true`, el IDS intenta crear una regla de Windows
 Firewall automaticamente. Para eso debe ejecutarse como administrador.
 
+En el Dashboard, las alertas `FUERZA_BRUTA_SSH` incluyen el boton
+`Bloquear 10 min`. Este crea una regla de entrada en Windows Firewall para la
+IP origen y la elimina automaticamente al terminar los diez minutos. Inicia
+TrafficWatch como administrador para que el boton pueda funcionar. La regla
+protege solamente la PC que ejecuta TrafficWatch; no desconecta al usuario del
+Wi-Fi ni bloquea su acceso a otros dispositivos.
+
 Comando equivalente:
 
 ```powershell
