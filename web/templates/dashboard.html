@@ -560,6 +560,103 @@
                 grid-template-columns: 1fr;
             }
         }
+
+        /* Capa visual: consola de seguridad moderna */
+        :root {
+            --surface: rgba(17, 27, 46, .86);
+            --surface-strong: #121c30;
+            --line: rgba(148, 163, 184, .16);
+            --brand: #60a5fa;
+            --accent: #22d3ee;
+            --danger: #fb7185;
+            --text-main: #f8fafc;
+            --text-soft: #94a3b8;
+        }
+
+        body {
+            background:
+                radial-gradient(circle at 86% -10%, rgba(34, 211, 238, .14), transparent 30%),
+                radial-gradient(circle at 20% 0%, rgba(96, 165, 250, .16), transparent 28%),
+                #08111f;
+            color: var(--text-main);
+            font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+        }
+
+        .sidebar {
+            background: linear-gradient(180deg, #0d1728 0%, #09111f 100%);
+            border-right-color: var(--line);
+            padding: 28px 18px;
+        }
+
+        .brand { position: relative; padding: 8px 8px 24px 62px; border-bottom-color: var(--line); }
+        .brand::before {
+            content: "◈"; position: absolute; left: 4px; top: 4px; width: 42px; height: 42px;
+            display: grid; place-items: center; color: #dbeafe; font-size: 25px;
+            border: 1px solid rgba(96,165,250,.55); border-radius: 13px;
+            background: linear-gradient(145deg, #2563eb, #06b6d4); box-shadow: 0 10px 25px rgba(6,182,212,.18);
+        }
+        .brand h1 { color: #f8fafc; font-size: 20px; letter-spacing: -.03em; }
+        .brand p { font-size: 12px; color: var(--text-soft); }
+        .nav { gap: 7px; }
+        .nav button {
+            border: 1px solid transparent; border-radius: 10px; color: #a8b5c8;
+            font-size: 13px; font-weight: 600; padding: 11px 12px; transition: .2s ease;
+        }
+        .nav button:hover, .nav button.active {
+            background: linear-gradient(90deg, rgba(37,99,235,.22), rgba(6,182,212,.10));
+            border-color: rgba(96,165,250,.28); color: #f8fafc;
+            box-shadow: inset 3px 0 0 var(--accent);
+        }
+
+        header {
+            background: rgba(10, 18, 33, .8); border-bottom: 1px solid var(--line);
+            padding: 28px clamp(20px, 4vw, 42px); backdrop-filter: blur(16px);
+        }
+        header h2 { color: #f8fafc; font-size: clamp(26px, 3vw, 36px); letter-spacing: -.04em; }
+        header p { color: var(--text-soft); font-size: 14px; }
+        main { max-width: 1600px; margin: 0 auto; padding: 28px clamp(20px, 4vw, 42px) 44px; }
+
+        .cards { grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 16px; }
+        .card, .status-card, .chart-panel, .info-panel, .manual-step, .filter-panel, .simulation-item {
+            background: linear-gradient(145deg, rgba(25, 38, 62, .94), rgba(14, 24, 42, .94));
+            border: 1px solid var(--line); border-radius: 14px; box-shadow: 0 14px 35px rgba(0,0,0,.18);
+        }
+        .card { min-height: 130px; padding: 20px; position: relative; overflow: hidden; }
+        .card::after { content: ""; position: absolute; width: 86px; height: 86px; right: -30px; bottom: -38px; border-radius: 50%; background: rgba(96,165,250,.12); }
+        .card h2, .status-card h3, .chart-panel h3, .info-panel h3, .manual-step h3 { color: #bcd8ff; font-size: 12px; letter-spacing: .08em; text-transform: uppercase; }
+        .card p { color: #f8fafc; font-size: 32px; letter-spacing: -.05em; }
+        .card:nth-child(2) p { color: #fda4af; }
+        .card:nth-child(3) p { color: #67e8f9; font-size: 23px; padding-top: 7px; }
+        .status-card { padding: 18px; }
+        .status-card p { color: #f8fafc; font-size: 18px; }
+
+        button { background: linear-gradient(135deg, #2563eb, #0ea5e9); border: 1px solid rgba(147,197,253,.25); box-shadow: 0 8px 20px rgba(37,99,235,.2); font-weight: 700; }
+        button:hover { background: linear-gradient(135deg, #3b82f6, #06b6d4); transform: translateY(-1px); }
+        .danger-button, .table-action-button { background: linear-gradient(135deg, #e11d48, #f43f5e); border-color: rgba(253,164,175,.3); }
+        .danger-button:hover, .table-action-button:hover { background: linear-gradient(135deg, #f43f5e, #fb7185); }
+        .secondary-button { background: linear-gradient(135deg, #0f766e, #0891b2); }
+
+        table { background: var(--surface); border: 1px solid var(--line); border-radius: 14px; box-shadow: 0 14px 35px rgba(0,0,0,.14); }
+        th { background: rgba(7, 16, 30, .84); color: #93c5fd; font-size: 11px; letter-spacing: .07em; text-transform: uppercase; }
+        td { border-bottom-color: var(--line); color: #cbd5e1; font-size: 13px; }
+        tbody tr { transition: background .15s ease; }
+        tbody tr:hover { background: rgba(96,165,250,.07); }
+        .filter-field input, .filter-field select, .inline-form input, .inline-form select { border-color: var(--line); background: rgba(5, 12, 23, .72); }
+        .empty { padding: 34px; color: var(--text-soft); }
+        .refresh-status { color: var(--text-soft); font-size: 12px; margin: -4px 0 16px; }
+        .refresh-status.error { color: #fda4af; }
+
+        @media (max-width: 1200px) {
+            .cards { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+            table { display: block; overflow-x: auto; white-space: nowrap; }
+        }
+        @media (max-width: 620px) {
+            .cards { grid-template-columns: 1fr; }
+            header { padding: 22px 18px; }
+            main { padding: 20px 14px 32px; }
+            .sidebar { padding: 18px 12px; }
+            .nav { grid-template-columns: 1fr; }
+        }
     </style>
 </head>
 <body>
@@ -567,7 +664,7 @@
         <aside class="sidebar">
             <div class="brand">
                 <h1>TrafficWatch IDS</h1>
-                <p>Sistema basico de deteccion de intrusos para monitoreo de red.</p>
+                <p>Centro de monitoreo y respuesta de red.</p>
             </div>
             <nav class="nav" aria-label="Navegacion principal">
                 <button class="active" id="dashboardNav" onclick="showView('dashboard')">Dashboard</button>
@@ -581,33 +678,33 @@
                 <button id="suricataNav" onclick="showView('suricata')">Suricata IPS</button>
                 <button id="historyNav" onclick="showView('history')">Historial</button>
                 <button id="rulesNav" onclick="showView('rules')">Reglas IDS</button>
-                <button type="button" onclick="openTechHubForum()">Gesti&oacute;n y an&aacute;lisis de comentarios &ndash; Tech Hub Forum</button>
+                <button type="button" onclick="openTechHubForum()">Analizador de spam</button>
             </nav>
         </aside>
 
         <div class="content">
             <section class="view active" id="dashboardView">
                 <header>
-                    <h2>IDS PRO Dashboard</h2>
-                    <p>Monitoreo de alertas de seguridad en tiempo real</p>
+                    <h2>Centro de Operaciones de Seguridad</h2>
+                    <p>Visibilidad, detección y respuesta activa sobre eventos de red.</p>
                 </header>
 
                 <main>
                     <section class="cards">
                         <div class="card">
-                            <h2>Total de alertas</h2>
+                            <h2>Incidentes activos</h2>
                             <p id="totalAlerts">0</p>
                         </div>
                         <div class="card">
-                            <h2>Alertas altas</h2>
+                            <h2>Incidentes altos</h2>
                             <p id="highAlerts">0</p>
                         </div>
                         <div class="card">
-                            <h2>IP m&aacute;s sospechosa</h2>
+                            <h2>IP m&aacute;s recurrente</h2>
                             <p id="topIp">-</p>
                         </div>
                         <div class="card">
-                            <h2>Tipos detectados</h2>
+                            <h2>Tipos activos</h2>
                             <p id="typeCount">0</p>
                         </div>
                     </section>
@@ -615,12 +712,14 @@
                     <div class="actions">
                         <button onclick="clearAlerts()">Limpiar alertas</button>
                     </div>
+                    <p class="refresh-status" id="refreshStatus">Actualización automática activa.</p>
 
                     <table>
                         <thead>
                             <tr>
-                                <th>Fecha/Hora</th>
+                                <th>Ultima actividad</th>
                                 <th>Riesgo</th>
+                                <th>Eventos</th>
                                 <th>Fuente</th>
                                 <th>Tipo</th>
                                 <th>IP Origen</th>
@@ -689,7 +788,7 @@
                             <ol>
                                 <li>Ejecuta el dashboard como administrador.</li>
                                 <li>Busca una alerta SSH: <strong>FUERZA_BRUTA_SSH</strong> o <strong>TRAFICO_REAL_LAB_FUERZA_BRUTA_SSH</strong>.</li>
-                                <li>Pulsa <strong>Bloquear 10 min</strong> en la columna Acción.</li>
+                                <li>Pulsa <strong>Bloquear 2 min</strong> en la columna Acción.</li>
                                 <li>Windows Firewall bloqueará conexiones entrantes de esa IP y quitará la regla al terminar el tiempo.</li>
                             </ol>
                         </article>
@@ -821,7 +920,7 @@
                     </section>
 
                     <div class="actions">
-                        <button onclick="loadNetworkDevices()">Escanear red</button>
+                        <button id="networkScanButton" onclick="loadNetworkDevices()">Escanear red</button>
                     </div>
 
                     <div class="simulation-result" id="networkScanStatus">Presiona Escanear red para buscar equipos activos.</div>
@@ -1272,13 +1371,19 @@
 
     <script>
         const DASHBOARD_CLEAR_COUNT_KEY = "idsDashboardClearCount";
+        const DASHBOARD_CLEAR_TIME_KEY = "idsDashboardClearTime";
         const HISTORY_PAGE_SIZE = 10;
         let latestAlerts = [];
+        let latestIncidents = [];
         let latestChartData = null;
+        let currentView = "dashboard";
+        let refreshInProgress = false;
         let visibleAlertStartIndex = Number(localStorage.getItem(DASHBOARD_CLEAR_COUNT_KEY) || 0);
+        let dashboardClearTime = Number(localStorage.getItem(DASHBOARD_CLEAR_TIME_KEY) || 0);
         let historyPage = 1;
 
         function showView(viewName) {
+            currentView = viewName;
             const dashboardView = document.getElementById("dashboardView");
             const manualView = document.getElementById("manualView");
             const trafficView = document.getElementById("trafficView");
@@ -1329,8 +1434,24 @@
                 renderHistory();
             }
 
-            if (viewName === "charts" && latestChartData) {
-                renderCharts(latestChartData);
+            if (viewName === "dashboard") {
+                renderDashboard();
+            }
+
+            if (viewName === "classified") {
+                loadClassifiedTraffic();
+            }
+
+            if (viewName === "status") {
+                loadIdsStatus();
+            }
+
+            if (viewName === "charts") {
+                if (latestChartData) {
+                    renderCharts(latestChartData);
+                } else {
+                    loadCharts();
+                }
             }
 
             if (viewName === "suricata") {
@@ -1343,7 +1464,7 @@
         }
 
         function openTechHubForum() {
-            window.open("http://localhost:8081/dashboard", "_blank", "noopener");
+            window.open("https://aegis-filter.onrender.com/comentarios", "_blank", "noopener");
         }
 
         function renderAlertRows(table, alerts) {
@@ -1393,6 +1514,59 @@
             });
         }
 
+        function renderIncidentRows(table, incidents) {
+            table.innerHTML = "";
+
+            if (incidents.length === 0) {
+                const row = document.createElement("tr");
+                const cell = document.createElement("td");
+                cell.colSpan = 10;
+                cell.className = "empty";
+                cell.textContent = "Sin incidentes registrados";
+                row.appendChild(cell);
+                table.appendChild(row);
+                return;
+            }
+
+            incidents.forEach(incident => {
+                const row = document.createElement("tr");
+                const values = [
+                    incident.last_seen || "-",
+                    incident.level || "DESCONOCIDO",
+                    String(incident.event_count || 1),
+                    incident.category || "-",
+                    incident.type || "-",
+                    incident.source_ip || "-",
+                    incident.target_ip || "-",
+                ];
+
+                values.forEach((value, index) => {
+                    const cell = document.createElement("td");
+                    cell.textContent = value;
+                    if (index === 1) {
+                        cell.className = String(value).toLowerCase();
+                    }
+                    if (index === 2) {
+                        cell.className = "incident-count";
+                    }
+                    row.appendChild(cell);
+                });
+
+                const responseCell = document.createElement("td");
+                responseCell.textContent = formatAlertResponse(incident);
+                row.appendChild(responseCell);
+
+                const actionCell = document.createElement("td");
+                appendAlertAction(actionCell, incident);
+                row.appendChild(actionCell);
+
+                const descriptionCell = document.createElement("td");
+                descriptionCell.textContent = incident.description || "-";
+                row.appendChild(descriptionCell);
+                table.appendChild(row);
+            });
+        }
+
         function formatAlertTarget(alert) {
             const targetIp = alert.target_ip || "-";
             const targetPort = alert.target_port || "";
@@ -1434,14 +1608,14 @@
 
             const button = document.createElement("button");
             button.className = "table-action-button";
-            button.textContent = "Bloquear 10 min";
+            button.textContent = "Bloquear 2 min";
             button.title = `Bloquear conexiones entrantes desde ${alert.source_ip} en este equipo`;
             button.onclick = () => blockSshIp(alert.source_ip, button);
             cell.appendChild(button);
         }
 
         async function blockSshIp(sourceIp, button) {
-            if (!confirm(`Bloquear conexiones entrantes desde ${sourceIp} durante 10 minutos en este equipo?`)) {
+            if (!confirm(`Bloquear conexiones entrantes desde ${sourceIp} durante 2 minutos en este equipo?`)) {
                 return;
             }
 
@@ -1465,7 +1639,7 @@
             } catch (error) {
                 alert(`${error.message}\n\nEjecuta TrafficWatch como administrador para modificar Windows Firewall.`);
                 button.disabled = false;
-                button.textContent = "Bloquear 10 min";
+                button.textContent = "Bloquear 2 min";
             }
         }
 
@@ -1503,10 +1677,12 @@
 
         function renderDashboard() {
             const table = document.getElementById("alertsTable");
-            const visibleAlerts = getVisibleAlerts();
-
-            renderAlertRows(table, visibleAlerts.slice().reverse());
-            renderStats(visibleAlerts);
+            const visibleIncidents = latestIncidents.filter(incident => {
+                const lastSeen = Date.parse(String(incident.last_seen || "").replace(" ", "T"));
+                return !dashboardClearTime || (Number.isFinite(lastSeen) && lastSeen > dashboardClearTime);
+            });
+            renderIncidentRows(table, visibleIncidents);
+            renderStats(visibleIncidents);
         }
 
         function renderHistory() {
@@ -1708,11 +1884,14 @@
 
         async function loadNetworkDevices() {
             const status = document.getElementById("networkScanStatus");
+            const scanButton = document.getElementById("networkScanButton");
             status.className = "simulation-result";
             status.textContent = "Escaneando red local...";
+            scanButton.disabled = true;
+            scanButton.textContent = "Escaneando...";
 
             try {
-                const response = await fetch("/api/network/devices");
+                const response = await fetch("/api/network/devices", { method: "POST" });
                 const payload = await response.json();
 
                 if (!response.ok) {
@@ -1727,13 +1906,18 @@
                 renderNetworkDevices(payload.devices);
 
                 status.className = "simulation-result success";
-                status.textContent = payload.ping_sweep_used
-                    ? "Escaneo completado con ping sweep y tabla ARP."
-                    : "Escaneo completado usando tabla ARP. Red grande detectada.";
+                status.textContent = payload.cached
+                    ? "Mostrando el resultado reciente del escaneo."
+                    : payload.scope_limited
+                        ? `Escaneo completado en el segmento seguro ${payload.scan_network}; la red detectada es mayor.`
+                        : "Escaneo completado con ping sweep y tabla ARP.";
             } catch (error) {
                 status.className = "simulation-result error";
                 status.textContent = error.message;
                 renderNetworkDevices([]);
+            } finally {
+                scanButton.disabled = false;
+                scanButton.textContent = "Escanear red";
             }
         }
 
@@ -2196,8 +2380,8 @@
         }
 
         async function clearAlerts() {
-            visibleAlertStartIndex = latestAlerts.length;
-            localStorage.setItem(DASHBOARD_CLEAR_COUNT_KEY, String(visibleAlertStartIndex));
+            dashboardClearTime = Date.now();
+            localStorage.setItem(DASHBOARD_CLEAR_TIME_KEY, String(dashboardClearTime));
             renderDashboard();
         }
 
@@ -2208,8 +2392,11 @@
 
             await fetch("/api/clear", { method: "POST" });
             latestAlerts = [];
+            latestIncidents = [];
             visibleAlertStartIndex = 0;
+            dashboardClearTime = 0;
             localStorage.setItem(DASHBOARD_CLEAR_COUNT_KEY, "0");
+            localStorage.setItem(DASHBOARD_CLEAR_TIME_KEY, "0");
             renderDashboard();
             renderHistory();
         }
@@ -2285,15 +2472,41 @@
         }
 
         async function refresh() {
-            const response = await fetch("/api/alerts");
-            latestAlerts = await response.json();
-            updateHistoryTypeOptions();
-            renderDashboard();
-            renderHistory();
-            await loadClassifiedTraffic();
-            await loadIdsStatus();
-            await loadCharts();
-            await loadSuricata();
+            if (refreshInProgress || document.hidden) {
+                return;
+            }
+
+            refreshInProgress = true;
+            const status = document.getElementById("refreshStatus");
+            try {
+                const [alertsResponse, incidentsResponse] = await Promise.all([
+                    fetch("/api/alerts"),
+                    fetch("/api/incidents"),
+                ]);
+                if (!alertsResponse.ok || !incidentsResponse.ok) {
+                    throw new Error("No se pudo actualizar la información principal.");
+                }
+
+                latestAlerts = await alertsResponse.json();
+                latestIncidents = await incidentsResponse.json();
+                updateHistoryTypeOptions();
+
+                if (currentView === "dashboard") renderDashboard();
+                if (currentView === "history") renderHistory();
+                if (currentView === "classified") await loadClassifiedTraffic();
+                if (currentView === "status") await loadIdsStatus();
+                if (currentView === "charts") await loadCharts();
+                if (currentView === "suricata") await loadSuricata();
+
+                status.className = "refresh-status";
+                status.textContent = "Actualizado correctamente.";
+            } catch (error) {
+                console.error("Error al actualizar el dashboard:", error);
+                status.className = "refresh-status error";
+                status.textContent = "No se pudo actualizar. Se reintentará automáticamente.";
+            } finally {
+                refreshInProgress = false;
+            }
         }
 
         window.addEventListener("resize", () => {
@@ -2308,7 +2521,11 @@
                 document.getElementById(filterId).addEventListener("change", updateHistoryFilters);
             });
 
-        setInterval(refresh, 2000);
+        window.addEventListener("visibilitychange", () => {
+            if (!document.hidden) refresh();
+        });
+
+        setInterval(refresh, 5000);
         refresh();
     </script>
 </body>

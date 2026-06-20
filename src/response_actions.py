@@ -2,6 +2,7 @@ import ipaddress
 import platform
 import re
 import subprocess
+import uuid
 from datetime import datetime, timedelta
 from typing import Optional
 
@@ -32,7 +33,7 @@ class ActiveResponse:
 
         clean_ip = self._validate_ip(source_ip)
         block_until = datetime.now() + timedelta(minutes=self.block_minutes)
-        rule_name = self._rule_name(alert_type, clean_ip)
+        rule_name = self._rule_name(alert_type, clean_ip, self._block_token())
         response = {
             "action": "BLOQUEO_TEMPORAL_IP",
             "status": "RECOMENDADO",
@@ -55,7 +56,7 @@ class ActiveResponse:
         }
 
         if self.auto_block_enabled:
-            response.update(self._apply_windows_block(rule_name, clean_ip))
+            response.update(self._apply_windows_block(rule_name, clean_ip, self.block_minutes))
 
         return response
 
@@ -65,11 +66,17 @@ class ActiveResponse:
         except ValueError as error:
             raise ValueError(f"IP origen invalida para respuesta activa: {source_ip}") from error
 
-    def _rule_name(self, alert_type: str, source_ip: str) -> str:
-        clean_type = re.sub(r"[^A-Za-z0-9_-]+", "_", alert_type)
-        return f"{self.rule_prefix} {clean_type} {source_ip}"
+    def _block_token(self) -> str:
+        """Give every temporary rule its own cleanup timer."""
+        return uuid.uuid4().hex[:12]
 
-    def _apply_windows_block(self, rule_name: str, source_ip: str) -> dict:
+    def _rule_name(self, alert_type: str, source_ip: str, token: str) -> str:
+        clean_type = re.sub(r"[^A-Za-z0-9_-]+", "_", alert_type)
+        return f"{self.rule_prefix} {clean_type} {source_ip} {token}"
+
+    def _apply_windows_block(
+        self, rule_name: str, source_ip: str, duration: int
+    ) -> dict:
         if platform.system().lower() != "windows":
             return {
                 "status": "NO_APLICADO",
@@ -103,10 +110,53 @@ class ActiveResponse:
                 "error": message or "No se pudo aplicar la regla de firewall.",
             }
 
+        timer_error = self._schedule_windows_unblock(rule_name, duration)
+        if timer_error:
+            self._remove_windows_block(rule_name)
+            return {
+                "status": "NO_APLICADO",
+                "error": (
+                    "No se pudo programar el desbloqueo automatico; "
+                    f"la regla fue revertida. {timer_error}"
+                ),
+            }
+
         return {
             "status": "BLOQUEO_APLICADO",
             "applied_at": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
         }
+
+    def _schedule_windows_unblock(self, rule_name: str, duration: int) -> Optional[str]:
+        remove_command = (
+            f"Start-Sleep -Seconds {duration * 60}; "
+            f'Remove-NetFirewallRule -DisplayName "{rule_name}" -ErrorAction SilentlyContinue'
+        )
+        try:
+            subprocess.Popen(
+                [
+                    "powershell.exe", "-NoProfile", "-WindowStyle", "Hidden",
+                    "-ExecutionPolicy", "Bypass", "-Command", remove_command,
+                ],
+                creationflags=getattr(subprocess, "CREATE_NO_WINDOW", 0),
+            )
+        except OSError as error:
+            return str(error)
+        return None
+
+    def _remove_windows_block(self, rule_name: str) -> None:
+        try:
+            subprocess.run(
+                [
+                    "powershell.exe", "-NoProfile", "-ExecutionPolicy", "Bypass", "-Command",
+                    f'Remove-NetFirewallRule -DisplayName "{rule_name}" -ErrorAction SilentlyContinue',
+                ],
+                capture_output=True,
+                text=True,
+                check=False,
+            )
+        except OSError:
+            # The original timer error is already reported to the caller.
+            pass
 
     def block_ip_temporarily(
         self,
@@ -117,7 +167,9 @@ class ActiveResponse:
         """Block one remote IP and start an independent timer to remove the rule."""
         clean_ip = self._validate_ip(source_ip)
         duration = max(1, int(minutes or self.block_minutes))
-        rule_name = self._rule_name("MANUAL_" + alert_type, clean_ip)
+        rule_name = self._rule_name(
+            "MANUAL_" + alert_type, clean_ip, self._block_token()
+        )
 
         if platform.system().lower() != "windows":
             return {
@@ -125,41 +177,9 @@ class ActiveResponse:
                 "error": "El bloqueo temporal solo esta implementado para Windows Firewall.",
             }
 
-        # The IP and generated display name are validated before entering PowerShell.
-        create_command = (
-            f'Remove-NetFirewallRule -DisplayName "{rule_name}" -ErrorAction SilentlyContinue; '
-            f'New-NetFirewallRule -DisplayName "{rule_name}" '
-            f'-Direction Inbound -RemoteAddress {clean_ip} -Action Block -ErrorAction Stop'
-        )
-        powershell = [
-            "powershell.exe", "-NoProfile", "-ExecutionPolicy", "Bypass", "-Command", create_command
-        ]
-
-        try:
-            subprocess.run(powershell, capture_output=True, text=True, check=True)
-        except FileNotFoundError:
-            return {
-                "status": "NO_APLICADO",
-                "error": "No se encontro powershell.exe para aplicar Windows Firewall.",
-            }
-        except subprocess.CalledProcessError as error:
-            message = (error.stderr or error.stdout or str(error)).strip()
-            return {
-                "status": "NO_APLICADO",
-                "error": message or "No se pudo crear la regla. Ejecuta TrafficWatch como administrador.",
-            }
-
-        remove_command = (
-            f"Start-Sleep -Seconds {duration * 60}; "
-            f'Remove-NetFirewallRule -DisplayName "{rule_name}" -ErrorAction SilentlyContinue'
-        )
-        subprocess.Popen(
-            [
-                "powershell.exe", "-NoProfile", "-WindowStyle", "Hidden",
-                "-ExecutionPolicy", "Bypass", "-Command", remove_command,
-            ],
-            creationflags=getattr(subprocess, "CREATE_NO_WINDOW", 0),
-        )
+        result = self._apply_windows_block(rule_name, clean_ip, duration)
+        if result.get("status") != "BLOQUEO_APLICADO":
+            return result
 
         block_until = datetime.now() + timedelta(minutes=duration)
         return {

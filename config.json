@@ -4,6 +4,16 @@
         "auto_detect": true,
         "scan_target": "gateway"
     },
+    "network_scan": {
+        "timeout_ms": 180,
+        "max_hosts": 254,
+        "max_workers": 32,
+        "cache_seconds": 30,
+        "resolve_names": false
+    },
+    "dashboard": {
+        "incident_window_seconds": 60
+    },
     "log_file": "logs/alerts.json",
     "status_file": "logs/status.json",
     "alert_cooldown_seconds": 10,
@@ -21,7 +31,7 @@
     "active_response": {
         "enabled": true,
         "auto_block_enabled": false,
-        "block_minutes": 10,
+        "block_minutes": 2,
         "block_alert_types": [
             "ICMP_FLOOD",
             "FUERZA_BRUTA_SSH"

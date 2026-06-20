@@ -4,23 +4,40 @@ import re
 import socket
 import subprocess
 from concurrent.futures import ThreadPoolExecutor, as_completed
+from itertools import islice
 
 from src.network_utils import detect_network_info
 
 
 MAX_PING_SWEEP_HOSTS = 254
+MAX_PING_WORKERS = 32
 
 
-def scan_local_network(timeout_ms: int = 180, resolve_names: bool = True) -> dict:
+def scan_local_network(
+    timeout_ms: int = 180,
+    resolve_names: bool = False,
+    max_hosts: int = MAX_PING_SWEEP_HOSTS,
+    max_workers: int = MAX_PING_WORKERS,
+) -> dict:
     network_info = detect_network_info()
     network = ipaddress.ip_network(network_info.network, strict=False)
-    hosts = list(network.hosts())
+    scan_network = network
+    scope_limited = network.num_addresses - 2 > max_hosts
+
+    # A university /16 or /8 must never be expanded into millions of hosts.
+    # For large IPv4 networks, scan only the operator's current /24 segment.
+    if scope_limited and isinstance(network, ipaddress.IPv4Network):
+        scan_network = ipaddress.ip_network(f"{network_info.ip_address}/24", strict=False)
+
+    hosts = list(islice(scan_network.hosts(), max_hosts))
     arp_entries = _read_arp_table()
     active_ips = set(arp_entries.keys())
-    ping_sweep_used = len(hosts) <= MAX_PING_SWEEP_HOSTS
+    ping_sweep_used = bool(hosts)
 
     if ping_sweep_used:
-        active_ips.update(_ping_sweep(hosts, timeout_ms=timeout_ms))
+        active_ips.update(
+            _ping_sweep(hosts, timeout_ms=timeout_ms, max_workers=max_workers)
+        )
 
     arp_entries = _read_arp_table()
     active_ips.update(arp_entries.keys())
@@ -32,7 +49,7 @@ def scan_local_network(timeout_ms: int = 180, resolve_names: bool = True) -> dic
     devices = []
 
     for ip_address in sorted(active_ips, key=_ip_sort_key):
-        if ipaddress.ip_address(ip_address) not in network:
+        if ipaddress.ip_address(ip_address) not in scan_network:
             continue
 
         devices.append({
@@ -48,15 +65,17 @@ def scan_local_network(timeout_ms: int = 180, resolve_names: bool = True) -> dic
         "local_ip": network_info.ip_address,
         "gateway": network_info.gateway,
         "network": network_info.network,
+        "scan_network": str(scan_network),
+        "scope_limited": scope_limited,
         "ping_sweep_used": ping_sweep_used,
         "device_count": len(devices),
         "devices": devices,
     }
 
 
-def _ping_sweep(hosts, timeout_ms: int) -> set:
+def _ping_sweep(hosts, timeout_ms: int, max_workers: int) -> set:
     active_ips = set()
-    workers = min(64, max(4, len(hosts)))
+    workers = min(max_workers, max(4, len(hosts)))
 
     with ThreadPoolExecutor(max_workers=workers) as executor:
         futures = {

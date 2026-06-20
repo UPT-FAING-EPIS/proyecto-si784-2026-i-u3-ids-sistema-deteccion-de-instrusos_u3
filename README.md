@@ -484,14 +484,14 @@ Configuracion en `config.json`:
 Con `auto_block_enabled` en `false`, el dashboard registra:
 
 ```text
-Respuesta: RECOMENDADO (10 min)
+Respuesta: RECOMENDADO (2 min, configuracion actual de prueba)
 ```
 
 Con `auto_block_enabled` en `true`, el IDS intenta crear una regla de Windows
 Firewall automaticamente. Para eso debe ejecutarse como administrador.
 
 En el Dashboard, las alertas `FUERZA_BRUTA_SSH` y las pruebas controladas
-`TRAFICO_REAL_LAB_FUERZA_BRUTA_SSH` incluyen el boton `Bloquear 10 min`.
+`TRAFICO_REAL_LAB_FUERZA_BRUTA_SSH` incluyen el boton `Bloquear 2 min`.
 Este crea una regla de entrada en Windows Firewall para la IP origen y la
 elimina automaticamente al terminar los diez minutos. Inicia
 TrafficWatch como administrador para que el boton pueda funcionar. La regla

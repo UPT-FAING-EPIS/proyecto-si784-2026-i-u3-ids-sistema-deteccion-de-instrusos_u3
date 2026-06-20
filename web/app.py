@@ -7,6 +7,8 @@ import json
 from pathlib import Path
 import subprocess
 import sys
+import threading
+import time
 from flask import Flask, Response, jsonify, render_template, request
 
 from src.network_scanner import scan_local_network
@@ -37,6 +39,8 @@ CONFIG_FILE = Path("config.json")
 storage = AlertStorage(str(LOG_FILE))
 traffic_storage = AlertStorage(str(TRAFFIC_LOG_FILE), max_records=20)
 policy_storage = AlertStorage(str(POLICY_FILE))
+network_scan_lock = threading.Lock()
+network_scan_cache = {"result": None, "expires_at": 0.0}
 
 SCAN_RISK_ORDER = {"BAJO": 1, "MEDIO": 2, "ALTO": 3}
 SCAN_SENSITIVE_PORTS = {21, 22, 23, 25, 53, 80, 110, 139, 143, 443, 445, 3306, 3389, 5900}
@@ -45,6 +49,7 @@ SSH_BLOCKABLE_ALERT_TYPES = {
     "FUERZA_BRUTA_SSH",
     "TRAFICO_REAL_LAB_FUERZA_BRUTA_SSH",
 }
+INCIDENT_RISK_ORDER = {"BAJO": 1, "MEDIO": 2, "ALTO": 3}
 
 SIMULATED_ALERTS = {
     "port_scan": {
@@ -181,6 +186,87 @@ def attack_lab():
 @app.route("/api/alerts")
 def api_alerts():
     return jsonify(storage.read())
+
+
+def _incident_window_seconds() -> int:
+    if not CONFIG_FILE.exists():
+        return 60
+    try:
+        config = json.loads(CONFIG_FILE.read_text(encoding="utf-8"))
+        value = config.get("dashboard", {}).get("incident_window_seconds", 60)
+        return max(10, min(int(value), 3600))
+    except (json.JSONDecodeError, TypeError, ValueError):
+        return 60
+
+
+def _parse_alert_timestamp(value: str) -> datetime:
+    try:
+        return datetime.strptime(value, "%Y-%m-%d %H:%M:%S")
+    except (TypeError, ValueError):
+        return datetime.min
+
+
+def _build_incidents(alerts: list, window_seconds: int) -> list:
+    """Merge repetitive alerts into dashboard incidents without losing raw history."""
+    incidents = []
+    active_by_key = {}
+
+    for alert in sorted(alerts, key=lambda item: _parse_alert_timestamp(item.get("timestamp"))):
+        key = (
+            alert.get("source_ip", "DESCONOCIDO"),
+            alert.get("type", "DESCONOCIDO"),
+            alert.get("target_ip", ""),
+            str(alert.get("target_port", "")),
+        )
+        timestamp = _parse_alert_timestamp(alert.get("timestamp"))
+        incident = active_by_key.get(key)
+
+        if incident and (timestamp - incident["_last_seen_at"]).total_seconds() <= window_seconds:
+            incident["event_count"] += 1
+            incident["last_seen"] = alert.get("timestamp", "")
+            incident["_last_seen_at"] = timestamp
+            incident["description"] = alert.get("description", incident["description"])
+            incident["response_action"] = alert.get("response_action", incident.get("response_action"))
+            if INCIDENT_RISK_ORDER.get(alert.get("level"), 0) > INCIDENT_RISK_ORDER.get(incident["level"], 0):
+                incident["level"] = alert.get("level", incident["level"])
+            continue
+
+        incident = {
+            "timestamp": alert.get("timestamp", ""),
+            "first_seen": alert.get("timestamp", ""),
+            "last_seen": alert.get("timestamp", ""),
+            "_last_seen_at": timestamp,
+            "level": alert.get("level", "DESCONOCIDO"),
+            "category": alert.get("category", ""),
+            "type": alert.get("type", "DESCONOCIDO"),
+            "source_ip": alert.get("source_ip", "DESCONOCIDO"),
+            "target_ip": alert.get("target_ip", ""),
+            "target_port": alert.get("target_port", ""),
+            "description": alert.get("description", ""),
+            "response_action": alert.get("response_action"),
+            "event_count": 1,
+        }
+        incidents.append(incident)
+        active_by_key[key] = incident
+
+    for incident in incidents:
+        incident.pop("_last_seen_at", None)
+
+    return sorted(
+        incidents,
+        key=lambda item: (
+            INCIDENT_RISK_ORDER.get(item.get("level"), 0),
+            _parse_alert_timestamp(item.get("last_seen")),
+            item.get("event_count", 0),
+        ),
+        reverse=True,
+    )
+
+
+@app.route("/api/incidents")
+def api_incidents():
+    incidents = _build_incidents(storage.read(), _incident_window_seconds())
+    return jsonify(incidents)
 
 
 @app.route("/api/traffic")
@@ -328,16 +414,60 @@ def api_stats():
     })
 
 
-@app.route("/api/network/devices")
-def api_network_devices():
+def _network_scan_config() -> dict:
+    defaults = {
+        "timeout_ms": 180,
+        "max_hosts": 254,
+        "max_workers": 32,
+        "cache_seconds": 30,
+        "resolve_names": False,
+    }
+    if not CONFIG_FILE.exists():
+        return defaults
     try:
-        return jsonify(scan_local_network())
+        values = json.loads(CONFIG_FILE.read_text(encoding="utf-8")).get("network_scan", {})
+    except json.JSONDecodeError:
+        return defaults
+    return {
+        "timeout_ms": max(50, min(int(values.get("timeout_ms", defaults["timeout_ms"])), 1000)),
+        "max_hosts": max(1, min(int(values.get("max_hosts", defaults["max_hosts"])), 254)),
+        "max_workers": max(1, min(int(values.get("max_workers", defaults["max_workers"])), 32)),
+        "cache_seconds": max(0, min(int(values.get("cache_seconds", defaults["cache_seconds"])), 300)),
+        "resolve_names": bool(values.get("resolve_names", defaults["resolve_names"])),
+    }
+
+
+@app.route("/api/network/devices", methods=["GET", "POST"])
+def api_network_devices():
+    config = _network_scan_config()
+    now = time.monotonic()
+    cached = network_scan_cache["result"]
+    if cached and now < network_scan_cache["expires_at"]:
+        return jsonify({**cached, "cached": True})
+
+    if not network_scan_lock.acquire(blocking=False):
+        return jsonify({
+            "status": "busy",
+            "message": "Ya hay un escaneo de red en curso. Espera a que termine.",
+        }), 429
+    try:
+        result = scan_local_network(
+            timeout_ms=config["timeout_ms"],
+            resolve_names=config["resolve_names"],
+            max_hosts=config["max_hosts"],
+            max_workers=config["max_workers"],
+        )
+        network_scan_cache["result"] = result
+        network_scan_cache["expires_at"] = time.monotonic() + config["cache_seconds"]
+        return jsonify({**result, "cached": False})
     except Exception as error:
         return jsonify({
             "status": "error",
             "message": str(error),
             "devices": []
         }), 500
+    finally:
+        network_scan_lock.release()
 
 
 @app.route("/api/real-scan/nmap", methods=["POST"])

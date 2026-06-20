@@ -1,4 +1,5 @@
 from src.alert_manager import AlertManager
+from src import response_actions
 from src.response_actions import ActiveResponse
 
 
@@ -41,3 +42,45 @@ def test_active_response_ignores_unconfigured_alert_type(tmp_path):
     manager.generate_alert("BAJO", "PUERTO_SOSPECHOSO", "192.168.1.51", "Puerto 22")
 
     assert "response_action" not in manager.storage.read()[0]
+
+
+def test_manual_blocks_use_independent_rule_names(monkeypatch):
+    monkeypatch.setattr(response_actions.platform, "system", lambda: "Windows")
+    monkeypatch.setattr(response_actions.subprocess, "run", lambda *args, **kwargs: None)
+    popen_commands = []
+    monkeypatch.setattr(
+        response_actions.subprocess,
+        "Popen",
+        lambda command, **kwargs: popen_commands.append(command),
+    )
+    response = ActiveResponse({"block_minutes": 10})
+
+    first = response.block_ip_temporarily("192.168.1.12")
+    second = response.block_ip_temporarily("192.168.1.12")
+
+    assert first["status"] == "BLOQUEO_APLICADO"
+    assert second["status"] == "BLOQUEO_APLICADO"
+    assert first["windows_rule_name"] != second["windows_rule_name"]
+    assert first["windows_rule_name"] in popen_commands[0][-1]
+    assert second["windows_rule_name"] in popen_commands[1][-1]
+
+
+def test_block_is_reverted_if_its_cleanup_timer_cannot_start(monkeypatch):
+    monkeypatch.setattr(response_actions.platform, "system", lambda: "Windows")
+    commands = []
+    monkeypatch.setattr(
+        response_actions.subprocess,
+        "run",
+        lambda command, **kwargs: commands.append(command),
+    )
+    monkeypatch.setattr(
+        response_actions.subprocess,
+        "Popen",
+        lambda *args, **kwargs: (_ for _ in ()).throw(OSError("timer unavailable")),
+    )
+
+    result = ActiveResponse().block_ip_temporarily("192.168.1.12")
+
+    assert result["status"] == "NO_APLICADO"
+    assert "revertida" in result["error"]
+    assert any("Remove-NetFirewallRule" in command[-1] for command in commands)
