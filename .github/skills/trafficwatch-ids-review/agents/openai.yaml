@@ -1,0 +1,4 @@
+interface:
+  display_name: "Revisión TrafficWatch IDS"
+  short_description: "Revisa y mantiene el proyecto IDS"
+  default_prompt: "Usa $trafficwatch-ids-review para revisar o actualizar TrafficWatch IDS de forma segura."
