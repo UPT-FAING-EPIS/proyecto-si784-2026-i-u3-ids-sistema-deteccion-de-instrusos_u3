@@ -1,0 +1,190 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Analisis Estatico Detallado - TrafficWatch IDS</title>
+  <style>
+:root {
+  color-scheme: light;
+  --bg: #f6f8fb;
+  --panel: #ffffff;
+  --text: #172033;
+  --muted: #5b6b84;
+  --line: #d8e0ec;
+  --accent: #0b83c5;
+  --ok: #16803c;
+  --warn: #9a6700;
+  --bad: #b42318;
+}
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+  font-family: Arial, Helvetica, sans-serif;
+}
+main {
+  max-width: 1120px;
+  margin: 0 auto;
+  padding: 32px 20px 48px;
+}
+h1 {
+  margin: 0 0 8px;
+  color: #0f5f8f;
+}
+p {
+  color: var(--muted);
+  line-height: 1.55;
+}
+.summary {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 12px;
+  margin: 24px 0;
+}
+.metric {
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: 16px;
+}
+.metric strong {
+  display: block;
+  font-size: 2rem;
+  line-height: 1;
+}
+.passed, .killed {
+  color: var(--ok);
+}
+.failed, .survived {
+  color: var(--bad);
+}
+.skipped, .pending, .timeout, .suspicious {
+  color: var(--warn);
+}
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin: 20px 0 28px;
+}
+.button {
+  display: inline-block;
+  border-radius: 6px;
+  background: var(--accent);
+  color: #fff;
+  font-weight: 700;
+  padding: 10px 14px;
+  text-decoration: none;
+}
+section {
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: 18px;
+  margin-top: 16px;
+}
+table {
+  width: 100%;
+  border-collapse: collapse;
+}
+th, td {
+  border-bottom: 1px solid var(--line);
+  padding: 10px;
+  text-align: left;
+  vertical-align: top;
+}
+th {
+  background: #eef4fb;
+}
+.screenshots {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 14px;
+}
+.screenshots img {
+  width: 100%;
+  border: 1px solid var(--line);
+  border-radius: 6px;
+}
+pre {
+  overflow: auto;
+  background: #0f172a;
+  color: #dbeafe;
+  border-radius: 8px;
+  padding: 14px;
+  max-height: 560px;
+}
+</style>
+</head>
+<body>
+  <main>
+    
+<h1>Analisis Estatico Detallado</h1>
+<p>Resumen academico de SonarCloud, Semgrep y Snyk generado durante CI/CD para evaluar seguridad, mantenibilidad y dependencias.</p>
+<div class="summary">
+  <div class="metric"><strong>23</strong>Hallazgos Semgrep</div>
+  <div class="metric"><strong>1</strong>Vulnerabilidades Snyk deps</div>
+  <div class="metric"><strong>0</strong>Hallazgos Snyk Code</div>
+  <div class="metric"><strong>Configurado</strong>SonarCloud</div>
+</div>
+<div class="actions">
+  <a class="button" href="../semgrep/index.html">Ver Semgrep</a>
+  <a class="button" href="../snyk/dependencies.html">Ver Snyk dependencias</a>
+  <a class="button" href="../snyk/code.html">Ver Snyk Code</a>
+  <a class="button" href="https://sonarcloud.io/project/overview?id=UPT-FAING-EPIS_proyecto-si784-2026-i-u3-ids-sistema-deteccion-de-instrusos_u3">Abrir SonarCloud</a>
+</div>
+<section>
+  <h2>SonarCloud</h2>
+  <table>
+    <tbody>
+      <tr><th>Proyecto</th><td>UPT-FAING-EPIS_proyecto-si784-2026-i-u3-ids-sistema-deteccion-de-instrusos_u3</td></tr>
+      <tr><th>Organizacion</th><td>upt-faing-epis</td></tr>
+      <tr><th>Cobertura enviada</th><td>coverage.xml</td></tr>
+      <tr><th>Estado</th><td>El workflow ejecuta el escaneo cuando existe el secreto SONAR_TOKEN.</td></tr>
+    </tbody>
+  </table>
+</section>
+<section>
+  <h2>Snyk</h2>
+  <table>
+    <tbody>
+      <tr><th>Dependencias</th><td>Dependencias analizadas (1)</td></tr>
+      <tr><th>Codigo</th><td>Revisar salida (0)</td></tr>
+      <tr><th>Estado</th><td>El reporte se completa cuando existe el secreto SNYK_TOKEN.</td></tr>
+    </tbody>
+  </table>
+</section>
+<section>
+  <h2>Hallazgos Semgrep</h2>
+  <table>
+    <thead><tr><th>Herramienta</th><th>Severidad</th><th>Archivo</th><th>Linea</th><th>Mensaje</th></tr></thead>
+    <tbody><tr><td>Semgrep</td><td>WARNING</td><td>.github/workflows/bdd-tests.yml</td><td>20</td><td>GitHub Actions step uses a mutable tag or branch reference. Tags and branch names can be silently repointed by the action owner, enabling supply-chain attacks — as seen in the trivy-action and kics-github-action compromises. Pin the reference to a full 40-character commit SHA instead, e.g. `uses: actions/checkout@8ade135a41bc03ea155e62e844d188df1ea18608`.</td></tr>
+<tr><td>Semgrep</td><td>WARNING</td><td>.github/workflows/bdd-tests.yml</td><td>23</td><td>GitHub Actions step uses a mutable tag or branch reference. Tags and branch names can be silently repointed by the action owner, enabling supply-chain attacks — as seen in the trivy-action and kics-github-action compromises. Pin the reference to a full 40-character commit SHA instead, e.g. `uses: actions/checkout@8ade135a41bc03ea155e62e844d188df1ea18608`.</td></tr>
+<tr><td>Semgrep</td><td>WARNING</td><td>.github/workflows/ci-tests.yml</td><td>20</td><td>GitHub Actions step uses a mutable tag or branch reference. Tags and branch names can be silently repointed by the action owner, enabling supply-chain attacks — as seen in the trivy-action and kics-github-action compromises. Pin the reference to a full 40-character commit SHA instead, e.g. `uses: actions/checkout@8ade135a41bc03ea155e62e844d188df1ea18608`.</td></tr>
+<tr><td>Semgrep</td><td>WARNING</td><td>.github/workflows/ci-tests.yml</td><td>23</td><td>GitHub Actions step uses a mutable tag or branch reference. Tags and branch names can be silently repointed by the action owner, enabling supply-chain attacks — as seen in the trivy-action and kics-github-action compromises. Pin the reference to a full 40-character commit SHA instead, e.g. `uses: actions/checkout@8ade135a41bc03ea155e62e844d188df1ea18608`.</td></tr>
+<tr><td>Semgrep</td><td>WARNING</td><td>.github/workflows/ci-tests.yml</td><td>43</td><td>GitHub Actions step uses a mutable tag or branch reference. Tags and branch names can be silently repointed by the action owner, enabling supply-chain attacks — as seen in the trivy-action and kics-github-action compromises. Pin the reference to a full 40-character commit SHA instead, e.g. `uses: actions/checkout@8ade135a41bc03ea155e62e844d188df1ea18608`.</td></tr>
+<tr><td>Semgrep</td><td>WARNING</td><td>.github/workflows/ci-tests.yml</td><td>54</td><td>GitHub Actions step uses a mutable tag or branch reference. Tags and branch names can be silently repointed by the action owner, enabling supply-chain attacks — as seen in the trivy-action and kics-github-action compromises. Pin the reference to a full 40-character commit SHA instead, e.g. `uses: actions/checkout@8ade135a41bc03ea155e62e844d188df1ea18608`.</td></tr>
+<tr><td>Semgrep</td><td>WARNING</td><td>.github/workflows/ci-tests.yml</td><td>57</td><td>GitHub Actions step uses a mutable tag or branch reference. Tags and branch names can be silently repointed by the action owner, enabling supply-chain attacks — as seen in the trivy-action and kics-github-action compromises. Pin the reference to a full 40-character commit SHA instead, e.g. `uses: actions/checkout@8ade135a41bc03ea155e62e844d188df1ea18608`.</td></tr>
+<tr><td>Semgrep</td><td>WARNING</td><td>.github/workflows/deploy-pages.yml</td><td>23</td><td>GitHub Actions step uses a mutable tag or branch reference. Tags and branch names can be silently repointed by the action owner, enabling supply-chain attacks — as seen in the trivy-action and kics-github-action compromises. Pin the reference to a full 40-character commit SHA instead, e.g. `uses: actions/checkout@8ade135a41bc03ea155e62e844d188df1ea18608`.</td></tr>
+<tr><td>Semgrep</td><td>WARNING</td><td>.github/workflows/deploy-pages.yml</td><td>28</td><td>GitHub Actions step uses a mutable tag or branch reference. Tags and branch names can be silently repointed by the action owner, enabling supply-chain attacks — as seen in the trivy-action and kics-github-action compromises. Pin the reference to a full 40-character commit SHA instead, e.g. `uses: actions/checkout@8ade135a41bc03ea155e62e844d188df1ea18608`.</td></tr>
+<tr><td>Semgrep</td><td>WARNING</td><td>.github/workflows/deploy-pages.yml</td><td>34</td><td>GitHub Actions step uses a mutable tag or branch reference. Tags and branch names can be silently repointed by the action owner, enabling supply-chain attacks — as seen in the trivy-action and kics-github-action compromises. Pin the reference to a full 40-character commit SHA instead, e.g. `uses: actions/checkout@8ade135a41bc03ea155e62e844d188df1ea18608`.</td></tr>
+<tr><td>Semgrep</td><td>WARNING</td><td>.github/workflows/deploy-pages.yml</td><td>369</td><td>GitHub Actions step uses a mutable tag or branch reference. Tags and branch names can be silently repointed by the action owner, enabling supply-chain attacks — as seen in the trivy-action and kics-github-action compromises. Pin the reference to a full 40-character commit SHA instead, e.g. `uses: actions/checkout@8ade135a41bc03ea155e62e844d188df1ea18608`.</td></tr>
+<tr><td>Semgrep</td><td>WARNING</td><td>.github/workflows/mutation-tests.yml</td><td>19</td><td>GitHub Actions step uses a mutable tag or branch reference. Tags and branch names can be silently repointed by the action owner, enabling supply-chain attacks — as seen in the trivy-action and kics-github-action compromises. Pin the reference to a full 40-character commit SHA instead, e.g. `uses: actions/checkout@8ade135a41bc03ea155e62e844d188df1ea18608`.</td></tr>
+<tr><td>Semgrep</td><td>WARNING</td><td>.github/workflows/mutation-tests.yml</td><td>22</td><td>GitHub Actions step uses a mutable tag or branch reference. Tags and branch names can be silently repointed by the action owner, enabling supply-chain attacks — as seen in the trivy-action and kics-github-action compromises. Pin the reference to a full 40-character commit SHA instead, e.g. `uses: actions/checkout@8ade135a41bc03ea155e62e844d188df1ea18608`.</td></tr>
+<tr><td>Semgrep</td><td>WARNING</td><td>.github/workflows/static-analysis.yml</td><td>24</td><td>GitHub Actions step uses a mutable tag or branch reference. Tags and branch names can be silently repointed by the action owner, enabling supply-chain attacks — as seen in the trivy-action and kics-github-action compromises. Pin the reference to a full 40-character commit SHA instead, e.g. `uses: actions/checkout@8ade135a41bc03ea155e62e844d188df1ea18608`.</td></tr>
+<tr><td>Semgrep</td><td>WARNING</td><td>.github/workflows/static-analysis.yml</td><td>37</td><td>GitHub Actions step uses a mutable tag or branch reference. Tags and branch names can be silently repointed by the action owner, enabling supply-chain attacks — as seen in the trivy-action and kics-github-action compromises. Pin the reference to a full 40-character commit SHA instead, e.g. `uses: actions/checkout@8ade135a41bc03ea155e62e844d188df1ea18608`.</td></tr>
+<tr><td>Semgrep</td><td>WARNING</td><td>.github/workflows/static-analysis.yml</td><td>45</td><td>GitHub Actions step uses a mutable tag or branch reference. Tags and branch names can be silently repointed by the action owner, enabling supply-chain attacks — as seen in the trivy-action and kics-github-action compromises. Pin the reference to a full 40-character commit SHA instead, e.g. `uses: actions/checkout@8ade135a41bc03ea155e62e844d188df1ea18608`.</td></tr>
+<tr><td>Semgrep</td><td>WARNING</td><td>.github/workflows/static-analysis.yml</td><td>59</td><td>GitHub Actions step uses a mutable tag or branch reference. Tags and branch names can be silently repointed by the action owner, enabling supply-chain attacks — as seen in the trivy-action and kics-github-action compromises. Pin the reference to a full 40-character commit SHA instead, e.g. `uses: actions/checkout@8ade135a41bc03ea155e62e844d188df1ea18608`.</td></tr>
+<tr><td>Semgrep</td><td>WARNING</td><td>.github/workflows/static-analysis.yml</td><td>69</td><td>GitHub Actions step uses a mutable tag or branch reference. Tags and branch names can be silently repointed by the action owner, enabling supply-chain attacks — as seen in the trivy-action and kics-github-action compromises. Pin the reference to a full 40-character commit SHA instead, e.g. `uses: actions/checkout@8ade135a41bc03ea155e62e844d188df1ea18608`.</td></tr>
+<tr><td>Semgrep</td><td>WARNING</td><td>.github/workflows/static-analysis.yml</td><td>86</td><td>GitHub Actions step uses a mutable tag or branch reference. Tags and branch names can be silently repointed by the action owner, enabling supply-chain attacks — as seen in the trivy-action and kics-github-action compromises. Pin the reference to a full 40-character commit SHA instead, e.g. `uses: actions/checkout@8ade135a41bc03ea155e62e844d188df1ea18608`.</td></tr>
+<tr><td>Semgrep</td><td>WARNING</td><td>.github/workflows/ui-tests.yml</td><td>21</td><td>GitHub Actions step uses a mutable tag or branch reference. Tags and branch names can be silently repointed by the action owner, enabling supply-chain attacks — as seen in the trivy-action and kics-github-action compromises. Pin the reference to a full 40-character commit SHA instead, e.g. `uses: actions/checkout@8ade135a41bc03ea155e62e844d188df1ea18608`.</td></tr>
+<tr><td>Semgrep</td><td>WARNING</td><td>.github/workflows/ui-tests.yml</td><td>24</td><td>GitHub Actions step uses a mutable tag or branch reference. Tags and branch names can be silently repointed by the action owner, enabling supply-chain attacks — as seen in the trivy-action and kics-github-action compromises. Pin the reference to a full 40-character commit SHA instead, e.g. `uses: actions/checkout@8ade135a41bc03ea155e62e844d188df1ea18608`.</td></tr>
+<tr><td>Semgrep</td><td>WARNING</td><td>run_dashboard.py</td><td>14</td><td>Running flask app with host 0.0.0.0 could expose the server publicly.</td></tr>
+<tr><td>Semgrep</td><td>WARNING</td><td>trafficwatch_desktop.py</td><td>24</td><td>Running flask app with host 0.0.0.0 could expose the server publicly.</td></tr></tbody>
+  </table>
+</section>
+
+  </main>
+</body>
+</html>

@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Pruebas de Interfaz - TrafficWatch IDS</title>
+  <title>Escaneo SonarCloud - TrafficWatch IDS</title>
   <style>
 :root {
   color-scheme: light;
@@ -120,35 +120,28 @@ pre {
 <body>
   <main>
     
-<h1>Pruebas de Interfaz - TrafficWatch IDS</h1>
-<p>Validacion automatizada con Playwright sobre el dashboard principal y el laboratorio web controlado.</p>
+<h1>Escaneo en SonarCloud</h1>
+<p>Configuracion del escaneo de SonarCloud ejecutado desde GitHub Actions.</p>
 <div class="summary">
-  <div class="metric"><strong>2</strong>Total</div>
-  <div class="metric"><strong class="passed">2</strong>Aprobadas</div>
-  <div class="metric"><strong class="failed">0</strong>Fallidas / errores</div>
-  <div class="metric"><strong class="skipped">0</strong>Omitidas</div>
-  <div class="metric"><strong>Aprobado</strong>Estado</div>
+  <div class="metric"><strong>CI</strong>Origen</div>
+  <div class="metric"><strong>Python</strong>Lenguaje</div>
+  <div class="metric"><strong>coverage.xml</strong>Cobertura</div>
 </div>
 <div class="actions">
-  <a class="button" href="pytest-report.html">Ver reporte pytest-html</a>
+  <a class="button" href="https://sonarcloud.io/project/overview?id=UPT-FAING-EPIS_proyecto-si784-2026-i-u3-ids-sistema-deteccion-de-instrusos_u3">Abrir proyecto en SonarCloud</a>
 </div>
 <section>
-  <h2>Casos ejecutados</h2>
+  <h2>Parametros</h2>
   <table>
-    <thead><tr><th>Modulo</th><th>Prueba</th><th>Resultado</th><th>Tiempo</th></tr></thead>
-    <tbody><tr><td>tests_ui.test_dashboard_ui</td><td>test_dashboard_home_renders_main_navigation</td><td class='passed'>passed</td><td>1.207 s</td></tr>
-<tr><td>tests_ui.test_dashboard_ui</td><td>test_attack_lab_renders_remote_lab_buttons</td><td class='passed'>passed</td><td>1.356 s</td></tr></tbody>
+    <tbody>
+      <tr><th>sonar.projectKey</th><td>UPT-FAING-EPIS_proyecto-si784-2026-i-u3-ids-sistema-deteccion-de-instrusos_u3</td></tr>
+      <tr><th>sonar.organization</th><td>upt-faing-epis</td></tr>
+      <tr><th>sonar.sources</th><td>src,web,main.py,run_dashboard.py,trafficwatch_desktop.py</td></tr>
+      <tr><th>sonar.tests</th><td>tests,tests_ui,tests_mutation</td></tr>
+      <tr><th>Secreto requerido</th><td>SONAR_TOKEN en GitHub Actions Secrets.</td></tr>
+    </tbody>
   </table>
 </section>
-
-<section>
-  <h2>Evidencia visual</h2>
-  <div class="screenshots">
-    <figure><img src="screenshots/attack-lab.png" alt="attack-lab"><figcaption>attack-lab</figcaption></figure>
-    <figure><img src="screenshots/dashboard-home.png" alt="dashboard-home"><figcaption>dashboard-home</figcaption></figure>
-  </div>
-</section>
-
 
   </main>
 </body>

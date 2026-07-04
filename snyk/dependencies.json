@@ -1,0 +1,452 @@
+{
+  "vulnerabilities": [
+    {
+      "id": "SNYK-PYTHON-FLASK-15322678",
+      "title": "Use of Cache Containing Sensitive Information",
+      "CVSSv3": "CVSS:3.1/AV:N/AC:L/PR:N/UI:R/S:U/C:L/I:N/A:N",
+      "credit": [
+        "Shourya Jaiswal"
+      ],
+      "semver": {
+        "vulnerable": [
+          "[,3.1.3)"
+        ]
+      },
+      "exploit": "Not Defined",
+      "fixedIn": [
+        "3.1.3"
+      ],
+      "patches": [],
+      "insights": {
+        "triageAdvice": null
+      },
+      "language": "python",
+      "severity": "low",
+      "cvssScore": 2.3,
+      "functions": [],
+      "malicious": false,
+      "isDisputed": false,
+      "moduleName": "flask",
+      "references": [
+        {
+          "url": "https://github.com/pallets/flask/commit/089cb86dd22bff589a4eafb7ab8e42dc357623b4",
+          "title": "GitHub Commit"
+        },
+        {
+          "url": "https://github.com/pallets/flask/releases/tag/3.1.3",
+          "title": "GitHub Release"
+        }
+      ],
+      "cvssDetails": [
+        {
+          "assigner": "NVD",
+          "severity": "medium",
+          "cvssV3Vector": "CVSS:3.1/AV:N/AC:L/PR:N/UI:R/S:U/C:L/I:N/A:N",
+          "cvssV3BaseScore": 4.3,
+          "modificationTime": "2026-02-25T01:18:45.329651Z"
+        },
+        {
+          "assigner": "Red Hat",
+          "severity": "medium",
+          "cvssV3Vector": "CVSS:3.1/AV:N/AC:L/PR:N/UI:R/S:U/C:L/I:N/A:N",
+          "cvssV3BaseScore": 4.3,
+          "modificationTime": "2026-03-13T20:08:51.728417Z"
+        },
+        {
+          "assigner": "SUSE",
+          "severity": "medium",
+          "cvssV3Vector": "CVSS:3.1/AV:N/AC:L/PR:N/UI:R/S:U/C:H/I:N/A:N",
+          "cvssV3BaseScore": 6.5,
+          "modificationTime": "2026-03-10T11:56:29.515098Z"
+        }
+      ],
+      "cvssSources": [
+        {
+          "type": "primary",
+          "vector": "CVSS:4.0/AV:N/AC:L/AT:P/PR:N/UI:P/VC:L/VI:N/VA:N/SC:N/SI:N/SA:N",
+          "assigner": "Snyk",
+          "severity": "low",
+          "baseScore": 2.3,
+          "cvssVersion": "4.0",
+          "modificationTime": "2026-06-15T15:56:25.074507Z"
+        },
+        {
+          "type": "secondary",
+          "vector": "CVSS:3.1/AV:N/AC:L/PR:N/UI:R/S:U/C:L/I:N/A:N",
+          "assigner": "Snyk",
+          "severity": "medium",
+          "baseScore": 4.3,
+          "cvssVersion": "3.1",
+          "modificationTime": "2026-06-15T15:56:25.074507Z"
+        },
+        {
+          "type": "secondary",
+          "vector": "CVSS:3.1/AV:N/AC:L/PR:N/UI:R/S:U/C:L/I:N/A:N",
+          "assigner": "NVD",
+          "severity": "medium",
+          "baseScore": 4.3,
+          "cvssVersion": "3.1",
+          "modificationTime": "2026-02-25T01:18:45.329651Z"
+        },
+        {
+          "type": "secondary",
+          "vector": "CVSS:3.1/AV:N/AC:L/PR:N/UI:R/S:U/C:L/I:N/A:N",
+          "assigner": "Red Hat",
+          "severity": "medium",
+          "baseScore": 4.3,
+          "cvssVersion": "3.1",
+          "modificationTime": "2026-03-13T20:08:51.728417Z"
+        },
+        {
+          "type": "secondary",
+          "vector": "CVSS:3.1/AV:N/AC:L/PR:N/UI:R/S:U/C:H/I:N/A:N",
+          "assigner": "SUSE",
+          "severity": "medium",
+          "baseScore": 6.5,
+          "cvssVersion": "3.1",
+          "modificationTime": "2026-03-10T11:56:29.515098Z"
+        }
+      ],
+      "description": "## Overview\n\nAffected versions of this package are vulnerable to Use of Cache Containing Sensitive Information in the `session` object. An attacker can cause sensitive user-specific responses to be cached and served to other users by leveraging a caching proxy that does not ignore responses with cookies, when the application does not set a `Cache-Control` header and accesses the session only for keys without mutating or accessing values.\n\n**Note:**\n\nThis is only exploitable if the application is hosted behind a caching proxy that does not ignore responses with cookies, does not set a `Cache-Control` header to indicate that a page is private or should not be cached, and accesses the session in a way that does not access the values, only the keys, and does not mutate the session.\n## Remediation\nUpgrade `flask` to version 3.1.3 or higher.\n## References\n- [GitHub Commit](https://github.com/pallets/flask/commit/089cb86dd22bff589a4eafb7ab8e42dc357623b4)\n- [GitHub Release](https://github.com/pallets/flask/releases/tag/3.1.3)\n",
+      "epssDetails": {
+        "percentile": "0.28943",
+        "probability": "0.00374",
+        "modelVersion": "v2026.06.15"
+      },
+      "identifiers": {
+        "CVE": [
+          "CVE-2026-27205"
+        ],
+        "CWE": [
+          "CWE-524"
+        ],
+        "GHSA": [
+          "GHSA-68rp-wp8r-4726"
+        ]
+      },
+      "packageName": "flask",
+      "proprietary": false,
+      "creationTime": "2026-02-20T09:06:20.410566Z",
+      "functions_new": [],
+      "alternativeIds": [],
+      "disclosureTime": "2026-02-19T20:45:41Z",
+      "exploitDetails": {
+        "sources": [],
+        "maturityLevels": [
+          {
+            "type": "secondary",
+            "level": "Not Defined",
+            "format": "CVSSv3"
+          },
+          {
+            "type": "primary",
+            "level": "Not Defined",
+            "format": "CVSSv4"
+          }
+        ]
+      },
+      "packageManager": "pip",
+      "publicationTime": "2026-02-20T09:06:20.828213Z",
+      "severityBasedOn": "CVSS",
+      "modificationTime": "2026-06-15T15:56:25.074507Z",
+      "socialTrendAlert": false,
+      "severityWithCritical": "low",
+      "from": [
+        "proyecto-si784-2026-i-u3-ids-sistema-deteccion-de-instrusos_u3@0.0.0",
+        "flask@3.0.3"
+      ],
+      "upgradePath": [],
+      "isUpgradable": false,
+      "isPatchable": false,
+      "name": "flask",
+      "version": "3.0.3"
+    }
+  ],
+  "ok": false,
+  "dependencyCount": 10,
+  "org": "abel-gg-777",
+  "policy": "# Snyk (https://snyk.io) policy file, patches or ignores known vulnerabilities.\nversion: v1.25.1\nignore: {}\npatch: {}\n",
+  "isPrivate": true,
+  "licensesPolicy": {
+    "severities": {},
+    "orgLicenseRules": {
+      "AGPL-1.0": {
+        "licenseType": "AGPL-1.0",
+        "severity": "high",
+        "instructions": ""
+      },
+      "AGPL-3.0": {
+        "licenseType": "AGPL-3.0",
+        "severity": "high",
+        "instructions": ""
+      },
+      "Artistic-1.0": {
+        "licenseType": "Artistic-1.0",
+        "severity": "medium",
+        "instructions": ""
+      },
+      "Artistic-2.0": {
+        "licenseType": "Artistic-2.0",
+        "severity": "medium",
+        "instructions": ""
+      },
+      "CDDL-1.0": {
+        "licenseType": "CDDL-1.0",
+        "severity": "medium",
+        "instructions": ""
+      },
+      "CPOL-1.02": {
+        "licenseType": "CPOL-1.02",
+        "severity": "high",
+        "instructions": ""
+      },
+      "EPL-1.0": {
+        "licenseType": "EPL-1.0",
+        "severity": "medium",
+        "instructions": ""
+      },
+      "GPL-2.0": {
+        "licenseType": "GPL-2.0",
+        "severity": "high",
+        "instructions": ""
+      },
+      "GPL-3.0": {
+        "licenseType": "GPL-3.0",
+        "severity": "high",
+        "instructions": ""
+      },
+      "LGPL-2.0": {
+        "licenseType": "LGPL-2.0",
+        "severity": "medium",
+        "instructions": ""
+      },
+      "LGPL-2.1": {
+        "licenseType": "LGPL-2.1",
+        "severity": "medium",
+        "instructions": ""
+      },
+      "LGPL-3.0": {
+        "licenseType": "LGPL-3.0",
+        "severity": "medium",
+        "instructions": ""
+      },
+      "MPL-1.1": {
+        "licenseType": "MPL-1.1",
+        "severity": "medium",
+        "instructions": ""
+      },
+      "MPL-2.0": {
+        "licenseType": "MPL-2.0",
+        "severity": "medium",
+        "instructions": ""
+      },
+      "MS-RL": {
+        "licenseType": "MS-RL",
+        "severity": "medium",
+        "instructions": ""
+      },
+      "SimPL-2.0": {
+        "licenseType": "SimPL-2.0",
+        "severity": "high",
+        "instructions": ""
+      }
+    }
+  },
+  "packageManager": "pip",
+  "ignoreSettings": {
+    "adminOnly": false,
+    "reasonRequired": false,
+    "disregardFilesystemIgnores": false
+  },
+  "summary": "1 vulnerable dependency path",
+  "remediation": {
+    "unresolved": [
+      {
+        "id": "SNYK-PYTHON-FLASK-15322678",
+        "title": "Use of Cache Containing Sensitive Information",
+        "CVSSv3": "CVSS:3.1/AV:N/AC:L/PR:N/UI:R/S:U/C:L/I:N/A:N",
+        "credit": [
+          "Shourya Jaiswal"
+        ],
+        "semver": {
+          "vulnerable": [
+            "[,3.1.3)"
+          ]
+        },
+        "exploit": "Not Defined",
+        "fixedIn": [
+          "3.1.3"
+        ],
+        "patches": [],
+        "insights": {
+          "triageAdvice": null
+        },
+        "language": "python",
+        "severity": "low",
+        "cvssScore": 2.3,
+        "functions": [],
+        "malicious": false,
+        "isDisputed": false,
+        "moduleName": "flask",
+        "references": [
+          {
+            "url": "https://github.com/pallets/flask/commit/089cb86dd22bff589a4eafb7ab8e42dc357623b4",
+            "title": "GitHub Commit"
+          },
+          {
+            "url": "https://github.com/pallets/flask/releases/tag/3.1.3",
+            "title": "GitHub Release"
+          }
+        ],
+        "cvssDetails": [
+          {
+            "assigner": "NVD",
+            "severity": "medium",
+            "cvssV3Vector": "CVSS:3.1/AV:N/AC:L/PR:N/UI:R/S:U/C:L/I:N/A:N",
+            "cvssV3BaseScore": 4.3,
+            "modificationTime": "2026-02-25T01:18:45.329651Z"
+          },
+          {
+            "assigner": "Red Hat",
+            "severity": "medium",
+            "cvssV3Vector": "CVSS:3.1/AV:N/AC:L/PR:N/UI:R/S:U/C:L/I:N/A:N",
+            "cvssV3BaseScore": 4.3,
+            "modificationTime": "2026-03-13T20:08:51.728417Z"
+          },
+          {
+            "assigner": "SUSE",
+            "severity": "medium",
+            "cvssV3Vector": "CVSS:3.1/AV:N/AC:L/PR:N/UI:R/S:U/C:H/I:N/A:N",
+            "cvssV3BaseScore": 6.5,
+            "modificationTime": "2026-03-10T11:56:29.515098Z"
+          }
+        ],
+        "cvssSources": [
+          {
+            "type": "primary",
+            "vector": "CVSS:4.0/AV:N/AC:L/AT:P/PR:N/UI:P/VC:L/VI:N/VA:N/SC:N/SI:N/SA:N",
+            "assigner": "Snyk",
+            "severity": "low",
+            "baseScore": 2.3,
+            "cvssVersion": "4.0",
+            "modificationTime": "2026-06-15T15:56:25.074507Z"
+          },
+          {
+            "type": "secondary",
+            "vector": "CVSS:3.1/AV:N/AC:L/PR:N/UI:R/S:U/C:L/I:N/A:N",
+            "assigner": "Snyk",
+            "severity": "medium",
+            "baseScore": 4.3,
+            "cvssVersion": "3.1",
+            "modificationTime": "2026-06-15T15:56:25.074507Z"
+          },
+          {
+            "type": "secondary",
+            "vector": "CVSS:3.1/AV:N/AC:L/PR:N/UI:R/S:U/C:L/I:N/A:N",
+            "assigner": "NVD",
+            "severity": "medium",
+            "baseScore": 4.3,
+            "cvssVersion": "3.1",
+            "modificationTime": "2026-02-25T01:18:45.329651Z"
+          },
+          {
+            "type": "secondary",
+            "vector": "CVSS:3.1/AV:N/AC:L/PR:N/UI:R/S:U/C:L/I:N/A:N",
+            "assigner": "Red Hat",
+            "severity": "medium",
+            "baseScore": 4.3,
+            "cvssVersion": "3.1",
+            "modificationTime": "2026-03-13T20:08:51.728417Z"
+          },
+          {
+            "type": "secondary",
+            "vector": "CVSS:3.1/AV:N/AC:L/PR:N/UI:R/S:U/C:H/I:N/A:N",
+            "assigner": "SUSE",
+            "severity": "medium",
+            "baseScore": 6.5,
+            "cvssVersion": "3.1",
+            "modificationTime": "2026-03-10T11:56:29.515098Z"
+          }
+        ],
+        "description": "## Overview\n\nAffected versions of this package are vulnerable to Use of Cache Containing Sensitive Information in the `session` object. An attacker can cause sensitive user-specific responses to be cached and served to other users by leveraging a caching proxy that does not ignore responses with cookies, when the application does not set a `Cache-Control` header and accesses the session only for keys without mutating or accessing values.\n\n**Note:**\n\nThis is only exploitable if the application is hosted behind a caching proxy that does not ignore responses with cookies, does not set a `Cache-Control` header to indicate that a page is private or should not be cached, and accesses the session in a way that does not access the values, only the keys, and does not mutate the session.\n## Remediation\nUpgrade `flask` to version 3.1.3 or higher.\n## References\n- [GitHub Commit](https://github.com/pallets/flask/commit/089cb86dd22bff589a4eafb7ab8e42dc357623b4)\n- [GitHub Release](https://github.com/pallets/flask/releases/tag/3.1.3)\n",
+        "epssDetails": {
+          "percentile": "0.28943",
+          "probability": "0.00374",
+          "modelVersion": "v2026.06.15"
+        },
+        "identifiers": {
+          "CVE": [
+            "CVE-2026-27205"
+          ],
+          "CWE": [
+            "CWE-524"
+          ],
+          "GHSA": [
+            "GHSA-68rp-wp8r-4726"
+          ]
+        },
+        "packageName": "flask",
+        "proprietary": false,
+        "creationTime": "2026-02-20T09:06:20.410566Z",
+        "functions_new": [],
+        "alternativeIds": [],
+        "disclosureTime": "2026-02-19T20:45:41Z",
+        "exploitDetails": {
+          "sources": [],
+          "maturityLevels": [
+            {
+              "type": "secondary",
+              "level": "Not Defined",
+              "format": "CVSSv3"
+            },
+            {
+              "type": "primary",
+              "level": "Not Defined",
+              "format": "CVSSv4"
+            }
+          ]
+        },
+        "packageManager": "pip",
+        "publicationTime": "2026-02-20T09:06:20.828213Z",
+        "severityBasedOn": "CVSS",
+        "modificationTime": "2026-06-15T15:56:25.074507Z",
+        "socialTrendAlert": false,
+        "packagePopularityRank": 99,
+        "from": [
+          "proyecto-si784-2026-i-u3-ids-sistema-deteccion-de-instrusos_u3@0.0.0",
+          "flask@3.0.3"
+        ],
+        "upgradePath": [],
+        "isUpgradable": false,
+        "isPatchable": false,
+        "isPinnable": true,
+        "isRuntime": false,
+        "name": "flask",
+        "version": "3.0.3",
+        "severityWithCritical": "low"
+      }
+    ],
+    "upgrade": {},
+    "patch": {},
+    "ignore": {},
+    "pin": {
+      "flask@3.0.3": {
+        "upgradeTo": "flask@3.1.3",
+        "vulns": [
+          "SNYK-PYTHON-FLASK-15322678"
+        ],
+        "isTransitive": false
+      }
+    }
+  },
+  "filesystemPolicy": false,
+  "filtered": {
+    "ignore": [],
+    "patch": []
+  },
+  "uniqueCount": 1,
+  "projectName": "proyecto-si784-2026-i-u3-ids-sistema-deteccion-de-instrusos_u3",
+  "displayTargetFile": "requirements.txt",
+  "hasUnknownVersions": false,
+  "path": "/home/runner/work/proyecto-si784-2026-i-u3-ids-sistema-deteccion-de-instrusos_u3/proyecto-si784-2026-i-u3-ids-sistema-deteccion-de-instrusos_u3"
+}
