@@ -258,14 +258,44 @@ def parse_mutmut_results(path: Path) -> tuple[Counter, list[tuple[str, str]]]:
     return counts, rows
 
 
-def render_mutation_report(results_path: Path, output_path: Path) -> None:
+def parse_mutmut_run_summary(path: Path) -> dict[str, int]:
+    summary: dict[str, int] = {}
+    if not path.exists():
+        return summary
+
+    for line in path.read_text(encoding="utf-8", errors="replace").splitlines():
+        match = re.search(
+            r"(\d+)/(\d+)\D+(\d+)\D+(\d+)\D+(\d+)\D+(\d+)\D+(\d+)\D+(\d+)",
+            line,
+        )
+        if not match:
+            continue
+        checked, total, killed, no_tests, timeout, suspicious, survived, skipped = [
+            int(value) for value in match.groups()
+        ]
+        if total >= checked:
+            summary = {
+                "checked": checked,
+                "total": total,
+                "killed": killed,
+                "no_tests": no_tests,
+                "timeout": timeout,
+                "suspicious": suspicious,
+                "survived": survived,
+                "skipped": skipped,
+            }
+    return summary
+
+
+def render_mutation_report(results_path: Path, output_path: Path, run_log_path: Path | None = None) -> None:
     counts, rows = parse_mutmut_results(results_path)
-    total = sum(counts.values())
-    evaluated = total - counts["not_checked"]
-    killed = counts["killed"]
-    survived = counts["survived"]
+    summary = parse_mutmut_run_summary(run_log_path) if run_log_path else {}
+    total = summary.get("total", sum(counts.values()))
+    evaluated = summary.get("checked", total - counts["not_checked"])
+    killed = summary.get("killed", counts["killed"])
+    survived = summary.get("survived", counts["survived"])
     mutation_score = round((killed / evaluated) * 100, 2) if evaluated else 0
-    pending = counts["not_checked"]
+    pending = max(0, total - evaluated)
 
     rows_for_display = sorted(rows, key=lambda item: item[1] == "not_checked")
     sample_rows = "\n".join(
@@ -329,7 +359,11 @@ def main() -> None:
             screenshots_dir=Path(args["screenshots"]) if args.get("screenshots") else None,
         )
     elif report_type == "mutation":
-        render_mutation_report(Path(args["results"]), Path(args["output"]))
+        render_mutation_report(
+            Path(args["results"]),
+            Path(args["output"]),
+            Path(args["run-log"]) if args.get("run-log") else None,
+        )
     else:
         raise SystemExit("Uso: --type unit|ui|mutation ...")
 
