@@ -1,4 +1,6 @@
+import os
 import threading
+from pathlib import Path
 from tempfile import TemporaryDirectory
 
 import pytest
@@ -7,6 +9,14 @@ from werkzeug.serving import make_server
 
 from src.storage import AlertStorage
 from web import app as dashboard_app
+
+
+def save_screenshot(page, name):
+    screenshot_dir = os.environ.get("UI_SCREENSHOT_DIR")
+    if not screenshot_dir:
+        return
+    Path(screenshot_dir).mkdir(parents=True, exist_ok=True)
+    page.screenshot(path=str(Path(screenshot_dir) / name), full_page=True)
 
 
 @pytest.fixture(scope="session")
@@ -43,6 +53,7 @@ def test_dashboard_home_renders_main_navigation(live_dashboard):
         expect(page.locator("#statusNav")).to_contain_text("Estado IDS")
         expect(page.locator("#historyNav")).to_contain_text("Historial")
         expect(page.locator("#rulesNav")).to_contain_text("Reglas IDS")
+        save_screenshot(page, "dashboard-home.png")
 
         browser.close()
 
@@ -58,5 +69,6 @@ def test_attack_lab_renders_remote_lab_buttons(live_dashboard):
         expect(page.locator("h1")).to_contain_text("TrafficWatch Lab")
         expect(page.get_by_role("button", name="Escanear IP")).to_be_visible()
         expect(page.get_by_role("button", name="Enviar").first).to_be_visible()
+        save_screenshot(page, "attack-lab.png")
 
         browser.close()
