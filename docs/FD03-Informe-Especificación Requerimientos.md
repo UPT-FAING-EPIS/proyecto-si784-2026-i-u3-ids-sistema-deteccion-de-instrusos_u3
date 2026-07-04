@@ -25,7 +25,7 @@ Integrantes:
 
 # Informe de Especificacion de Requerimientos
 
-Version: **2.4**
+Version: **2.5**
 
 | Version | Hecha por | Revisada por | Aprobada por | Fecha | Motivo |
 |:--:|:--:|:--:|:--:|:--:|:--|
@@ -35,6 +35,7 @@ Version: **2.4**
 | 2.2 | APO, ECA | APO, ECA | P. Cuadros Q. | 2026-07-04 | Se agrega representacion de la arquitectura del sistema |
 | 2.3 | APO, ECA | APO, ECA | P. Cuadros Q. | 2026-07-04 | Se agrega modelo conceptual con paquetes y casos de uso |
 | 2.4 | APO, ECA | APO, ECA | P. Cuadros Q. | 2026-07-04 | Se agrega modelo logico y analisis de objetos |
+| 2.5 | APO, ECA | APO, ECA | P. Cuadros Q. | 2026-07-04 | Se agrega diagrama de actividades con objetos |
 
 ## 1. Introduccion
 
@@ -480,6 +481,61 @@ classDiagram
     Dashboard --> IntegracionSuricata
     Dashboard --> EscaneoNmap
     Dashboard --> RespuestaActiva
+```
+
+#### 5.3.2 Diagrama de Actividades con objetos
+
+El diagrama de actividades con objetos representa el flujo principal del sistema y los objetos que se generan, consultan o actualizan en cada etapa. Permite observar como una accion del usuario termina convirtiendose en trafico clasificado, alertas persistidas y resultados visibles en el dashboard.
+
+```mermaid
+flowchart TD
+    A([Inicio]) --> B[Usuario abre dashboard]
+    B --> O1[(Objeto: Dashboard)]
+    O1 --> C{Modo de ejecucion}
+
+    C -->|Captura local| D[Administrador inicia IDS]
+    D --> O2[(Objeto: IDS)]
+    O2 --> E[Detectar interfaz y red local]
+    E --> O3[(Objeto: EstadoIDS)]
+    E --> F[Capturar paquete de red]
+    F --> O4[(Objeto: Paquete)]
+    O4 --> G[Analizar paquete]
+    G --> O5[(Objeto: AnalizadorTrafico)]
+    O5 --> H[Consultar reglas IDS]
+    H --> O6[(Objeto: ReglaIDS)]
+    O6 --> I[Clasificar trafico]
+    I --> O7[(Objeto: TraficoClasificado)]
+    O7 --> J[Guardar trafico en JSON]
+
+    I --> K{Existe comportamiento sospechoso}
+    K -->|No| L[Actualizar dashboard]
+    K -->|Si| M[Generar alerta]
+    M --> O8[(Objeto: Alerta)]
+    O8 --> N[Validar cooldown]
+    N --> O9[(Objeto: HistorialAlertas)]
+    N --> P[Generar recomendacion defensiva]
+    P --> O10[(Objeto: RespuestaActiva)]
+    O10 --> Q[Guardar alerta en JSON]
+    Q --> L
+
+    C -->|Demo Render| R[Cargar dashboard demostrativo]
+    R --> O11[(Objeto: DespliegueRender)]
+    O11 --> L
+
+    C -->|Prueba controlada| S[Usuario ejecuta simulacion o Attack Lab]
+    S --> O12[(Objeto: EventoLaboratorio)]
+    O12 --> M
+
+    L --> T[Consultar APIs Flask]
+    T --> O9
+    T --> O7
+    T --> O3
+    T --> U[Mostrar alertas, graficos, estado e historial]
+    U --> V{Usuario solicita exportacion}
+    V -->|Si| W[Generar archivo JSON o CSV]
+    W --> O13[(Objeto: EvidenciaExportada)]
+    O13 --> X([Fin])
+    V -->|No| X([Fin])
 ```
 
 ## 6. Reglas de negocio IDS
