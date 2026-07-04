@@ -1,0 +1,162 @@
+name: Deploy QA Portal to GitHub Pages
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pages: write
+  id-token: write
+
+jobs:
+  build-reports:
+    name: Generate and Deploy Reports
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: pip
+
+      - name: Set up Node.js (for Snyk/HTML converters)
+        uses: actions/setup-node@v4
+        with:
+          node-version: 18
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements-dev.txt
+          pip install pytest-html behave-html-formatter
+          npm install -g snyk snyk-to-html
+
+      - name: Create Reports Directories
+        run: |
+          mkdir -p reports/unit-tests
+          mkdir -p reports/coverage
+          mkdir -p reports/bdd
+          mkdir -p reports/ui-tests
+          mkdir -p reports/mutation
+          mkdir -p reports/semgrep
+          mkdir -p reports/snyk
+
+      # 1. Pruebas Unitarias
+      - name: Unit Tests Report
+        run: |
+          python -m pytest tests -m "not integration" --html=reports/unit-tests/index.html --self-contained-html || true
+
+      # 2. Cobertura de Pruebas
+      - name: Coverage HTML Report
+        run: |
+          python -m pytest tests --cov=src --cov=web --cov-report=html:reports/coverage || true
+
+      # 3. Pruebas BDD (Behave)
+      - name: BDD Behave Report
+        run: |
+          python -m behave -f html -o reports/bdd/index.html features || true
+
+      # 4. Pruebas de Interfaz UI (Playwright)
+      - name: Install Playwright Browser
+        run: python -m playwright install --with-deps chromium
+      - name: UI Tests Report
+        run: |
+          python -m pytest tests_ui -m ui --html=reports/ui-tests/index.html --self-contained-html || true
+
+      # 5. Pruebas de Mutación (mutmut)
+      - name: Mutation Tests Report
+        run: |
+          mutmut run || true
+          mutmut html
+          mv html/* reports/mutation/ || true
+
+      # 6. Reporte de Seguridad Snyk (con Token)
+      - name: Snyk Vulnerability Report
+        env:
+          SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
+        run: |
+          if [ -n "$SNYK_TOKEN" ]; then
+            snyk test --file=requirements.txt --json | snyk-to-html -o reports/snyk/dependencies.html || true
+            snyk code test --json | snyk-to-html -o reports/snyk/code.html || true
+          else
+            echo "SNYK_TOKEN no configurado. Se omite el reporte de Snyk."
+            echo "<h3>Snyk no configurado</h3><p>Registra el SNYK_TOKEN en tus GitHub Secrets para habilitar este reporte.</p>" > reports/snyk/dependencies.html
+          fi
+
+      # 7. Crear el Index Dashboard del Portal de QA
+      - name: Generate QA Portal index.html
+        run: |
+          cat << 'EOF' > reports/index.html
+          <!DOCTYPE html>
+          <html lang="es">
+          <head>
+              <meta charset="UTF-8">
+              <meta name="viewport" content="width=device-width, initial-scale=1.0">
+              <title>QA & Security Portal - TrafficWatch IDS</title>
+              <style>
+                  body { font-family: 'Segoe UI', Arial, sans-serif; background-color: #0f172a; color: #f8fafc; margin: 40px; }
+                  h1 { color: #38bdf8; border-bottom: 2px solid #334155; padding-bottom: 15px; }
+                  .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px; margin-top: 30px; }
+                  .card { background-color: #1e293b; padding: 20px; border-radius: 12px; border: 1px solid #334155; transition: transform 0.2s; }
+                  .card:hover { transform: translateY(-5px); border-color: #38bdf8; }
+                  .card h3 { color: #f1f5f9; margin-top: 0; }
+                  .card p { color: #94a3b8; font-size: 0.9em; line-height: 1.5; }
+                  .btn { display: inline-block; background-color: #0284c7; color: white; padding: 8px 16px; border-radius: 6px; text-decoration: none; font-weight: bold; margin-top: 10px; }
+                  .btn:hover { background-color: #0369a1; }
+              </style>
+          </head>
+          <body>
+              <h1>TrafficWatch IDS - Portal de Reportes QA y Seguridad</h1>
+              <p>Resultados acumulados de pruebas y escaneos de seguridad generados en la última ejecución de CI/CD.</p>
+              
+              <div class="grid">
+                  <div class="card">
+                      <h3>Pruebas Unitarias</h3>
+                      <p>Resultados de la ejecución de pruebas unitarias sobre módulos críticos (src/ y web/).</p>
+                      <a href="./unit-tests/index.html" class="btn">Ver Reporte</a>
+                  </div>
+                  <div class="card">
+                      <h3>Cobertura de Código</h3>
+                      <p>Porcentaje de líneas de código evaluadas por las pruebas unitarias.</p>
+                      <a href="./coverage/index.html" class="btn">Ver Cobertura</a>
+                  </div>
+                  <div class="card">
+                      <h3>Pruebas BDD (Behave)</h3>
+                      <p>Validación de historias de usuario y criterios de aceptación con Behave.</p>
+                      <a href="./bdd/index.html" class="btn">Ver Escenarios</a>
+                  </div>
+                  <div class="card">
+                      <h3>Pruebas de Interfaz (Playwright)</h3>
+                      <p>Resultados de interacción del Dashboard de TrafficWatch.</p>
+                      <a href="./ui-tests/index.html" class="btn">Ver Pruebas UI</a>
+                  </div>
+                  <div class="card">
+                      <h3>Pruebas de Mutación</h3>
+                      <p>Evaluación de la calidad de las pruebas simulando fallos en el código fuente.</p>
+                      <a href="./mutation/index.html" class="btn">Ver Mutantes</a>
+                  </div>
+                  <div class="card">
+                      <h3>Seguridad - Snyk</h3>
+                      <p>Reportes de vulnerabilidades detectadas en dependencias de Python.</p>
+                      <a href="./snyk/dependencies.html" class="btn">Ver Dependencias</a>
+                  </div>
+              </div>
+          </body>
+          </html>
+          EOF
+
+      # 8. Desplegar carpeta a la rama gh-pages
+      - name: Deploy to GitHub Pages
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./reports
+          publish_branch: gh-pages
