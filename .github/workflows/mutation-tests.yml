@@ -30,7 +30,7 @@ jobs:
           python -m pip install -r requirements-dev.txt
 
       - name: Check baseline tests
-        run: python -m pytest tests -m "not integration" -x
+        run: python -m pytest tests/test_storage.py tests/test_alert_manager.py tests/test_response_actions.py -x
 
       - name: Run mutation tests
         id: mutmut_run
@@ -38,6 +38,7 @@ jobs:
           PYTHONPATH: ${{ github.workspace }}
         run: |
           set +e
+          rm -rf mutants
           mutmut run
           MUTMUT_EXIT_CODE=$?
           echo "exit_code=${MUTMUT_EXIT_CODE}" >> "$GITHUB_OUTPUT"

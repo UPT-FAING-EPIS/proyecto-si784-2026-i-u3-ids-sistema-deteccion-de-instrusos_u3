@@ -184,9 +184,8 @@ jobs:
 
       - name: Mutation tests report
         run: |
-          mutmut run "storage*" || true
-          mutmut run "alert_manager*" || true
-          mutmut run "response_actions*" || true
+          rm -rf mutants
+          mutmut run || true
           mutmut results > reports/mutation/results.txt || true
           python scripts/generate_qa_report_pages.py \
             --type mutation \

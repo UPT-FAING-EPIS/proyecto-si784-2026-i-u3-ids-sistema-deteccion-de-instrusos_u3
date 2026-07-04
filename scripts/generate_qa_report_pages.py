@@ -267,12 +267,13 @@ def render_mutation_report(results_path: Path, output_path: Path) -> None:
     mutation_score = round((killed / evaluated) * 100, 2) if evaluated else 0
     pending = counts["not_checked"]
 
+    rows_for_display = sorted(rows, key=lambda item: item[1] == "not_checked")
     sample_rows = "\n".join(
         "<tr>"
         f"<td>{html.escape(mutant)}</td>"
         f"<td class='{html.escape(status)}'>{html.escape(status.replace('_', ' '))}</td>"
         "</tr>"
-        for mutant, status in rows[:120]
+        for mutant, status in rows_for_display[:120]
     ) or '<tr><td colspan="2">No se encontraron resultados de mutacion.</td></tr>'
 
     diagnostic = (
