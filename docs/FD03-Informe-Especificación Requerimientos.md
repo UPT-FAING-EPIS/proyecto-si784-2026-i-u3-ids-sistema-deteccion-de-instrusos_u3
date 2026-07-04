@@ -25,7 +25,7 @@ Integrantes:
 
 # Informe de Especificacion de Requerimientos
 
-Version: **2.3**
+Version: **2.4**
 
 | Version | Hecha por | Revisada por | Aprobada por | Fecha | Motivo |
 |:--:|:--:|:--:|:--:|:--:|:--|
@@ -34,6 +34,7 @@ Version: **2.3**
 | 2.1 | APO, ECA | APO, ECA | P. Cuadros Q. | 2026-07-04 | Actualizacion segun codigo actual, APIs Flask, Render, Suricata IPS y respuesta activa |
 | 2.2 | APO, ECA | APO, ECA | P. Cuadros Q. | 2026-07-04 | Se agrega representacion de la arquitectura del sistema |
 | 2.3 | APO, ECA | APO, ECA | P. Cuadros Q. | 2026-07-04 | Se agrega modelo conceptual con paquetes y casos de uso |
+| 2.4 | APO, ECA | APO, ECA | P. Cuadros Q. | 2026-07-04 | Se agrega modelo logico y analisis de objetos |
 
 ## 1. Introduccion
 
@@ -348,6 +349,137 @@ flowchart TB
     ACT --> RF29
     ACT --> RF19
     ACT --> RF30
+```
+
+### 5.3 Modelo Logico
+
+El modelo logico describe los objetos principales que participan en TrafficWatch IDS y la forma en que se relacionan durante la captura, analisis, registro y visualizacion de eventos. Este modelo ayuda a pasar de los requerimientos hacia una estructura entendible para el diseno e implementacion.
+
+#### 5.3.1 Analisis de Objetos
+
+| Objeto | Tipo | Responsabilidad | Datos principales | Relacion |
+|---|---|---|---|---|
+| Usuario | Actor | Opera el dashboard y consulta resultados. | Nombre de usuario, rol, acciones solicitadas. | Interactua con Dashboard, Attack Lab y Exportacion. |
+| Administrador | Actor | Inicia captura real y acciones defensivas con permisos. | Rol administrador, permisos del sistema. | Ejecuta IDS, Nmap validado y bloqueo temporal. |
+| Dashboard | Objeto de interfaz | Presenta alertas, graficos, historial, estado y acciones. | Filtros, pagina actual, datos de APIs. | Consulta Alertas, Trafico, Estado e Integraciones. |
+| IDS | Objeto de control | Coordina captura, analisis y estado operativo. | Interfaz, red local, estado de ejecucion. | Usa Capturador, Analizador y Estado. |
+| CapturadorPaquetes | Objeto tecnico | Captura paquetes desde la interfaz de red. | Interfaz, paquete observado, callback. | Entrega paquetes al Analizador. |
+| AnalizadorTrafico | Objeto de dominio | Clasifica trafico y evalua reglas IDS. | IP origen, IP destino, protocolo, puerto, regla activada. | Genera TraficoClasificado y solicita Alertas. |
+| ReglaIDS | Objeto de configuracion | Define umbrales y condiciones de deteccion. | Tipo de regla, umbral, ventana de tiempo, puertos. | Es usada por AnalizadorTrafico. |
+| Alerta | Objeto de dominio | Representa un evento sospechoso detectado. | Tipo, severidad, IP origen, descripcion, fecha. | Se guarda en HistorialAlertas. |
+| TraficoClasificado | Objeto de dominio | Registra trafico observado y su categoria. | Protocolo, origen, destino, puerto, clasificacion. | Se guarda para visualizacion y exportacion. |
+| EstadoIDS | Objeto de estado | Informa si el IDS esta activo y que red monitorea. | Activo, interfaz, IP local, gateway, ultimo latido. | Es consultado por Dashboard. |
+| HistorialAlertas | Objeto de persistencia | Almacena y devuelve alertas en JSON. | Lista de alertas, ruta `logs/alerts.json`. | Es consultado por Dashboard y Exportacion. |
+| IntegracionSuricata | Objeto de integracion | Lee eventos EVE y genera datos IPS de demostracion. | Ruta EVE, reglas locales, politicas IPS. | Se consulta desde Dashboard. |
+| EscaneoNmap | Objeto de integracion | Ejecuta escaneo local validado. | Objetivo, puertos permitidos, resultado. | Puede generar alertas controladas. |
+| RespuestaActiva | Objeto de servicio | Genera recomendaciones y bloqueo SSH temporal autorizado. | IP objetivo, tipo de alerta, duracion. | Se asocia con Alerta y Administrador. |
+| DespliegueRender | Objeto de despliegue | Publica una demo web sin captura real. | URL publica, build command, start command. | Expone Dashboard en modo demostracion. |
+
+```mermaid
+classDiagram
+    class Usuario {
+        +rol
+        +consultar_dashboard()
+        +exportar_evidencia()
+    }
+
+    class Administrador {
+        +permisos
+        +iniciar_ids()
+        +aplicar_bloqueo()
+    }
+
+    class Dashboard {
+        +mostrar_alertas()
+        +mostrar_graficos()
+        +consultar_estado()
+        +exportar()
+    }
+
+    class IDS {
+        +interfaz
+        +red_local
+        +iniciar()
+        +actualizar_estado()
+    }
+
+    class CapturadorPaquetes {
+        +interfaz
+        +capturar()
+    }
+
+    class AnalizadorTrafico {
+        +analizar_paquete()
+        +clasificar_trafico()
+        +evaluar_reglas()
+    }
+
+    class ReglaIDS {
+        +tipo
+        +umbral
+        +ventana_tiempo
+    }
+
+    class Alerta {
+        +tipo
+        +severidad
+        +ip_origen
+        +descripcion
+        +fecha
+    }
+
+    class TraficoClasificado {
+        +protocolo
+        +origen
+        +destino
+        +clasificacion
+    }
+
+    class EstadoIDS {
+        +activo
+        +interfaz
+        +ip_local
+        +ultimo_latido
+    }
+
+    class HistorialAlertas {
+        +ruta_json
+        +guardar()
+        +leer()
+        +limpiar()
+    }
+
+    class IntegracionSuricata {
+        +leer_eve()
+        +generar_evento_demo()
+    }
+
+    class EscaneoNmap {
+        +objetivo
+        +puertos
+        +ejecutar()
+    }
+
+    class RespuestaActiva {
+        +generar_recomendacion()
+        +bloquear_ssh_temporal()
+    }
+
+    Usuario --> Dashboard
+    Administrador --> IDS
+    Administrador --> RespuestaActiva
+    IDS --> CapturadorPaquetes
+    IDS --> EstadoIDS
+    CapturadorPaquetes --> AnalizadorTrafico
+    AnalizadorTrafico --> ReglaIDS
+    AnalizadorTrafico --> TraficoClasificado
+    AnalizadorTrafico --> Alerta
+    Alerta --> HistorialAlertas
+    Dashboard --> HistorialAlertas
+    Dashboard --> EstadoIDS
+    Dashboard --> IntegracionSuricata
+    Dashboard --> EscaneoNmap
+    Dashboard --> RespuestaActiva
 ```
 
 ## 6. Reglas de negocio IDS
