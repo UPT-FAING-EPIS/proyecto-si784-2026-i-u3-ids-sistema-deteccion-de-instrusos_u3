@@ -33,4 +33,4 @@ TOTAL                          1109    729    34%
 Coverage HTML written to dir reports/coverage
 
 
-======================= 14 passed, 3 deselected in 1.00s =======================
+======================= 14 passed, 3 deselected in 0.95s =======================
