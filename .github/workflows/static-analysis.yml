@@ -1,0 +1,88 @@
+name: Static Analysis
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+  schedule:
+    - cron: "27 6 * * 1"
+
+permissions:
+  contents: read
+
+jobs:
+  semgrep:
+    name: Semgrep CE
+    runs-on: ubuntu-latest
+    container:
+      image: semgrep/semgrep
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Run Semgrep
+        run: semgrep scan --config auto
+
+  snyk:
+    name: Snyk dependencies
+    runs-on: ubuntu-latest
+    env:
+      SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Skip when SNYK_TOKEN is missing
+        if: env.SNYK_TOKEN == ''
+        run: echo "SNYK_TOKEN no configurado. Se omite Snyk."
+
+      - name: Run Snyk
+        if: env.SNYK_TOKEN != ''
+        uses: snyk/actions/python-3.11@master
+        env:
+          SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
+        with:
+          args: --file=requirements.txt --severity-threshold=high
+
+  sonar:
+    name: SonarQube Cloud
+    runs-on: ubuntu-latest
+    env:
+      SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Skip when SONAR_TOKEN is missing
+        if: env.SONAR_TOKEN == ''
+        run: echo "SONAR_TOKEN no configurado. Se omite SonarQube Cloud."
+
+      - name: Set up Python
+        if: env.SONAR_TOKEN != ''
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: pip
+
+      - name: Install dependencies
+        if: env.SONAR_TOKEN != ''
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install -r requirements-dev.txt
+
+      - name: Generate coverage
+        if: env.SONAR_TOKEN != ''
+        run: python -m pytest tests -m "not integration" --cov=src --cov=web --cov-report=xml
+
+      - name: Run SonarQube scan
+        if: env.SONAR_TOKEN != ''
+        uses: SonarSource/sonarqube-scan-action@v7
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}

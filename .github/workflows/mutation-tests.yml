@@ -1,0 +1,37 @@
+name: Mutation Tests
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "43 7 * * 6"
+
+permissions:
+  contents: read
+
+jobs:
+  mutmut:
+    name: Mutmut critical modules
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: pip
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install -r requirements-dev.txt
+
+      - name: Run mutation tests
+        run: mutmut run --paths-to-mutate src/analyzer.py,src/alert_manager.py,src/storage.py,src/response_actions.py,src/suricata_integration.py
+
+      - name: Show mutation results
+        if: always()
+        run: mutmut results
