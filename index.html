@@ -18,38 +18,43 @@
 </head>
 <body>
     <h1>TrafficWatch IDS - Portal de Reportes QA y Seguridad</h1>
-    <p>Resultados acumulados de pruebas y escaneos de seguridad generados en la última ejecución de CI/CD.</p>
-    
+    <p>Resultados acumulados de pruebas y escaneos de seguridad generados en la ultima ejecucion de CI/CD.</p>
+
     <div class="grid">
         <div class="card">
             <h3>Pruebas Unitarias</h3>
-            <p>Resultados de la ejecución de pruebas unitarias sobre módulos críticos (src/ y web/).</p>
+            <p>Resultados de la ejecucion de pruebas unitarias sobre modulos criticos (src/ y web/).</p>
             <a href="./unit-tests/index.html" class="btn">Ver Reporte</a>
         </div>
         <div class="card">
-            <h3>Cobertura de Código</h3>
-            <p>Porcentaje de líneas de código evaluadas por las pruebas unitarias.</p>
+            <h3>Cobertura de Codigo</h3>
+            <p>Porcentaje de lineas de codigo evaluadas por las pruebas unitarias.</p>
             <a href="./coverage/index.html" class="btn">Ver Cobertura</a>
         </div>
         <div class="card">
             <h3>Pruebas BDD (Behave)</h3>
-            <p>Validación de historias de usuario y criterios de aceptación con Behave.</p>
+            <p>Validacion de historias de usuario y criterios de aceptacion con Behave.</p>
             <a href="./bdd/index.html" class="btn">Ver Escenarios</a>
         </div>
         <div class="card">
             <h3>Pruebas de Interfaz (Playwright)</h3>
-            <p>Resultados de interacción del Dashboard de TrafficWatch.</p>
+            <p>Resultados de interaccion del Dashboard de TrafficWatch.</p>
             <a href="./ui-tests/index.html" class="btn">Ver Pruebas UI</a>
         </div>
         <div class="card">
-            <h3>Pruebas de Mutación</h3>
-            <p>Evaluación de la calidad de las pruebas simulando fallos en el código fuente.</p>
+            <h3>Pruebas de Mutacion</h3>
+            <p>Evaluacion de la calidad de las pruebas simulando fallos en el codigo fuente.</p>
             <a href="./mutation/index.html" class="btn">Ver Mutantes</a>
         </div>
         <div class="card">
             <h3>Seguridad - Snyk</h3>
             <p>Reportes de vulnerabilidades detectadas en dependencias de Python.</p>
             <a href="./snyk/dependencies.html" class="btn">Ver Dependencias</a>
+        </div>
+        <div class="card">
+            <h3>Seguridad - Semgrep</h3>
+            <p>Analisis estatico de codigo fuente con reglas de seguridad y calidad.</p>
+            <a href="./semgrep/index.html" class="btn">Ver Semgrep</a>
         </div>
     </div>
 </body>

@@ -1,0 +1,120 @@
+[
+{
+  "description": [
+    "Como equipo del proyecto",
+    "Quiero validar el dashboard desde escenarios BDD",
+    "Para confirmar que las funciones demo siguen disponibles en CI"
+  ],
+  "elements": [
+    {
+      "keyword": "Scenario",
+      "location": "features/dashboard.feature:6",
+      "name": "Consultar estado del IDS",
+      "status": "passed",
+      "steps": [
+        {
+          "keyword": "Given",
+          "location": "features/dashboard.feature:7",
+          "match": {
+            "arguments": [],
+            "location": "features/steps/dashboard_steps.py:10"
+          },
+          "name": "el dashboard Flask esta disponible",
+          "result": {
+            "duration": 0.004639625549316406,
+            "status": "passed"
+          },
+          "step_type": "given"
+        },
+        {
+          "keyword": "When",
+          "location": "features/dashboard.feature:8",
+          "match": {
+            "arguments": [],
+            "location": "features/steps/dashboard_steps.py:25"
+          },
+          "name": "consulto la API de estado",
+          "result": {
+            "duration": 0.001859903335571289,
+            "status": "passed"
+          },
+          "step_type": "when"
+        },
+        {
+          "keyword": "Then",
+          "location": "features/dashboard.feature:9",
+          "match": {
+            "arguments": [],
+            "location": "features/steps/dashboard_steps.py:30"
+          },
+          "name": "recibo un estado valido del IDS",
+          "result": {
+            "duration": 9.059906005859375e-05,
+            "status": "passed"
+          },
+          "step_type": "then"
+        }
+      ],
+      "tags": [],
+      "type": "scenario"
+    },
+    {
+      "keyword": "Scenario",
+      "location": "features/dashboard.feature:11",
+      "name": "Generar una alerta simulada",
+      "status": "passed",
+      "steps": [
+        {
+          "keyword": "Given",
+          "location": "features/dashboard.feature:12",
+          "match": {
+            "arguments": [],
+            "location": "features/steps/dashboard_steps.py:10"
+          },
+          "name": "el dashboard Flask esta disponible",
+          "result": {
+            "duration": 0.0005807876586914062,
+            "status": "passed"
+          },
+          "step_type": "given"
+        },
+        {
+          "keyword": "When",
+          "location": "features/dashboard.feature:13",
+          "match": {
+            "arguments": [],
+            "location": "features/steps/dashboard_steps.py:40"
+          },
+          "name": "genero una simulacion de fuerza bruta SSH",
+          "result": {
+            "duration": 0.0008940696716308594,
+            "status": "passed"
+          },
+          "step_type": "when"
+        },
+        {
+          "keyword": "Then",
+          "location": "features/dashboard.feature:14",
+          "match": {
+            "arguments": [],
+            "location": "features/steps/dashboard_steps.py:45"
+          },
+          "name": "la alerta queda registrada en el historial",
+          "result": {
+            "duration": 0.0005340576171875,
+            "status": "passed"
+          },
+          "step_type": "then"
+        }
+      ],
+      "tags": [],
+      "type": "scenario"
+    }
+  ],
+  "keyword": "Feature",
+  "location": "features/dashboard.feature:1",
+  "name": "Dashboard de TrafficWatch IDS",
+  "status": "passed",
+  "tags": []
+}
+]

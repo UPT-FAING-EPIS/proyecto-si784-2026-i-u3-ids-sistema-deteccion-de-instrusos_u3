@@ -1,0 +1,36 @@
+============================= test session starts ==============================
+platform linux -- Python 3.11.15, pytest-8.3.2, pluggy-1.6.0
+rootdir: /home/runner/work/proyecto-si784-2026-i-u3-ids-sistema-deteccion-de-instrusos_u3/proyecto-si784-2026-i-u3-ids-sistema-deteccion-de-instrusos_u3
+configfile: pytest.ini
+plugins: metadata-3.1.1, html-4.2.0, cov-5.0.0
+collected 17 items / 3 deselected / 14 selected
+
+tests/test_alert_manager.py ..                                           [ 14%]
+tests/test_network_utils.py ...                                          [ 35%]
+tests/test_response_actions.py ....                                      [ 64%]
+tests/test_storage.py .                                                  [ 71%]
+tests/test_traffic_classification.py ....                                [100%]
+
+---------- coverage: platform linux, python 3.11.15-final-0 ----------
+Name                          Stmts   Miss  Cover
+-------------------------------------------------
+src/__init__.py                   0      0   100%
+src/alert_manager.py             33      2    94%
+src/analyzer.py                 184    128    30%
+src/network_scanner.py           77     60    22%
+src/network_utils.py            101     60    41%
+src/packet_capture.py            11     11     0%
+src/real_scan.py                 35     25    29%
+src/response_actions.py          75     12    84%
+src/status_manager.py            39     27    31%
+src/storage.py                   32      7    78%
+src/suricata_integration.py      78     62    21%
+src/utils.py                     15     15     0%
+web/__init__.py                   0      0   100%
+web/app.py                      429    320    25%
+-------------------------------------------------
+TOTAL                          1109    729    34%
+Coverage HTML written to dir reports/coverage
+
+
+======================= 14 passed, 3 deselected in 0.94s =======================
