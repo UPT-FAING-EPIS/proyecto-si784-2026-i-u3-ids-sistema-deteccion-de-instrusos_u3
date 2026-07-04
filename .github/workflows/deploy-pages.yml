@@ -14,7 +14,6 @@ env:
   PYTHONPATH: ${{ github.workspace }}
 
 jobs:
-
   build-reports:
     name: Generate and Deploy Reports
     runs-on: ubuntu-latest
@@ -31,7 +30,7 @@ jobs:
           python-version: "3.11"
           cache: pip
 
-      - name: Set up Node.js (for Snyk/HTML converters)
+      - name: Set up Node.js for Snyk reports
         uses: actions/setup-node@v4
         with:
           node-version: 18
@@ -39,11 +38,11 @@ jobs:
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
-          pip install -r requirements-dev.txt
-          pip install "pytest-html>=4,<5" behave-html-formatter jinja2
-          npm install -g snyk snyk-to-html
+          python -m pip install -r requirements-dev.txt
+          python -m pip install "pytest-html>=4,<5" jinja2
+          npm install -g snyk snyk-to-html || true
 
-      - name: Create Reports Directories
+      - name: Create report directories
         run: |
           mkdir -p reports/unit-tests
           mkdir -p reports/coverage
@@ -52,44 +51,199 @@ jobs:
           mkdir -p reports/mutation
           mkdir -p reports/semgrep
           mkdir -p reports/snyk
+          touch reports/.nojekyll
 
-      # 1. Pruebas Unitarias
-      - name: Unit Tests Report
+      - name: Unit tests report
         run: |
           python -m pytest tests -m "not integration" --html=reports/unit-tests/index.html --self-contained-html || true
+          if [ ! -f reports/unit-tests/index.html ]; then
+            cat > reports/unit-tests/index.html <<'EOF'
+          <!doctype html><html lang="es"><meta charset="utf-8"><title>Pruebas Unitarias</title><body><h1>Pruebas Unitarias</h1><p>No se pudo generar el reporte HTML de pytest.</p></body></html>
+          EOF
+          fi
 
-      # 2. Cobertura de Pruebas
-      - name: Coverage HTML Report
+      - name: Coverage HTML report
         run: |
-          python -m coverage run -m pytest tests -m "not integration" || true
-          python -m coverage html -d reports/coverage || true
+          python -m pytest tests -m "not integration" --cov=src --cov=web --cov-report=html:reports/coverage --cov-report=term > reports/coverage/coverage.txt 2>&1 || true
+          if [ ! -f reports/coverage/index.html ]; then
+            cat > reports/coverage/index.html <<'EOF'
+          <!doctype html><html lang="es"><meta charset="utf-8"><title>Cobertura de Codigo</title><body><h1>Cobertura de Codigo</h1><p>No se pudo generar el reporte HTML de cobertura. Revisa el log incluido abajo.</p><pre>
+          EOF
+            cat reports/coverage/coverage.txt >> reports/coverage/index.html || true
+            echo '</pre></body></html>' >> reports/coverage/index.html
+          fi
 
-      # 3. Pruebas BDD (Behave)
-      - name: BDD Behave Report
+      - name: BDD Behave report
         run: |
-          python -m behave -f html -o reports/bdd/index.html features || true
+          python -m behave -f json.pretty -o reports/bdd/report.json features > reports/bdd/behave.txt 2>&1 || true
+          python - <<'PY'
+          import json
+          from html import escape
+          from pathlib import Path
 
-      # 4. Pruebas de Interfaz UI (Playwright)
-      - name: Install Playwright Browser
-        run: python -m playwright install --with-deps chromium
-      - name: UI Tests Report
+          report_path = Path("reports/bdd/report.json")
+          log_path = Path("reports/bdd/behave.txt")
+          output_path = Path("reports/bdd/index.html")
+
+          try:
+              features = json.loads(report_path.read_text(encoding="utf-8")) if report_path.exists() else []
+          except json.JSONDecodeError:
+              features = []
+
+          rows = []
+          total = passed = failed = skipped = 0
+          for feature in features:
+              feature_name = feature.get("name", "Feature sin nombre")
+              for element in feature.get("elements", []):
+                  if element.get("type") != "scenario":
+                      continue
+                  total += 1
+                  statuses = [
+                      step.get("result", {}).get("status", "unknown")
+                      for step in element.get("steps", [])
+                  ]
+                  if any(status == "failed" for status in statuses):
+                      status = "failed"
+                      failed += 1
+                  elif statuses and all(status == "passed" for status in statuses):
+                      status = "passed"
+                      passed += 1
+                  else:
+                      status = "skipped"
+                      skipped += 1
+
+                  rows.append(
+                      "<tr>"
+                      f"<td>{escape(feature_name)}</td>"
+                      f"<td>{escape(element.get('name', 'Escenario sin nombre'))}</td>"
+                      f"<td class='{status}'>{escape(status)}</td>"
+                      "</tr>"
+                  )
+
+          log_text = escape(log_path.read_text(encoding="utf-8", errors="replace")) if log_path.exists() else ""
+          table_rows = "".join(rows) or '<tr><td colspan="3">No se encontraron escenarios en el reporte JSON.</td></tr>'
+          html = f"""<!doctype html>
+          <html lang="es">
+          <head>
+            <meta charset="utf-8">
+            <meta name="viewport" content="width=device-width, initial-scale=1">
+            <title>Pruebas BDD - TrafficWatch IDS</title>
+            <style>
+              body {{ font-family: Arial, sans-serif; margin: 32px; color: #172033; }}
+              h1 {{ color: #0f5f8f; }}
+              .summary {{ display: flex; gap: 12px; flex-wrap: wrap; margin: 20px 0; }}
+              .metric {{ border: 1px solid #d6dde8; border-radius: 8px; padding: 12px 16px; min-width: 120px; }}
+              .metric strong {{ display: block; font-size: 1.6rem; }}
+              table {{ border-collapse: collapse; width: 100%; margin-top: 18px; }}
+              th, td {{ border: 1px solid #d6dde8; padding: 10px; text-align: left; }}
+              th {{ background: #eef4fb; }}
+              .passed {{ color: #16803c; font-weight: bold; }}
+              .failed {{ color: #b42318; font-weight: bold; }}
+              .skipped {{ color: #8a5a00; font-weight: bold; }}
+              pre {{ background: #f6f8fb; border: 1px solid #d6dde8; padding: 12px; overflow: auto; }}
+            </style>
+          </head>
+          <body>
+            <h1>Pruebas BDD (Behave)</h1>
+            <p>Validacion de historias de usuario y criterios de aceptacion del dashboard.</p>
+            <section class="summary">
+              <div class="metric"><strong>{total}</strong>Total</div>
+              <div class="metric"><strong>{passed}</strong>Aprobados</div>
+              <div class="metric"><strong>{failed}</strong>Fallidos</div>
+              <div class="metric"><strong>{skipped}</strong>Omitidos</div>
+            </section>
+            <table>
+              <thead><tr><th>Feature</th><th>Escenario</th><th>Estado</th></tr></thead>
+              <tbody>{table_rows}</tbody>
+            </table>
+            <h2>Salida de Behave</h2>
+            <pre>{log_text}</pre>
+          </body>
+          </html>
+          """
+          output_path.write_text(html, encoding="utf-8")
+          PY
+
+      - name: Install Playwright browser
+        run: python -m playwright install --with-deps chromium || true
+
+      - name: UI tests report
         run: |
           python -m pytest tests_ui -m ui --html=reports/ui-tests/index.html --self-contained-html || true
+          if [ ! -f reports/ui-tests/index.html ]; then
+            cat > reports/ui-tests/index.html <<'EOF'
+          <!doctype html><html lang="es"><meta charset="utf-8"><title>Pruebas UI</title><body><h1>Pruebas de Interfaz</h1><p>No se pudo generar el reporte HTML de Playwright/pytest.</p></body></html>
+          EOF
+          fi
 
-      # 5. Pruebas de Mutación (mutmut)
-      - name: Mutation Tests Report
+      - name: Mutation tests report
         run: |
           mutmut run || true
-          mkdir -p reports/mutation
           mutmut results > reports/mutation/results.txt || true
           cat > reports/mutation/index.html <<'EOF'
-          <html><body><h2>Mutmut Results</h2><pre>
+          <!doctype html><html lang="es"><meta charset="utf-8"><title>Pruebas de Mutacion</title><body><h1>Mutmut Results</h1><pre>
           EOF
-          cat reports/mutation/results.txt >> reports/mutation/index.html
+          cat reports/mutation/results.txt >> reports/mutation/index.html || true
           echo '</pre></body></html>' >> reports/mutation/index.html
 
-      # 6. Reporte de Seguridad Snyk (con Token)
-      - name: Snyk Vulnerability Report
+      - name: Semgrep security report
+        run: |
+          python -m pip install semgrep || true
+          semgrep scan --config auto --json --output reports/semgrep/semgrep.json || true
+          python - <<'PY'
+          import json
+          from html import escape
+          from pathlib import Path
+
+          report_path = Path("reports/semgrep/semgrep.json")
+          output_path = Path("reports/semgrep/index.html")
+          try:
+              data = json.loads(report_path.read_text(encoding="utf-8")) if report_path.exists() else {}
+          except json.JSONDecodeError:
+              data = {}
+          results = data.get("results", [])
+
+          rows = []
+          for item in results:
+              extra = item.get("extra", {})
+              rows.append(
+                  "<tr>"
+                  f"<td>{escape(item.get('path', ''))}</td>"
+                  f"<td>{escape(str(item.get('start', {}).get('line', '')))}</td>"
+                  f"<td>{escape(extra.get('severity', 'INFO'))}</td>"
+                  f"<td>{escape(extra.get('message', ''))}</td>"
+                  "</tr>"
+              )
+
+          table_rows = "".join(rows) or '<tr><td colspan="4">Semgrep no reporto hallazgos o no genero resultados.</td></tr>'
+          html = f"""<!doctype html>
+          <html lang="es">
+          <head>
+            <meta charset="utf-8">
+            <meta name="viewport" content="width=device-width, initial-scale=1">
+            <title>Semgrep - TrafficWatch IDS</title>
+            <style>
+              body {{ font-family: Arial, sans-serif; margin: 32px; color: #172033; }}
+              h1 {{ color: #0f5f8f; }}
+              table {{ border-collapse: collapse; width: 100%; margin-top: 18px; }}
+              th, td {{ border: 1px solid #d6dde8; padding: 10px; text-align: left; vertical-align: top; }}
+              th {{ background: #eef4fb; }}
+            </style>
+          </head>
+          <body>
+            <h1>Analisis Estatico Semgrep</h1>
+            <p>Hallazgos detectados: <strong>{len(results)}</strong></p>
+            <table>
+              <thead><tr><th>Archivo</th><th>Linea</th><th>Severidad</th><th>Mensaje</th></tr></thead>
+              <tbody>{table_rows}</tbody>
+            </table>
+          </body>
+          </html>
+          """
+          output_path.write_text(html, encoding="utf-8")
+          PY
+
+      - name: Snyk vulnerability report
         env:
           SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
         run: |
@@ -100,8 +254,13 @@ jobs:
             echo "SNYK_TOKEN no configurado. Se omite el reporte de Snyk."
             echo "<h3>Snyk no configurado</h3><p>Registra el SNYK_TOKEN en tus GitHub Secrets para habilitar este reporte.</p>" > reports/snyk/dependencies.html
           fi
+          if [ ! -f reports/snyk/dependencies.html ]; then
+            echo "<h3>Snyk dependencias</h3><p>No se pudo generar el reporte de dependencias.</p>" > reports/snyk/dependencies.html
+          fi
+          if [ ! -f reports/snyk/code.html ]; then
+            echo "<h3>Snyk Code</h3><p>No se pudo generar el reporte de codigo o SNYK_TOKEN no esta configurado.</p>" > reports/snyk/code.html
+          fi
 
-      # 7. Crear el Index Dashboard del Portal de QA
       - name: Generate QA Portal index.html
         run: |
           cat << 'EOF' > reports/index.html
@@ -125,32 +284,32 @@ jobs:
           </head>
           <body>
               <h1>TrafficWatch IDS - Portal de Reportes QA y Seguridad</h1>
-              <p>Resultados acumulados de pruebas y escaneos de seguridad generados en la última ejecución de CI/CD.</p>
-              
+              <p>Resultados acumulados de pruebas y escaneos de seguridad generados en la ultima ejecucion de CI/CD.</p>
+
               <div class="grid">
                   <div class="card">
                       <h3>Pruebas Unitarias</h3>
-                      <p>Resultados de la ejecución de pruebas unitarias sobre módulos críticos (src/ y web/).</p>
+                      <p>Resultados de la ejecucion de pruebas unitarias sobre modulos criticos (src/ y web/).</p>
                       <a href="./unit-tests/index.html" class="btn">Ver Reporte</a>
                   </div>
                   <div class="card">
-                      <h3>Cobertura de Código</h3>
-                      <p>Porcentaje de líneas de código evaluadas por las pruebas unitarias.</p>
+                      <h3>Cobertura de Codigo</h3>
+                      <p>Porcentaje de lineas de codigo evaluadas por las pruebas unitarias.</p>
                       <a href="./coverage/index.html" class="btn">Ver Cobertura</a>
                   </div>
                   <div class="card">
                       <h3>Pruebas BDD (Behave)</h3>
-                      <p>Validación de historias de usuario y criterios de aceptación con Behave.</p>
+                      <p>Validacion de historias de usuario y criterios de aceptacion con Behave.</p>
                       <a href="./bdd/index.html" class="btn">Ver Escenarios</a>
                   </div>
                   <div class="card">
                       <h3>Pruebas de Interfaz (Playwright)</h3>
-                      <p>Resultados de interacción del Dashboard de TrafficWatch.</p>
+                      <p>Resultados de interaccion del Dashboard de TrafficWatch.</p>
                       <a href="./ui-tests/index.html" class="btn">Ver Pruebas UI</a>
                   </div>
                   <div class="card">
-                      <h3>Pruebas de Mutación</h3>
-                      <p>Evaluación de la calidad de las pruebas simulando fallos en el código fuente.</p>
+                      <h3>Pruebas de Mutacion</h3>
+                      <p>Evaluacion de la calidad de las pruebas simulando fallos en el codigo fuente.</p>
                       <a href="./mutation/index.html" class="btn">Ver Mutantes</a>
                   </div>
                   <div class="card">
@@ -158,12 +317,16 @@ jobs:
                       <p>Reportes de vulnerabilidades detectadas en dependencias de Python.</p>
                       <a href="./snyk/dependencies.html" class="btn">Ver Dependencias</a>
                   </div>
+                  <div class="card">
+                      <h3>Seguridad - Semgrep</h3>
+                      <p>Analisis estatico de codigo fuente con reglas de seguridad y calidad.</p>
+                      <a href="./semgrep/index.html" class="btn">Ver Semgrep</a>
+                  </div>
               </div>
           </body>
           </html>
           EOF
 
-      # 8. Desplegar carpeta a la rama gh-pages
       - name: Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v3
         with:
