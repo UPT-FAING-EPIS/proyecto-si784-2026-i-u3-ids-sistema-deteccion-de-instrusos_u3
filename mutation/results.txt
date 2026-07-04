@@ -1,7 +1,6 @@
     storage.xǁAlertStorageǁ__init____mutmut_4: survived
     storage.xǁAlertStorageǁ__init____mutmut_6: survived
     storage.xǁAlertStorageǁ__init____mutmut_8: survived
-    storage.xǁAlertStorageǁ__init____mutmut_11: survived
     storage.xǁAlertStorageǁ__init____mutmut_13: survived
     storage.xǁAlertStorageǁ__init____mutmut_15: survived
     storage.xǁAlertStorageǁ__init____mutmut_16: survived
@@ -20,12 +19,15 @@
     storage.xǁAlertStorageǁread__mutmut_6: survived
     storage.xǁAlertStorageǁread__mutmut_7: survived
     storage.xǁAlertStorageǁread__mutmut_11: survived
-    response_actions.xǁActiveResponseǁ__init____mutmut_5: survived
-    response_actions.xǁActiveResponseǁ__init____mutmut_6: survived
-    response_actions.xǁActiveResponseǁ__init____mutmut_8: survived
-    response_actions.xǁActiveResponseǁ__init____mutmut_9: survived
-    response_actions.xǁActiveResponseǁ__init____mutmut_10: survived
-    response_actions.xǁActiveResponseǁ__init____mutmut_11: survived
+    storage.xǁAlertStorageǁclear__mutmut_3: survived
+    storage.xǁAlertStorageǁclear__mutmut_6: survived
+    storage.xǁAlertStorageǁclear__mutmut_10: survived
+    storage.xǁAlertStorageǁclear__mutmut_13: survived
+    storage.xǁAlertStorageǁclear__mutmut_14: survived
+    storage.xǁAlertStorageǁclear__mutmut_17: survived
+    storage.xǁAlertStorageǁclear__mutmut_18: survived
+    storage.xǁAlertStorageǁclear__mutmut_19: survived
+    storage.xǁAlertStorageǁclear__mutmut_20: survived
     response_actions.xǁActiveResponseǁ__init____mutmut_12: survived
     response_actions.xǁActiveResponseǁ__init____mutmut_13: survived
     response_actions.xǁActiveResponseǁ__init____mutmut_14: survived
@@ -35,49 +37,25 @@
     response_actions.xǁActiveResponseǁ__init____mutmut_18: survived
     response_actions.xǁActiveResponseǁ__init____mutmut_19: survived
     response_actions.xǁActiveResponseǁ__init____mutmut_20: survived
-    response_actions.xǁActiveResponseǁ__init____mutmut_26: survived
-    response_actions.xǁActiveResponseǁ__init____mutmut_29: survived
-    response_actions.xǁActiveResponseǁ__init____mutmut_31: survived
     response_actions.xǁActiveResponseǁ__init____mutmut_34: survived
-    response_actions.xǁActiveResponseǁ__init____mutmut_37: survived
-    response_actions.xǁActiveResponseǁ__init____mutmut_41: survived
-    response_actions.xǁActiveResponseǁ__init____mutmut_42: survived
-    response_actions.xǁActiveResponseǁ__init____mutmut_44: survived
-    response_actions.xǁActiveResponseǁ__init____mutmut_45: survived
     response_actions.xǁActiveResponseǁ__init____mutmut_46: survived
-    response_actions.xǁActiveResponseǁ__init____mutmut_47: survived
     response_actions.xǁActiveResponseǁ__init____mutmut_48: survived
-    response_actions.xǁActiveResponseǁ__init____mutmut_49: survived
-    response_actions.xǁActiveResponseǁ__init____mutmut_50: survived
     response_actions.xǁActiveResponseǁ__init____mutmut_51: survived
     response_actions.xǁActiveResponseǁ__init____mutmut_52: survived
     response_actions.xǁActiveResponseǁ__init____mutmut_53: survived
-    response_actions.xǁActiveResponseǁbuild_response__mutmut_1: survived
     response_actions.xǁActiveResponseǁbuild_response__mutmut_7: survived
-    response_actions.xǁActiveResponseǁbuild_response__mutmut_9: survived
-    response_actions.xǁActiveResponseǁbuild_response__mutmut_11: survived
-    response_actions.xǁActiveResponseǁbuild_response__mutmut_12: survived
     response_actions.xǁActiveResponseǁbuild_response__mutmut_25: survived
     response_actions.xǁActiveResponseǁbuild_response__mutmut_26: survived
-    response_actions.xǁActiveResponseǁbuild_response__mutmut_27: survived
-    response_actions.xǁActiveResponseǁbuild_response__mutmut_28: survived
     response_actions.xǁActiveResponseǁbuild_response__mutmut_31: survived
     response_actions.xǁActiveResponseǁbuild_response__mutmut_32: survived
     response_actions.xǁActiveResponseǁbuild_response__mutmut_34: survived
     response_actions.xǁActiveResponseǁbuild_response__mutmut_35: survived
     response_actions.xǁActiveResponseǁbuild_response__mutmut_36: survived
-    response_actions.xǁActiveResponseǁbuild_response__mutmut_37: survived
-    response_actions.xǁActiveResponseǁbuild_response__mutmut_38: survived
     response_actions.xǁActiveResponseǁbuild_response__mutmut_39: survived
     response_actions.xǁActiveResponseǁbuild_response__mutmut_40: survived
     response_actions.xǁActiveResponseǁbuild_response__mutmut_41: survived
     response_actions.xǁActiveResponseǁ_validate_ip__mutmut_5: survived
-    response_actions.xǁActiveResponseǁ_block_token__mutmut_1: survived
-    response_actions.xǁActiveResponseǁ_rule_name__mutmut_1: survived
-    response_actions.xǁActiveResponseǁ_rule_name__mutmut_8: survived
-    response_actions.xǁActiveResponseǁ_rule_name__mutmut_9: survived
     response_actions.xǁActiveResponseǁ_rule_name__mutmut_10: survived
-    response_actions.xǁActiveResponseǁ_rule_name__mutmut_11: survived
     response_actions.xǁActiveResponseǁ_apply_windows_block__mutmut_5: survived
     response_actions.xǁActiveResponseǁ_apply_windows_block__mutmut_6: survived
     response_actions.xǁActiveResponseǁ_apply_windows_block__mutmut_7: survived
@@ -145,42 +123,32 @@
     response_actions.xǁActiveResponseǁblock_ip_temporarily__mutmut_15: survived
     response_actions.xǁActiveResponseǁblock_ip_temporarily__mutmut_21: survived
     response_actions.xǁActiveResponseǁblock_ip_temporarily__mutmut_22: survived
-    response_actions.xǁActiveResponseǁblock_ip_temporarily__mutmut_29: survived
-    response_actions.xǁActiveResponseǁblock_ip_temporarily__mutmut_41: survived
-    response_actions.xǁActiveResponseǁblock_ip_temporarily__mutmut_47: survived
-    response_actions.xǁActiveResponseǁblock_ip_temporarily__mutmut_48: survived
-    response_actions.xǁActiveResponseǁblock_ip_temporarily__mutmut_49: survived
+    response_actions.xǁActiveResponseǁblock_ip_temporarily__mutmut_33: survived
+    response_actions.xǁActiveResponseǁblock_ip_temporarily__mutmut_38: survived
     response_actions.xǁActiveResponseǁblock_ip_temporarily__mutmut_50: survived
-    response_actions.xǁActiveResponseǁblock_ip_temporarily__mutmut_51: survived
-    response_actions.xǁActiveResponseǁblock_ip_temporarily__mutmut_52: survived
-    response_actions.xǁActiveResponseǁblock_ip_temporarily__mutmut_53: survived
-    response_actions.xǁActiveResponseǁblock_ip_temporarily__mutmut_54: survived
-    response_actions.xǁActiveResponseǁblock_ip_temporarily__mutmut_55: survived
     response_actions.xǁActiveResponseǁblock_ip_temporarily__mutmut_56: survived
+    response_actions.xǁActiveResponseǁblock_ip_temporarily__mutmut_57: survived
     response_actions.xǁActiveResponseǁblock_ip_temporarily__mutmut_58: survived
     response_actions.xǁActiveResponseǁblock_ip_temporarily__mutmut_59: survived
     response_actions.xǁActiveResponseǁblock_ip_temporarily__mutmut_60: survived
+    response_actions.xǁActiveResponseǁblock_ip_temporarily__mutmut_61: survived
+    response_actions.xǁActiveResponseǁblock_ip_temporarily__mutmut_62: survived
     response_actions.xǁActiveResponseǁblock_ip_temporarily__mutmut_63: survived
     response_actions.xǁActiveResponseǁblock_ip_temporarily__mutmut_64: survived
-    response_actions.xǁActiveResponseǁblock_ip_temporarily__mutmut_66: survived
+    response_actions.xǁActiveResponseǁblock_ip_temporarily__mutmut_65: survived
     response_actions.xǁActiveResponseǁblock_ip_temporarily__mutmut_67: survived
     response_actions.xǁActiveResponseǁblock_ip_temporarily__mutmut_68: survived
+    response_actions.xǁActiveResponseǁblock_ip_temporarily__mutmut_69: survived
+    response_actions.xǁActiveResponseǁblock_ip_temporarily__mutmut_72: survived
+    response_actions.xǁActiveResponseǁblock_ip_temporarily__mutmut_73: survived
+    response_actions.xǁActiveResponseǁblock_ip_temporarily__mutmut_75: survived
+    response_actions.xǁActiveResponseǁblock_ip_temporarily__mutmut_76: survived
+    response_actions.xǁActiveResponseǁblock_ip_temporarily__mutmut_77: survived
     alert_manager.xǁAlertManagerǁ__init____mutmut_1: survived
-    alert_manager.xǁAlertManagerǁ__init____mutmut_9: survived
     alert_manager.xǁAlertManagerǁ__init____mutmut_12: survived
     alert_manager.xǁAlertManagerǁ_is_in_cooldown__mutmut_2: survived
     alert_manager.xǁAlertManagerǁ_is_in_cooldown__mutmut_10: survived
-    alert_manager.xǁAlertManagerǁgenerate_alert__mutmut_7: survived
-    alert_manager.xǁAlertManagerǁgenerate_alert__mutmut_8: survived
     alert_manager.xǁAlertManagerǁgenerate_alert__mutmut_10: survived
     alert_manager.xǁAlertManagerǁgenerate_alert__mutmut_11: survived
     alert_manager.xǁAlertManagerǁgenerate_alert__mutmut_12: survived
-    alert_manager.xǁAlertManagerǁgenerate_alert__mutmut_13: survived
-    alert_manager.xǁAlertManagerǁgenerate_alert__mutmut_14: survived
-    alert_manager.xǁAlertManagerǁgenerate_alert__mutmut_15: survived
-    alert_manager.xǁAlertManagerǁgenerate_alert__mutmut_16: survived
-    alert_manager.xǁAlertManagerǁgenerate_alert__mutmut_17: survived
-    alert_manager.xǁAlertManagerǁgenerate_alert__mutmut_18: survived
-    alert_manager.xǁAlertManagerǁgenerate_alert__mutmut_19: survived
-    alert_manager.xǁAlertManagerǁgenerate_alert__mutmut_20: survived
     alert_manager.xǁAlertManagerǁgenerate_alert__mutmut_29: survived
