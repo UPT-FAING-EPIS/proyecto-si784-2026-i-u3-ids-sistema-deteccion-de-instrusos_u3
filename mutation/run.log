@@ -1,0 +1,89 @@
+mutmut, version 3.4.0
+⠋ Generating mutants⠙ Generating mutants⠹ Generating mutants⠸ Generating mutants⠼ Generating mutants⠴ Generating mutants⠦ Generating mutants⠧ Generating mutants⠇ Generating mutants⠏ Generating mutants⠋ Generating mutants⠙ Generating mutants⠹ Generating mutants⠸ Generating mutants⠼ Generating mutants⠴ Generating mutants⠦ Generating mutants⠧ Generating mutants⠇ Generating mutants⠏ Generating mutants⠋ Generating mutants⠙ Generating mutants⠹ Generating mutants⠸ Generating mutants⠼ Generating mutants⠴ Generating mutants⠦ Generating mutants⠧ Generating mutants⠇ Generating mutants⠏ Generating mutants⠋ Generating mutants⠙ Generating mutants⠹ Generating mutants⠸ Generating mutants⠼ Generating mutants⠴ Generating mutants⠦ Generating mutants⠧ Generating mutants⠦ Generating mutants⠧ Generating mutants⠦ Generating mutants⠧ Generating mutants⠦ Generating mutants⠧ Generating mutants⠇ Generating mutants⠏ Generating mutants⠇ Generating mutants⠏ Generating mutants⠋ Generating mutants⠙ Generating mutants⠇ Generating mutants⠏ Generating mutants⠹ Generating mutants⠸ Generating mutants⠋ Generating mutants⠙ Generating mutants⠋ Generating mutants⠙ Generating mutants⠇ Generating mutants⠏ Generating mutants
+    done in 1153ms
+⠦ Running stats     ⠧ Running stats⠇ Running stats⠏ Running stats⠋ Running stats⠙ Running stats⠹ Running stats⠸ Running stats⠼ Running stats⠴ Running stats⠦ Running stats⠧ Running stats⠇ Running stats⠏ Running stats⠋ Running stats⠙ Running stats
+F
+=================================== FAILURES ===================================
+_____________ test_alert_manager_uses_cooldown_for_repeated_alerts _____________
+Traceback (most recent call last):
+  File "/opt/hostedtoolcache/Python/3.11.15/x64/lib/python3.11/site-packages/_pytest/runner.py", line 341, in from_call
+    result: TResult | None = func()
+                             ^^^^^^
+  File "/opt/hostedtoolcache/Python/3.11.15/x64/lib/python3.11/site-packages/_pytest/runner.py", line 242, in <lambda>
+    lambda: runtest_hook(item=item, **kwds), when=when, reraise=reraise
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/hostedtoolcache/Python/3.11.15/x64/lib/python3.11/site-packages/pluggy/_hooks.py", line 512, in __call__
+    return self._hookexec(self.name, self._hookimpls.copy(), kwargs, firstresult)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/hostedtoolcache/Python/3.11.15/x64/lib/python3.11/site-packages/pluggy/_manager.py", line 120, in _hookexec
+    return self._inner_hookexec(hook_name, methods, kwargs, firstresult)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/hostedtoolcache/Python/3.11.15/x64/lib/python3.11/site-packages/pluggy/_callers.py", line 167, in _multicall
+    raise exception
+  File "/opt/hostedtoolcache/Python/3.11.15/x64/lib/python3.11/site-packages/pluggy/_callers.py", line 139, in _multicall
+    teardown.throw(exception)
+  File "/opt/hostedtoolcache/Python/3.11.15/x64/lib/python3.11/site-packages/_pytest/threadexception.py", line 92, in pytest_runtest_call
+    yield from thread_exception_runtest_hook()
+  File "/opt/hostedtoolcache/Python/3.11.15/x64/lib/python3.11/site-packages/_pytest/threadexception.py", line 68, in thread_exception_runtest_hook
+    yield
+  File "/opt/hostedtoolcache/Python/3.11.15/x64/lib/python3.11/site-packages/pluggy/_callers.py", line 139, in _multicall
+    teardown.throw(exception)
+  File "/opt/hostedtoolcache/Python/3.11.15/x64/lib/python3.11/site-packages/_pytest/unraisableexception.py", line 95, in pytest_runtest_call
+    yield from unraisable_exception_runtest_hook()
+  File "/opt/hostedtoolcache/Python/3.11.15/x64/lib/python3.11/site-packages/_pytest/unraisableexception.py", line 70, in unraisable_exception_runtest_hook
+    yield
+  File "/opt/hostedtoolcache/Python/3.11.15/x64/lib/python3.11/site-packages/pluggy/_callers.py", line 139, in _multicall
+    teardown.throw(exception)
+  File "/opt/hostedtoolcache/Python/3.11.15/x64/lib/python3.11/site-packages/_pytest/logging.py", line 848, in pytest_runtest_call
+    yield from self._runtest_for(item, "call")
+  File "/opt/hostedtoolcache/Python/3.11.15/x64/lib/python3.11/site-packages/_pytest/logging.py", line 831, in _runtest_for
+    yield
+  File "/opt/hostedtoolcache/Python/3.11.15/x64/lib/python3.11/site-packages/pluggy/_callers.py", line 139, in _multicall
+    teardown.throw(exception)
+  File "/opt/hostedtoolcache/Python/3.11.15/x64/lib/python3.11/site-packages/_pytest/capture.py", line 879, in pytest_runtest_call
+    return (yield)
+            ^^^^^
+  File "/opt/hostedtoolcache/Python/3.11.15/x64/lib/python3.11/site-packages/pluggy/_callers.py", line 139, in _multicall
+    teardown.throw(exception)
+  File "/opt/hostedtoolcache/Python/3.11.15/x64/lib/python3.11/site-packages/_pytest/skipping.py", line 257, in pytest_runtest_call
+    return (yield)
+            ^^^^^
+  File "/opt/hostedtoolcache/Python/3.11.15/x64/lib/python3.11/site-packages/pluggy/_callers.py", line 121, in _multicall
+    res = hook_impl.function(*args)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/hostedtoolcache/Python/3.11.15/x64/lib/python3.11/site-packages/_pytest/runner.py", line 174, in pytest_runtest_call
+    item.runtest()
+  File "/opt/hostedtoolcache/Python/3.11.15/x64/lib/python3.11/site-packages/_pytest/python.py", line 1627, in runtest
+    self.ihook.pytest_pyfunc_call(pyfuncitem=self)
+  File "/opt/hostedtoolcache/Python/3.11.15/x64/lib/python3.11/site-packages/pluggy/_hooks.py", line 512, in __call__
+    return self._hookexec(self.name, self._hookimpls.copy(), kwargs, firstresult)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/hostedtoolcache/Python/3.11.15/x64/lib/python3.11/site-packages/pluggy/_manager.py", line 120, in _hookexec
+    return self._inner_hookexec(hook_name, methods, kwargs, firstresult)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/hostedtoolcache/Python/3.11.15/x64/lib/python3.11/site-packages/pluggy/_callers.py", line 167, in _multicall
+    raise exception
+  File "/opt/hostedtoolcache/Python/3.11.15/x64/lib/python3.11/site-packages/pluggy/_callers.py", line 121, in _multicall
+    res = hook_impl.function(*args)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/hostedtoolcache/Python/3.11.15/x64/lib/python3.11/site-packages/_pytest/python.py", line 159, in pytest_pyfunc_call
+    result = testfunction(**testargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/runner/work/proyecto-si784-2026-i-u3-ids-sistema-deteccion-de-instrusos_u3/proyecto-si784-2026-i-u3-ids-sistema-deteccion-de-instrusos_u3/tests/test_alert_manager.py", line 5, in test_alert_manager_uses_cooldown_for_repeated_alerts
+    manager = AlertManager(str(tmp_path / "alerts.json"), cooldown_seconds=10)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/runner/work/proyecto-si784-2026-i-u3-ids-sistema-deteccion-de-instrusos_u3/proyecto-si784-2026-i-u3-ids-sistema-deteccion-de-instrusos_u3/mutants/src/alert_manager.py", line 134, in __init__
+    result = _mutmut_trampoline(object.__getattribute__(self, "xǁAlertManagerǁ__init____mutmut_orig"), object.__getattribute__(self, "xǁAlertManagerǁ__init____mutmut_mutants"), args, kwargs, self)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/runner/work/proyecto-si784-2026-i-u3-ids-sistema-deteccion-de-instrusos_u3/proyecto-si784-2026-i-u3-ids-sistema-deteccion-de-instrusos_u3/mutants/src/alert_manager.py", line 23, in _mutmut_trampoline
+    record_trampoline_hit(orig.__module__ + '.' + orig.__name__)
+  File "/opt/hostedtoolcache/Python/3.11.15/x64/lib/python3.11/site-packages/mutmut/__main__.py", line 137, in record_trampoline_hit
+    assert not name.startswith('src.'), f'Failed trampoline hit. Module name starts with `src.`, which is invalid'
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: Failed trampoline hit. Module name starts with `src.`, which is invalid
+=========================== short test summary info ============================
+FAILED tests/test_alert_manager.py::test_alert_manager_uses_cooldown_for_repeated_alerts - AssertionError: Failed trampoline hit. Module name starts with `src.`, which is invalid
+!!!!!!!!!!!!!!!!!!!!!!!!!! stopping after 1 failures !!!!!!!!!!!!!!!!!!!!!!!!!!!
+1 failed in 0.07s
+failed to collect stats. runner returned 1
+
