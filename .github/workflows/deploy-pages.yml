@@ -61,8 +61,8 @@ jobs:
       # 2. Cobertura de Pruebas
       - name: Coverage HTML Report
         run: |
-          python -m pytest tests -m "not integration" --cov=src --cov=web --cov-report=html || true
-          mv htmlcov reports/coverage || true
+          python -m coverage run -m pytest tests -m "not integration" || true
+          python -m coverage html -d reports/coverage || true
 
       # 3. Pruebas BDD (Behave)
       - name: BDD Behave Report
