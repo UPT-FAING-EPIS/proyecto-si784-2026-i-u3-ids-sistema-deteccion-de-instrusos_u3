@@ -13,7 +13,7 @@ de red, Suricata y el bloqueo IPS deben ejecutarse en una maquina dentro de la r
 Repositorio GitHub:
 
 ```text
-https://github.com/diegochara2019065026/proyecto-si784-2026-i-u1-ids
+https://github.com/UPT-FAING-EPIS/proyecto-si784-2026-i-u3-ids-sistema-deteccion-de-instrusos_u3
 ```
 
 Demo en Render:
@@ -21,6 +21,12 @@ Demo en Render:
 ```text
 Dashboard: https://proyecto-si784-2026-i-u1-ids.onrender.com/
 Simulador atacante: https://proyecto-si784-2026-i-u1-ids.onrender.com/attack-lab
+```
+
+Carpeta de evidencias en Google Drive:
+
+```text
+https://drive.google.com/drive/folders/1Q2PTs7s7vJ1NTpOqziYL1PbAINZa8mvs
 ```
 
 Ejecutable Windows:
