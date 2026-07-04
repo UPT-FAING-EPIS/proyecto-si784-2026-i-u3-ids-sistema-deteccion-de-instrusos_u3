@@ -15,7 +15,7 @@ tests/test_traffic_classification.py ....                                [100%]
 Name                          Stmts   Miss  Cover
 -------------------------------------------------
 src/__init__.py                   0      0   100%
-src/alert_manager.py             33      2    94%
+src/alert_manager.py             36      2    94%
 src/analyzer.py                 184    128    30%
 src/network_scanner.py           77     60    22%
 src/network_utils.py            101     60    41%
@@ -29,8 +29,8 @@ src/utils.py                     15     15     0%
 web/__init__.py                   0      0   100%
 web/app.py                      429    320    25%
 -------------------------------------------------
-TOTAL                          1109    729    34%
+TOTAL                          1112    729    34%
 Coverage HTML written to dir reports/coverage
 
 
-======================= 14 passed, 3 deselected in 0.78s =======================
+======================= 14 passed, 3 deselected in 0.82s =======================
