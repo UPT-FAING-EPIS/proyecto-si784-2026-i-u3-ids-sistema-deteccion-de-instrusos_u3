@@ -25,7 +25,7 @@ Integrantes:
 
 # Informe de Especificacion de Requerimientos
 
-Version: **2.5**
+Version: **2.6**
 
 | Version | Hecha por | Revisada por | Aprobada por | Fecha | Motivo |
 |:--:|:--:|:--:|:--:|:--:|:--|
@@ -36,6 +36,7 @@ Version: **2.5**
 | 2.3 | APO, ECA | APO, ECA | P. Cuadros Q. | 2026-07-04 | Se agrega modelo conceptual con paquetes y casos de uso |
 | 2.4 | APO, ECA | APO, ECA | P. Cuadros Q. | 2026-07-04 | Se agrega modelo logico y analisis de objetos |
 | 2.5 | APO, ECA | APO, ECA | P. Cuadros Q. | 2026-07-04 | Se agrega diagrama de actividades con objetos |
+| 2.6 | APO, ECA | APO, ECA | P. Cuadros Q. | 2026-07-04 | Se agrega diagrama de secuencia y diagrama de clases |
 
 ## 1. Introduccion
 
@@ -538,7 +539,175 @@ flowchart TD
     V -->|No| X([Fin])
 ```
 
-## 6. Reglas de negocio IDS
+#### 5.3.3 Diagrama de Secuencia
+
+El diagrama de secuencia representa la interaccion temporal entre el usuario, el dashboard, el proceso IDS y los objetos principales cuando se detecta una actividad sospechosa y se muestra en la interfaz.
+
+```mermaid
+sequenceDiagram
+    actor Usuario
+    actor Administrador
+    participant Dashboard as Dashboard Flask
+    participant IDS as IDS main.py
+    participant Captura as CapturadorPaquetes
+    participant Analizador as AnalizadorTrafico
+    participant Regla as ReglaIDS
+    participant Alertas as AlertManager
+    participant Respuesta as RespuestaActiva
+    participant Historial as HistorialAlertas
+    participant Estado as EstadoIDS
+
+    Usuario->>Dashboard: Abre dashboard web
+    Dashboard->>Historial: Solicita alertas registradas
+    Dashboard->>Estado: Solicita estado actual del IDS
+    Historial-->>Dashboard: Devuelve alertas JSON
+    Estado-->>Dashboard: Devuelve estado operativo
+    Dashboard-->>Usuario: Muestra panel inicial
+
+    Administrador->>IDS: Inicia captura local
+    IDS->>Estado: Registra interfaz y red local
+    IDS->>Captura: Configura captura de paquetes
+    Captura->>Analizador: Envia paquete capturado
+    Analizador->>Regla: Consulta umbrales y reglas
+    Regla-->>Analizador: Devuelve configuracion IDS
+    Analizador->>Analizador: Clasifica trafico y evalua riesgo
+
+    alt Trafico sospechoso
+        Analizador->>Alertas: Solicita generar alerta
+        Alertas->>Respuesta: Solicita recomendacion defensiva
+        Respuesta-->>Alertas: Devuelve accion sugerida
+        Alertas->>Historial: Guarda alerta con evidencia
+        Historial-->>Dashboard: Alerta disponible por API
+        Dashboard-->>Usuario: Actualiza historial, graficos y estado
+    else Trafico normal
+        Analizador->>Historial: Guarda trafico clasificado
+        Dashboard-->>Usuario: Mantiene vista actualizada
+    end
+```
+
+## 6. Diagrama de Clases
+
+El diagrama de clases consolida las entidades logicas identificadas en el analisis de objetos y muestra las relaciones principales entre interfaz, captura, analisis, reglas, alertas, persistencia e integraciones.
+
+```mermaid
+classDiagram
+    class Usuario {
+        +rol
+        +consultar_alertas()
+        +exportar_evidencias()
+        +ejecutar_pruebas()
+    }
+
+    class Administrador {
+        +permisos
+        +iniciar_ids()
+        +ejecutar_nmap()
+        +bloquear_ssh_temporal()
+    }
+
+    class Dashboard {
+        +mostrar_alertas()
+        +mostrar_historial()
+        +mostrar_graficos()
+        +exportar_json_csv()
+    }
+
+    class IDS {
+        +interfaz
+        +red_local
+        +iniciar()
+        +detener()
+        +actualizar_estado()
+    }
+
+    class CapturadorPaquetes {
+        +interfaz
+        +capturar()
+        +enviar_paquete()
+    }
+
+    class AnalizadorTrafico {
+        +reglas
+        +analizar_paquete()
+        +clasificar_trafico()
+        +evaluar_riesgo()
+    }
+
+    class ReglaIDS {
+        +tipo
+        +umbral
+        +ventana_tiempo
+        +puertos
+    }
+
+    class Alerta {
+        +tipo
+        +severidad
+        +ip_origen
+        +descripcion
+        +fecha
+    }
+
+    class TraficoClasificado {
+        +protocolo
+        +origen
+        +destino
+        +puerto
+        +clasificacion
+    }
+
+    class HistorialAlertas {
+        +ruta_json
+        +guardar_alerta()
+        +leer_alertas()
+        +limpiar()
+    }
+
+    class EstadoIDS {
+        +activo
+        +interfaz
+        +ip_local
+        +gateway
+        +ultimo_latido
+    }
+
+    class IntegracionSuricata {
+        +leer_eventos_eve()
+        +generar_alerta_demo()
+        +generar_politica_ips()
+    }
+
+    class EscaneoNmap {
+        +objetivo
+        +puertos
+        +validar_objetivo()
+        +ejecutar()
+    }
+
+    class RespuestaActiva {
+        +generar_recomendacion()
+        +aplicar_bloqueo_temporal()
+    }
+
+    Usuario --> Dashboard
+    Administrador --|> Usuario
+    Administrador --> IDS
+    Dashboard --> HistorialAlertas
+    Dashboard --> EstadoIDS
+    Dashboard --> IntegracionSuricata
+    Dashboard --> EscaneoNmap
+    Dashboard --> RespuestaActiva
+    IDS --> CapturadorPaquetes
+    IDS --> EstadoIDS
+    CapturadorPaquetes --> AnalizadorTrafico
+    AnalizadorTrafico --> ReglaIDS
+    AnalizadorTrafico --> Alerta
+    AnalizadorTrafico --> TraficoClasificado
+    Alerta --> HistorialAlertas
+    RespuestaActiva --> Alerta
+```
+
+## 7. Reglas de negocio IDS
 
 | Regla | Descripcion |
 |---|---|
@@ -554,7 +723,7 @@ flowchart TD
 | POLITICA_BLOQUEO_YOUTUBE | Politica IPS generada para restringir YouTube por IP. |
 | BLOQUEO_TEMPORAL_SSH | Registro de bloqueo temporal aplicado ante alerta SSH valida. |
 
-## 7. Casos de uso
+## 8. Casos de uso
 
 | Caso | Actor | Flujo principal |
 |---|---|---|
@@ -572,9 +741,9 @@ flowchart TD
 | CU-12 Generar politica IPS | Usuario | Genera comandos o reglas Suricata y guarda politicas. |
 | CU-13 Bloquear IP SSH | Usuario administrador | Aplica bloqueo temporal a una IP con alerta SSH registrada. |
 
-## 8. Interfaces
+## 9. Interfaces
 
-### 8.1 Interfaz web
+### 9.1 Interfaz web
 
 Secciones implementadas:
 
@@ -590,7 +759,7 @@ Secciones implementadas:
 - Politicas IPS.
 - Attack Lab.
 
-### 8.2 API local Flask
+### 9.2 API local Flask
 
 | Ruta | Funcion |
 |---|---|
@@ -621,7 +790,7 @@ Secciones implementadas:
 | `/api/export/traffic.json` | Exporta trafico JSON. |
 | `/api/export/traffic.csv` | Exporta trafico CSV. |
 
-## 9. Criterios de aceptacion
+## 10. Criterios de aceptacion
 
 - El dashboard abre en `http://127.0.0.1:5000`.
 - El IDS captura paquetes al ejecutarse como administrador.
@@ -638,6 +807,6 @@ Secciones implementadas:
 - El bloqueo SSH solo procede si existe una alerta SSH para la IP indicada.
 - Render muestra la demo sin depender de Nmap, Suricata real, Scapy o Windows Firewall.
 
-## 10. Conclusiones
+## 11. Conclusiones
 
 Los requerimientos actuales reflejan una version funcional del IDS academico. El proyecto evoluciono desde una captura basica con alertas hacia una herramienta con dashboard completo, reglas ampliadas, estado operativo, clasificacion de trafico, incidentes, graficos, exportaciones, Attack Lab, Suricata IPS, politicas de respuesta, despliegue Render y automatizacion para Windows.
