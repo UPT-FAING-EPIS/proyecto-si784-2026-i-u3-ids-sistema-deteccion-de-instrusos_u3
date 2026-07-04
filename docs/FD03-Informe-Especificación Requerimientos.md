@@ -25,13 +25,14 @@ Integrantes:
 
 # Informe de Especificacion de Requerimientos
 
-Version: **2.1**
+Version: **2.2**
 
 | Version | Hecha por | Revisada por | Aprobada por | Fecha | Motivo |
 |:--:|:--:|:--:|:--:|:--:|:--|
 | 1.0 | APO, ECA | APO, ECA | P. Cuadros Q. | 2026-04-20 | Version inicial |
 | 2.0 | APO, ECA | APO, ECA | P. Cuadros Q. | 2026-06-09 | Actualizacion segun implementacion final |
 | 2.1 | APO, ECA | APO, ECA | P. Cuadros Q. | 2026-07-04 | Actualizacion segun codigo actual, APIs Flask, Render, Suricata IPS y respuesta activa |
+| 2.2 | APO, ECA | APO, ECA | P. Cuadros Q. | 2026-07-04 | Se agrega representacion de la arquitectura del sistema |
 
 ## 1. Introduccion
 
@@ -60,7 +61,77 @@ El sistema permite:
 
 El sistema no reemplaza herramientas empresariales de seguridad ni debe ejecutar acciones ofensivas. La respuesta activa es defensiva, local, temporal y requiere autorizacion.
 
-## 3. Requerimientos funcionales
+## 3. Representacion de la arquitectura del sistema
+
+La arquitectura de **TrafficWatch IDS** se organiza en capas para separar la captura de trafico, el analisis IDS, la persistencia, la visualizacion web y los servicios de apoyo. Esta separacion permite que el sistema funcione en modo local con captura real y tambien como demo web en Render con funciones simuladas o limitadas.
+
+```mermaid
+flowchart LR
+    U[Usuario / Administrador] --> L[Scripts de inicio .bat/.ps1]
+    L --> IDS[Proceso IDS main.py]
+    L --> WEB[Dashboard Flask run_dashboard.py]
+
+    IDS --> CAP[Captura de paquetes Scapy]
+    CAP --> ANA[Analizador IDS]
+    ANA --> RULES[Reglas config.json]
+    ANA --> ALERTS[Alertas logs/alerts.json]
+    ANA --> TRAFFIC[Trafico clasificado logs/traffic.json]
+    IDS --> STATUS[Estado logs/status.json]
+
+    WEB --> API[APIs Flask]
+    API --> ALERTS
+    API --> TRAFFIC
+    API --> STATUS
+    API --> NMAP[Nmap local validado]
+    API --> SURICATA[Suricata EVE / IPS demo]
+    API --> FIREWALL[Windows Firewall manual]
+    API --> LAB[Attack Lab]
+
+    WEB --> UI[Interfaz web dashboard.html]
+    RENDER[Render] --> WEB
+```
+
+### 3.1 Capas de la arquitectura
+
+| Capa | Componentes | Responsabilidad |
+|---|---|---|
+| Presentacion | `web/templates/dashboard.html`, `attack_lab.html` | Muestra alertas, graficos, historial, estado del IDS, reglas y laboratorio de pruebas. |
+| API web | `web/app.py` | Expone endpoints Flask para consultar datos, exportar informacion y ejecutar acciones controladas. |
+| Deteccion IDS | `main.py`, `src/packet_capture.py`, `src/analyzer.py` | Captura paquetes, clasifica trafico y evalua reglas de deteccion. |
+| Gestion de alertas | `src/alert_manager.py`, `src/response_actions.py` | Genera alertas, aplica cooldown y prepara respuestas defensivas. |
+| Persistencia | `src/storage.py`, archivos `logs/*.json` | Guarda alertas, trafico, estado y politicas para consulta posterior. |
+| Integraciones | `src/real_scan.py`, `src/network_scanner.py`, `src/suricata_integration.py` | Ejecuta escaneos controlados, consulta Suricata EVE y genera politicas IPS. |
+| Configuracion y despliegue | `config.json`, `render.yaml`, `runtime.txt`, workflows GitHub | Centraliza reglas, parametros, despliegue y automatizacion de calidad. |
+
+### 3.2 Flujo principal del sistema
+
+```mermaid
+sequenceDiagram
+    participant Red as Red local
+    participant Captura as PacketCapture
+    participant Analizador as TrafficAnalyzer
+    participant Alertas as AlertManager
+    participant Logs as Archivos JSON
+    participant Web as Dashboard Flask
+    participant Usuario as Usuario
+
+    Usuario->>Web: Abre dashboard
+    Usuario->>Captura: Inicia IDS local
+    Red->>Captura: Envia paquetes observados
+    Captura->>Analizador: Entrega paquete
+    Analizador->>Analizador: Clasifica trafico y aplica reglas
+    Analizador->>Logs: Guarda trafico clasificado
+    Analizador->>Alertas: Solicita alerta si detecta riesgo
+    Alertas->>Logs: Guarda alerta con evidencia
+    Web->>Logs: Consulta APIs locales
+    Web->>Usuario: Muestra alertas, graficos e historial
+```
+
+### 3.3 Consideraciones de despliegue
+
+En ejecucion local, el sistema puede capturar trafico real con Scapy, usar Nmap, leer eventos Suricata y aplicar acciones manuales de firewall si el usuario tiene permisos de administrador. En Render, el dashboard se publica como demostracion academica y no ejecuta captura real de red, Nmap local, Suricata real ni Windows Firewall.
+
+## 4. Requerimientos funcionales
 
 | ID | Requerimiento | Prioridad | Evidencia |
 |---|---|---|---|
@@ -95,7 +166,7 @@ El sistema no reemplaza herramientas empresariales de seguridad ni debe ejecutar
 | RF-29 | Aplicar bloqueo temporal SSH bajo validacion. | Media | `/api/firewall/block-ssh-ip`, `src/response_actions.py` |
 | RF-30 | Desplegar dashboard de demostracion en Render. | Media | `render.yaml`, `runtime.txt` |
 
-## 4. Requerimientos no funcionales
+## 5. Requerimientos no funcionales
 
 | ID | Requerimiento | Criterio |
 |---|---|---|
@@ -112,7 +183,7 @@ El sistema no reemplaza herramientas empresariales de seguridad ni debe ejecutar
 | RNF-11 | Tolerancia a datos | El dashboard debe tolerar listas vacias, campos nulos y logs JSON corruptos o ausentes. |
 | RNF-12 | Escalabilidad de laboratorio | El escaneo de red debe usar limites de hosts, trabajadores, timeouts y cache. |
 
-## 5. Reglas de negocio IDS
+## 6. Reglas de negocio IDS
 
 | Regla | Descripcion |
 |---|---|
@@ -128,7 +199,7 @@ El sistema no reemplaza herramientas empresariales de seguridad ni debe ejecutar
 | POLITICA_BLOQUEO_YOUTUBE | Politica IPS generada para restringir YouTube por IP. |
 | BLOQUEO_TEMPORAL_SSH | Registro de bloqueo temporal aplicado ante alerta SSH valida. |
 
-## 6. Casos de uso
+## 7. Casos de uso
 
 | Caso | Actor | Flujo principal |
 |---|---|---|
@@ -146,9 +217,9 @@ El sistema no reemplaza herramientas empresariales de seguridad ni debe ejecutar
 | CU-12 Generar politica IPS | Usuario | Genera comandos o reglas Suricata y guarda politicas. |
 | CU-13 Bloquear IP SSH | Usuario administrador | Aplica bloqueo temporal a una IP con alerta SSH registrada. |
 
-## 7. Interfaces
+## 8. Interfaces
 
-### 7.1 Interfaz web
+### 8.1 Interfaz web
 
 Secciones implementadas:
 
@@ -164,7 +235,7 @@ Secciones implementadas:
 - Politicas IPS.
 - Attack Lab.
 
-### 7.2 API local Flask
+### 8.2 API local Flask
 
 | Ruta | Funcion |
 |---|---|
@@ -195,7 +266,7 @@ Secciones implementadas:
 | `/api/export/traffic.json` | Exporta trafico JSON. |
 | `/api/export/traffic.csv` | Exporta trafico CSV. |
 
-## 8. Criterios de aceptacion
+## 9. Criterios de aceptacion
 
 - El dashboard abre en `http://127.0.0.1:5000`.
 - El IDS captura paquetes al ejecutarse como administrador.
@@ -212,6 +283,6 @@ Secciones implementadas:
 - El bloqueo SSH solo procede si existe una alerta SSH para la IP indicada.
 - Render muestra la demo sin depender de Nmap, Suricata real, Scapy o Windows Firewall.
 
-## 9. Conclusiones
+## 10. Conclusiones
 
 Los requerimientos actuales reflejan una version funcional del IDS academico. El proyecto evoluciono desde una captura basica con alertas hacia una herramienta con dashboard completo, reglas ampliadas, estado operativo, clasificacion de trafico, incidentes, graficos, exportaciones, Attack Lab, Suricata IPS, politicas de respuesta, despliegue Render y automatizacion para Windows.
