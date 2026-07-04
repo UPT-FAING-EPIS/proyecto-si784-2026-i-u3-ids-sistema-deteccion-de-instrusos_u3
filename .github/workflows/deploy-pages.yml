@@ -10,7 +10,11 @@ permissions:
   pages: write
   id-token: write
 
+env:
+  PYTHONPATH: ${{ github.workspace }}
+
 jobs:
+
   build-reports:
     name: Generate and Deploy Reports
     runs-on: ubuntu-latest
