@@ -25,7 +25,7 @@ Integrantes:
 
 # Informe de Especificacion de Requerimientos
 
-Version: **2.7**
+Version: **2.8**
 
 | Version | Hecha por | Revisada por | Aprobada por | Fecha | Motivo |
 |:--:|:--:|:--:|:--:|:--:|:--|
@@ -38,6 +38,7 @@ Version: **2.7**
 | 2.5 | APO, ECA | APO, ECA | P. Cuadros Q. | 2026-07-04 | Se agrega diagrama de actividades con objetos |
 | 2.6 | APO, ECA | APO, ECA | P. Cuadros Q. | 2026-07-04 | Se agrega diagrama de secuencia y diagrama de clases |
 | 2.7 | APO, ECA | APO, ECA | P. Cuadros Q. | 2026-07-04 | Se ajusta el estilo de los diagramas de casos de uso |
+| 2.8 | APO, ECA | APO, ECA | P. Cuadros Q. | 2026-07-04 | Se ajusta el estilo del diagrama de paquetes |
 
 ## 1. Introduccion
 
@@ -198,53 +199,35 @@ El modelo conceptual representa los paquetes principales del sistema y la relaci
 
 ```mermaid
 flowchart TB
-    subgraph PRESENTACION[Paquete Presentacion]
-        DASH[Dashboard web]
-        LAB[Attack Lab]
-        EXPORT[Exportacion JSON/CSV]
+    classDef actor fill:#ffffff,stroke:#cf4f7a,stroke-width:1.5px,color:#222222;
+    classDef package fill:#fff8c9,stroke:#cf4f7a,stroke-width:1.5px,color:#222222;
+
+    ADMIN["Administrador"]:::actor
+
+    subgraph SISTEMA[TrafficWatch IDS]
+        direction TB
+        USUARIOS["Paquete<br/>Gestion de usuarios"]:::package
+        PRESENTACION["Paquete<br/>Presentacion<br/>Dashboard / Attack Lab"]:::package
+        APLICACION["Paquete<br/>Aplicacion<br/>APIs Flask / Simulaciones"]:::package
+        DOMINIO["Paquete<br/>Dominio IDS<br/>Captura / Analisis / Alertas"]:::package
+        INTEGRACION["Paquete<br/>Integracion<br/>Nmap / Suricata / Firewall"]:::package
+        DATOS["Paquete<br/>Datos<br/>config.json / logs JSON"]:::package
+        DESPLIEGUE["Paquete<br/>Despliegue y calidad<br/>Render / GitHub Actions / Pruebas"]:::package
     end
 
-    subgraph APLICACION[Paquete Aplicacion]
-        API[APIs Flask]
-        SIM[Simulaciones controladas]
-        STATS[Estadisticas y graficos]
-    end
+    style SISTEMA fill:#fffbcf,stroke:#cf4f7a,stroke-width:1.5px
 
-    subgraph DOMINIO[Paquete Dominio IDS]
-        CAP[Captura de paquetes]
-        ANALISIS[Analisis de trafico]
-        ALERTAS[Gestion de alertas]
-        RESPUESTA[Respuesta activa controlada]
-    end
+    ADMIN -.-> PRESENTACION
+    PRESENTACION -.-> APLICACION
+    APLICACION -.-> USUARIOS
+    APLICACION -.-> DOMINIO
+    APLICACION -.-> INTEGRACION
+    DOMINIO -.-> DATOS
+    INTEGRACION -.-> DATOS
+    DESPLIEGUE -.-> PRESENTACION
+    DESPLIEGUE -.-> APLICACION
 
-    subgraph INTEGRACION[Paquete Integracion]
-        NMAP[Nmap validado]
-        SURICATA[Suricata EVE / IPS]
-        FIREWALL[Windows Firewall]
-        SCANNER[Escaneo de red local]
-    end
-
-    subgraph DATOS[Paquete Datos]
-        CONFIG[config.json]
-        LOG_ALERTS[logs/alerts.json]
-        LOG_TRAFFIC[logs/traffic.json]
-        LOG_STATUS[logs/status.json]
-        POLICIES[logs/policies.json]
-    end
-
-    subgraph DESPLIEGUE[Paquete Despliegue y Calidad]
-        RENDER[Render]
-        WORKFLOWS[GitHub Actions]
-        TESTS[Pruebas automatizadas]
-    end
-
-    PRESENTACION --> APLICACION
-    APLICACION --> DOMINIO
-    APLICACION --> INTEGRACION
-    DOMINIO --> DATOS
-    INTEGRACION --> DATOS
-    DESPLIEGUE --> PRESENTACION
-    DESPLIEGUE --> APLICACION
+    linkStyle default stroke:#cf4f7a,stroke-width:1.4px,stroke-dasharray: 5 5
 ```
 
 #### 5.2.2 Diagrama de Casos de Uso
