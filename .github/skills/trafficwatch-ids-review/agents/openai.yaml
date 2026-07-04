@@ -1,4 +1,4 @@
 interface:
-  display_name: "Revisión TrafficWatch IDS"
-  short_description: "Revisa, prueba y mejora el IDS de forma segura"
-  default_prompt: "Usa $trafficwatch-ids-review para revisar TrafficWatch IDS, validar cambios y mantener separadas las funciones locales de la demo en Render."
+  display_name: "Revision TrafficWatch IDS"
+  short_description: "Resume, compara, revisa y mejora el IDS"
+  default_prompt: "Usa $trafficwatch-ids-review para entender, comparar o revisar TrafficWatch IDS segun el codigo actual, la documentacion, el dashboard y la compatibilidad Render/local."

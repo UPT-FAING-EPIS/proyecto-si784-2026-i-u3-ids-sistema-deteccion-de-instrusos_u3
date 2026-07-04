@@ -16,6 +16,12 @@ La skill sirve para que Codex trabaje en TrafficWatch IDS con contexto del proye
 | `AGENTS.md` | Instrucciones generales para IAs que reconozcan archivos tipo AGENTS. |
 | `.github/skills/trafficwatch-ids-review/AGENTS.md` | Copia de referencia para IAs generales dentro de la carpeta de la skill. |
 
+
+
+
+
+
+
 ## Como usar la skill en Codex
 
 Para activar la skill en Codex, menciona su nombre con `$` en el prompt:
@@ -79,6 +85,9 @@ La skill indica que no se deben ejecutar automaticamente:
 
 Estas acciones solo deben hacerse si el usuario lo pide de forma explicita.
 
+
+
+
 ## Como usarlo con GitHub Copilot
 
 GitHub Copilot no usa `SKILL.md` como Codex. Copilot toma contexto del repositorio y puede leer instrucciones generales desde:
@@ -109,6 +118,16 @@ Revisa si estos cambios siguen siendo compatibles con Render. Ten en cuenta .git
 ```
 
 No es necesario invocar `$trafficwatch-ids-review` en Copilot. Esa sintaxis es para Codex. En Copilot basta con que el archivo `.github/copilot-instructions.md` exista y sea claro.
+
+
+
+
+
+
+
+
+
+
 
 ## Como usarlo con IAs generales
 

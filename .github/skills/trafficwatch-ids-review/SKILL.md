@@ -1,6 +1,6 @@
 ---
 name: trafficwatch-ids-review
-description: Skill especifica para revisar, implementar, probar y documentar TrafficWatch IDS, un sistema academico de deteccion de intrusos con Python, Flask, Scapy, dashboard web, respuesta activa controlada, Suricata/IPS, scripts de Windows y despliegue demo en Render. Usala para cambios en reglas IDS, alertas, trafico clasificado, dashboard, red local, bloqueo temporal, APIs Flask, pruebas, empaquetado, documentacion o compatibilidad Render/local.
+description: Skill especifica para entender, comparar, revisar, implementar, probar y documentar TrafficWatch IDS, un sistema academico de deteccion de intrusos con Python, Flask, Scapy, dashboard web, respuesta activa controlada, Suricata/IPS, scripts de Windows y despliegue demo en Render. Usala cuando el usuario pregunte que existe en el proyecto, pida resumenes, comparaciones entre codigo y documentacion, auditorias de APIs, reglas IDS, alertas, trafico clasificado, dashboard, red local, bloqueo temporal, pruebas, empaquetado, documentacion o compatibilidad Render/local.
 ---
 
 # Revision de TrafficWatch IDS
@@ -10,6 +10,20 @@ description: Skill especifica para revisar, implementar, probar y documentar Tra
 Usa esta skill para trabajar dentro del repositorio TrafficWatch IDS con contexto de seguridad, red local, dashboard, despliegue academico y compatibilidad Windows/Render.
 
 La prioridad es mantener el sistema util para laboratorio, demostrable en Render y seguro para pruebas controladas. No conviertas funciones de simulacion o defensa en acciones ofensivas ni automatices acciones de red sin autorizacion explicita del usuario.
+
+## Uso Conversacional
+
+La skill tambien sirve para preguntas de entendimiento, no solo para editar codigo. Si el usuario pide "que hace el proyecto", "compara esto con aquello", "que existe en el repo" o "segun la skill revisa...", responde usando el mapa del proyecto y leyendo los archivos relevantes.
+
+Ejemplos naturales:
+
+- `Usa $trafficwatch-ids-review para decirme que modulos existen y que hace cada uno.`
+- `Usa $trafficwatch-ids-review para comparar el README con el codigo actual.`
+- `Usa $trafficwatch-ids-review para comparar FD04 con web/app.py y decir que falta actualizar.`
+- `Usa $trafficwatch-ids-review para revisar si el dashboard consume APIs inexistentes.`
+- `Usa $trafficwatch-ids-review para resumir el proyecto para una exposicion.`
+
+Si el usuario primero pregunta que puede hacer la skill, explica sus capacidades y luego sugiere prompts concretos. En turnos posteriores, pide o espera que vuelva a mencionar `$trafficwatch-ids-review` para activar la skill de forma explicita.
 
 ## Cuando Usarla
 
