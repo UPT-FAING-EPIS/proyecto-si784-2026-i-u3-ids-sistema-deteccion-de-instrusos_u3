@@ -296,6 +296,7 @@ def render_mutation_report(results_path: Path, output_path: Path) -> None:
 <p>{html.escape(diagnostic)}</p>
 <div class="actions">
   <a class="button" href="results.txt">Ver salida completa de mutmut</a>
+  <a class="button" href="run.log">Ver log de ejecucion</a>
 </div>
 <section>
   <h2>Muestra de resultados</h2>

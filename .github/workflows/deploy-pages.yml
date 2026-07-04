@@ -185,8 +185,9 @@ jobs:
       - name: Mutation tests report
         run: |
           rm -rf mutants
-          mutmut run || true
-          mutmut results > reports/mutation/results.txt || true
+          mutmut --version > reports/mutation/run.log 2>&1 || true
+          mutmut run >> reports/mutation/run.log 2>&1 || true
+          mutmut results > reports/mutation/results.txt 2>> reports/mutation/run.log || true
           python scripts/generate_qa_report_pages.py \
             --type mutation \
             --results reports/mutation/results.txt \
