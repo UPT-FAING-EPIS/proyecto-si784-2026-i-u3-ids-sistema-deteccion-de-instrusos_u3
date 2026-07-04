@@ -3,7 +3,7 @@ name: trafficwatch-ids-review
 description: Skill específica para revisar e implementar cambios en TrafficWatch IDS, un proyecto de detección de intrusos con Python y Flask. Úsala cuando se solicite revisar, modificar, probar, documentar, empaquetar o solucionar problemas de este repositorio, incluyendo reglas del analizador, almacenamiento de alertas, respuesta activa, utilidades de red, APIs del dashboard Flask, integración con Suricata, scripts de Windows, despliegue en Render, pruebas y documentación académica.
 ---
 
-# Revisión De TrafficWatch IDS
+# Revisión de TrafficWatch IDS
 
 ## Propósito
 
@@ -19,17 +19,23 @@ Usa esta skill para trabajar dentro del repositorio TrafficWatch IDS teniendo en
 ## Mapa Del Proyecto
 
 - `main.py`: punto de entrada local del IDS. Carga la configuración, detecta información de red, inicia la captura y actualiza el estado.
+- `src/packet_capture.py`: captura de paquetes con Scapy para la ejecución local del IDS.
 - `src/analyzer.py`: clasificación de paquetes y reglas IDS para escaneo de puertos, ICMP flood, SYN flood, fuerza bruta, frecuencia de conexiones, puertos sospechosos y puertos raros.
 - `src/alert_manager.py`: creación de alertas, cooldown, categorías y metadatos opcionales de respuesta activa.
 - `src/storage.py`: persistencia JSON con límite de registros y lectura tolerante a corrupción.
 - `src/network_utils.py`: detección de red en Windows y ejemplos de comandos.
+- `src/status_manager.py`: estado operativo del IDS, interfaz usada, red detectada y último latido.
+- `src/network_scanner.py`: escaneo controlado de dispositivos activos de la red local.
+- `src/real_scan.py`: ejecución validada de Nmap local con rangos de puertos permitidos.
 - `src/response_actions.py`: respuesta activa con Firewall de Windows. Mantén el bloqueo automático de forma conservadora.
 - `src/suricata_integration.py`: estado de Suricata, alertas de demostración, reglas locales, planes IPS y constructores de comandos de firewall.
+- `run_dashboard.py`: arranque local del dashboard Flask.
 - `web/app.py`: rutas Flask, endpoints API, agregación del dashboard, exportaciones, simulación, escaneos y políticas.
 - `web/templates/dashboard.html`: interfaz principal del dashboard.
 - `web/templates/attack_lab.html`: interfaz controlada del laboratorio de ataques.
 - `suricata/local.rules`: reglas locales de Suricata.
 - `config.json`: umbrales, rutas de logs, ventana del dashboard, límites de escaneo de red, Suricata y configuración de respuesta activa.
+- `docs/`: documentación académica, arquitectura, requerimientos, despliegue Render y guía Suricata IPS.
 - `tests/`: cobertura enfocada con pytest para clasificación del analizador, almacenamiento, alertas, utilidades de red y respuesta activa.
 - Scripts de Windows: configuración, lanzador, empaquetado, instalador y ayudantes de administrador.
 - `render.yaml` y `runtime.txt`: despliegue de demostración en Render.
@@ -43,7 +49,14 @@ Usa esta skill para trabajar dentro del repositorio TrafficWatch IDS teniendo en
 - Evita escaneos reales de red, captura de paquetes, ejecución de Suricata, cambios de firewall, instaladores o scripts de administrador salvo que el usuario lo pida explícitamente.
 - Usa `app.test_client()` de Flask para revisar endpoints cuando no sea necesario abrir un navegador o iniciar un servidor completo.
 - Conserva las etiquetas en español ya presentes en el dashboard y la documentación.
+- Para cambios en `docs/`, conserva el tono académico, la estructura FD01-FD06 y la coherencia con README, Render y las funciones reales del sistema.
 - No hagas commits ni crees fixtures a partir de `logs/alerts.json`, `logs/traffic.json`, `logs/status.json`, `logs/policies.json` o `logs/suricata/eve.json` reales.
+
+## No Hacer
+
+- No ejecutes capturas reales, escaneos Nmap, Suricata real, cambios de firewall, instaladores o scripts de administrador sin pedido explícito del usuario.
+- No uses logs reales como fixtures, datos fuente o evidencia estable.
+- No rompas la compatibilidad con Render al agregar funciones que dependan de Windows, red local, permisos de administrador, Nmap, Npcap o Suricata.
 
 ## Validación
 
@@ -56,6 +69,7 @@ python -m pytest tests/test_traffic_classification.py
 python -m pytest tests/test_alert_manager.py
 python -m pytest tests/test_response_actions.py
 python -m pytest tests/test_network_utils.py
+python -m pytest tests/test_storage.py
 python -m compileall src web
 ```
 
