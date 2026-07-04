@@ -25,7 +25,7 @@ Integrantes:
 
 # Informe de Arquitectura de Software
 
-Version: **2.3**
+Version: **2.4**
 
 | Version | Hecha por | Revisada por | Aprobada por | Fecha | Motivo |
 |:--:|:--:|:--:|:--:|:--:|:--|
@@ -34,6 +34,7 @@ Version: **2.3**
 | 2.1 | APO, ECA | APO, ECA | P. Cuadros Q. | 2026-07-04 | Actualizacion segun dashboard, Suricata IPS, respuesta activa y despliegue Render |
 | 2.2 | APO, ECA | APO, ECA | P. Cuadros Q. | 2026-07-04 | Revision de coherencia con informes FD01-FD05 y codigo actual |
 | 2.3 | APO, ECA | APO, ECA | P. Cuadros Q. | 2026-07-04 | Se agregan vistas de casos de uso, subsistemas y secuencia de diseno |
+| 2.4 | APO, ECA | APO, ECA | P. Cuadros Q. | 2026-07-04 | Se agregan diagramas de colaboracion, objetos, clases, procesos y despliegue |
 
 ## 1. Introduccion
 
@@ -251,6 +252,307 @@ sequenceDiagram
     Dashboard->>Logs: Consulta alertas, trafico y estado
     Logs-->>Dashboard: Devuelve datos JSON
     Dashboard-->>Usuario: Presenta historial, graficos y acciones
+```
+
+### 3.2.3 Diagrama de colaboracion (vista de diseno)
+
+El diagrama de colaboracion muestra como los componentes cooperan para detectar un evento sospechoso, persistir la evidencia y actualizar el dashboard.
+
+```mermaid
+flowchart TD
+    U[Usuario] -->|1 abre| WEB[Dashboard Flask]
+    U -->|2 inicia| MAIN[main.py]
+    MAIN -->|3 configura| CAP[PacketCapture]
+    CAP -->|4 paquete| ANA[TrafficAnalyzer]
+    ANA -->|5 consulta reglas| CFG[config.json]
+    ANA -->|6 guarda trafico| STORE[AlertStorage / Storage]
+    ANA -->|7 solicita alerta| AM[AlertManager]
+    AM -->|8 recomendacion| AR[ActiveResponse]
+    AM -->|9 guarda alerta| STORE
+    STORE -->|10 lee JSON| WEB
+    WEB -->|11 renderiza| UI[dashboard.html]
+    UI -->|12 muestra resultado| U
+```
+
+### 3.2.4 Diagrama de objetos
+
+El diagrama de objetos representa una instancia tipica durante la ejecucion del IDS, con objetos cargados en memoria y archivos de persistencia asociados.
+
+```mermaid
+classDiagram
+    class idsProcess {
+        interface = "Wi-Fi"
+        running = true
+        mode = "local"
+    }
+
+    class analyzer {
+        rules = "config.rules"
+        localNetwork = "192.168.1.0/24"
+    }
+
+    class alertManager {
+        cooldownSeconds = 30
+        activeResponseEnabled = true
+    }
+
+    class alertRecord {
+        type = "ESCANEO_DE_PUERTOS"
+        level = "Alta"
+        sourceIp = "192.168.1.20"
+    }
+
+    class trafficRecord {
+        protocol = "TCP"
+        classification = "local"
+        destinationPort = 22
+    }
+
+    class dashboardSession {
+        url = "http://127.0.0.1:5000"
+        view = "Historial"
+    }
+
+    class jsonLogs {
+        alerts = "logs/alerts.json"
+        traffic = "logs/traffic.json"
+        status = "logs/status.json"
+    }
+
+    idsProcess --> analyzer
+    analyzer --> alertManager
+    analyzer --> trafficRecord
+    alertManager --> alertRecord
+    alertRecord --> jsonLogs
+    trafficRecord --> jsonLogs
+    dashboardSession --> jsonLogs
+```
+
+### 3.2.5 Diagrama de clases
+
+El diagrama de clases resume las clases y modulos principales que sostienen la captura, analisis, alertas, respuesta, integraciones y dashboard.
+
+```mermaid
+classDiagram
+    class PacketCapture {
+        +interface
+        +packet_callback
+        +start()
+    }
+
+    class TrafficAnalyzer {
+        +rules
+        +analyze_packet(packet)
+        -_analyze_tcp(packet, source, destination)
+        -_analyze_icmp(source)
+        -_record_traffic(packet, source, destination)
+        -_classify_traffic(source, destination)
+    }
+
+    class AlertManager {
+        +cooldown_seconds
+        +active_response
+        +generate_alert(level, type, source_ip, description)
+    }
+
+    class AlertStorage {
+        +save(record)
+        +read()
+        +clear()
+    }
+
+    class StatusManager {
+        +start(interface, network_info)
+        +heartbeat()
+        +stop()
+    }
+
+    class FlaskDashboard {
+        +api_alerts()
+        +api_traffic()
+        +api_status()
+        +api_real_nmap_scan()
+        +api_suricata_status()
+        +export_alerts()
+    }
+
+    class NetworkScanner {
+        +scan_local_network()
+    }
+
+    class RealScan {
+        +run_nmap_scan(target, ports)
+    }
+
+    class SuricataIntegration {
+        +read_suricata_alerts()
+        +get_suricata_status()
+        +build_inline_ips_plan()
+    }
+
+    class ActiveResponse {
+        +build_response(alert_type, source_ip)
+        +block_ip_temporarily(source_ip)
+    }
+
+    PacketCapture --> TrafficAnalyzer
+    TrafficAnalyzer --> AlertManager
+    TrafficAnalyzer --> AlertStorage
+    AlertManager --> ActiveResponse
+    AlertManager --> AlertStorage
+    StatusManager --> AlertStorage
+    FlaskDashboard --> AlertStorage
+    FlaskDashboard --> NetworkScanner
+    FlaskDashboard --> RealScan
+    FlaskDashboard --> SuricataIntegration
+    FlaskDashboard --> ActiveResponse
+```
+
+### 3.3 Vista de arquitectura software
+
+Esta vista agrupa los paquetes de software por responsabilidad tecnica: presentacion, dominio IDS, integraciones, persistencia, configuracion, documentacion y automatizacion.
+
+### 3.3.1 Diagrama de arquitectura software (paquetes)
+
+```mermaid
+flowchart TB
+    subgraph PRESENTACION[Paquete presentacion]
+        HTML[web/templates]
+        FLASK[web/app.py]
+    end
+
+    subgraph DOMINIO[Paquete dominio IDS]
+        MAIN[main.py]
+        CAP[src/packet_capture.py]
+        ANA[src/analyzer.py]
+        ALERT[src/alert_manager.py]
+        STATUS[src/status_manager.py]
+    end
+
+    subgraph SOPORTE[Paquete soporte]
+        STORE[src/storage.py]
+        UTILS[src/utils.py]
+        NET[src/network_utils.py]
+        CFG[config.json]
+    end
+
+    subgraph INTEGRACIONES[Paquete integraciones]
+        SCANNER[src/network_scanner.py]
+        NMAP[src/real_scan.py]
+        SURI[src/suricata_integration.py]
+        RESP[src/response_actions.py]
+    end
+
+    subgraph AUTOMATIZACION[Paquete calidad y despliegue]
+        TESTS[tests y tests_ui]
+        BDD[features]
+        WF[.github/workflows]
+        RENDER[render.yaml]
+    end
+
+    subgraph DOC[Paquete documentacion]
+        DOCS[docs]
+        README[README.md]
+    end
+
+    HTML --> FLASK
+    FLASK --> DOMINIO
+    FLASK --> INTEGRACIONES
+    DOMINIO --> SOPORTE
+    INTEGRACIONES --> SOPORTE
+    AUTOMATIZACION --> FLASK
+    AUTOMATIZACION --> DOMINIO
+    DOC --> DOMINIO
+```
+
+### 3.4 Vista de procesos del sistema
+
+La vista de procesos describe el comportamiento operativo del aplicativo desde el inicio hasta la presentacion de resultados y posibles acciones defensivas.
+
+### 3.4.1 Diagrama de procesos del sistema (diagrama de actividad)
+
+```mermaid
+flowchart TD
+    A[Inicio] --> B{Modo de ejecucion}
+    B -->|Local| C[Ejecutar scripts Windows]
+    B -->|Render| D[Iniciar dashboard demo]
+    C --> E[Levantar dashboard Flask]
+    C --> F[Iniciar IDS como administrador]
+    F --> G[Detectar interfaz y red local]
+    G --> H[Capturar paquetes]
+    H --> I[Clasificar trafico]
+    I --> J{Regla IDS activada}
+    J -->|No| K[Guardar trafico clasificado]
+    J -->|Si| L[Generar alerta]
+    L --> M[Aplicar cooldown]
+    M --> N[Agregar recomendacion defensiva]
+    N --> O[Guardar alerta JSON]
+    K --> P[Dashboard consulta APIs]
+    O --> P
+    D --> P
+    P --> Q[Mostrar historial, graficos y estado]
+    Q --> R{Usuario solicita accion}
+    R -->|Exportar| S[Descargar JSON o CSV]
+    R -->|Simular| T[Registrar evento de laboratorio]
+    R -->|Bloquear SSH| U[Validar alerta y permisos]
+    R -->|Sin accion| V[Fin]
+    U --> W{Validacion correcta}
+    W -->|Si| X[Aplicar bloqueo temporal]
+    W -->|No| Y[Mostrar error controlado]
+    S --> V
+    T --> P
+    X --> V
+    Y --> V
+```
+
+### 3.5 Vista de despliegue
+
+La vista de despliegue describe los nodos donde se ejecuta TrafficWatch IDS. El equipo Windows ejecuta las funciones completas de captura y respuesta; Render ejecuta solo la demo web; GitHub almacena el codigo y automatiza pruebas, versionamiento y despliegue.
+
+### 3.5.1 Diagrama de despliegue
+
+```mermaid
+flowchart LR
+    subgraph DEV[Equipo del desarrollador]
+        VSCODE[Visual Studio Code]
+        GIT[Git local]
+    end
+
+    subgraph WIN[Equipo Windows del usuario]
+        EXE[TrafficWatchIDS.exe o Python]
+        IDS[main.py IDS]
+        DASH[Dashboard Flask]
+        NPCAP[Npcap / Scapy]
+        NMAP[Nmap]
+        FW[Windows Firewall]
+        LOGS[logs JSON]
+    end
+
+    subgraph GITHUB[GitHub]
+        REPO[Repositorio U3]
+        ACTIONS[GitHub Actions]
+        RELEASE[Tags y Releases]
+    end
+
+    subgraph RENDER[Render Cloud]
+        SERVICE[Web Service]
+        WEBDEMO[Dashboard demo]
+    end
+
+    VSCODE --> GIT
+    GIT --> REPO
+    REPO --> ACTIONS
+    ACTIONS --> RELEASE
+    ACTIONS --> SERVICE
+    SERVICE --> WEBDEMO
+    EXE --> DASH
+    EXE --> IDS
+    IDS --> NPCAP
+    IDS --> LOGS
+    DASH --> LOGS
+    DASH --> NMAP
+    DASH --> FW
+    WEBDEMO --> DASH
 ```
 
 ## 4. Componentes
