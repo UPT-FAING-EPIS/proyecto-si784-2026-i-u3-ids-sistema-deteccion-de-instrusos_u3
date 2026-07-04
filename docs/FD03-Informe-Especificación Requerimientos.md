@@ -25,7 +25,7 @@ Integrantes:
 
 # Informe de Especificacion de Requerimientos
 
-Version: **2.2**
+Version: **2.3**
 
 | Version | Hecha por | Revisada por | Aprobada por | Fecha | Motivo |
 |:--:|:--:|:--:|:--:|:--:|:--|
@@ -33,6 +33,7 @@ Version: **2.2**
 | 2.0 | APO, ECA | APO, ECA | P. Cuadros Q. | 2026-06-09 | Actualizacion segun implementacion final |
 | 2.1 | APO, ECA | APO, ECA | P. Cuadros Q. | 2026-07-04 | Actualizacion segun codigo actual, APIs Flask, Render, Suricata IPS y respuesta activa |
 | 2.2 | APO, ECA | APO, ECA | P. Cuadros Q. | 2026-07-04 | Se agrega representacion de la arquitectura del sistema |
+| 2.3 | APO, ECA | APO, ECA | P. Cuadros Q. | 2026-07-04 | Se agrega modelo conceptual con paquetes y casos de uso |
 
 ## 1. Introduccion
 
@@ -168,6 +169,8 @@ En ejecucion local, el sistema puede capturar trafico real con Scapy, usar Nmap,
 
 ## 5. Requerimientos no funcionales
 
+### 5.1 Resumen de requerimientos no funcionales
+
 | ID | Requerimiento | Criterio |
 |---|---|---|
 | RNF-01 | Usabilidad | El usuario puede iniciar dashboard, IDS y pruebas mediante `.bat`. |
@@ -182,6 +185,170 @@ En ejecucion local, el sistema puede capturar trafico real con Scapy, usar Nmap,
 | RNF-10 | Seguridad operativa | Las acciones de red, firewall y escaneo deben estar limitadas a entornos autorizados. |
 | RNF-11 | Tolerancia a datos | El dashboard debe tolerar listas vacias, campos nulos y logs JSON corruptos o ausentes. |
 | RNF-12 | Escalabilidad de laboratorio | El escaneo de red debe usar limites de hosts, trabajadores, timeouts y cache. |
+
+### 5.2 Modelo Conceptual
+
+El modelo conceptual representa los paquetes principales del sistema y la relacion entre actores, funcionalidades y requerimientos. Los diagramas permiten observar el alcance funcional de TrafficWatch IDS antes de pasar al detalle tecnico de implementacion.
+
+#### 5.2.1 Diagrama de Paquetes
+
+```mermaid
+flowchart TB
+    subgraph PRESENTACION[Paquete Presentacion]
+        DASH[Dashboard web]
+        LAB[Attack Lab]
+        EXPORT[Exportacion JSON/CSV]
+    end
+
+    subgraph APLICACION[Paquete Aplicacion]
+        API[APIs Flask]
+        SIM[Simulaciones controladas]
+        STATS[Estadisticas y graficos]
+    end
+
+    subgraph DOMINIO[Paquete Dominio IDS]
+        CAP[Captura de paquetes]
+        ANALISIS[Analisis de trafico]
+        ALERTAS[Gestion de alertas]
+        RESPUESTA[Respuesta activa controlada]
+    end
+
+    subgraph INTEGRACION[Paquete Integracion]
+        NMAP[Nmap validado]
+        SURICATA[Suricata EVE / IPS]
+        FIREWALL[Windows Firewall]
+        SCANNER[Escaneo de red local]
+    end
+
+    subgraph DATOS[Paquete Datos]
+        CONFIG[config.json]
+        LOG_ALERTS[logs/alerts.json]
+        LOG_TRAFFIC[logs/traffic.json]
+        LOG_STATUS[logs/status.json]
+        POLICIES[logs/policies.json]
+    end
+
+    subgraph DESPLIEGUE[Paquete Despliegue y Calidad]
+        RENDER[Render]
+        WORKFLOWS[GitHub Actions]
+        TESTS[Pruebas automatizadas]
+    end
+
+    PRESENTACION --> APLICACION
+    APLICACION --> DOMINIO
+    APLICACION --> INTEGRACION
+    DOMINIO --> DATOS
+    INTEGRACION --> DATOS
+    DESPLIEGUE --> PRESENTACION
+    DESPLIEGUE --> APLICACION
+```
+
+#### 5.2.2 Diagrama de Casos de Uso
+
+##### Diagrama General
+
+```mermaid
+flowchart LR
+    USR[Usuario]
+    ADM[Administrador]
+    REM[Usuario remoto autorizado]
+    RENDER[Render]
+
+    subgraph SISTEMA[TrafficWatch IDS]
+        UC01[Iniciar dashboard]
+        UC02[Iniciar IDS]
+        UC03[Consultar alertas]
+        UC04[Ver graficos y estado]
+        UC05[Exportar evidencias]
+        UC06[Ejecutar simulaciones]
+        UC07[Usar Attack Lab]
+        UC08[Escanear red local]
+        UC09[Ejecutar Nmap validado]
+        UC10[Consultar Suricata IPS]
+        UC11[Generar politicas IPS]
+        UC12[Aplicar bloqueo SSH temporal]
+        UC13[Ver demo web]
+    end
+
+    USR --> UC01
+    USR --> UC03
+    USR --> UC04
+    USR --> UC05
+    USR --> UC06
+    USR --> UC08
+    USR --> UC09
+    USR --> UC10
+    USR --> UC11
+    ADM --> UC02
+    ADM --> UC12
+    REM --> UC07
+    RENDER --> UC13
+```
+
+##### Diagrama por Requerimientos
+
+```mermaid
+flowchart TB
+    ACT[Usuario / Administrador]
+
+    subgraph RF_CAPTURA[Captura y deteccion]
+        RF01[RF-01 Capturar paquetes]
+        RF02[RF-02 Detectar escaneo de puertos]
+        RF03[RF-03 Detectar SYN flood]
+        RF04[RF-04 Detectar ICMP flood]
+        RF05[RF-05 Detectar fuerza bruta]
+        RF09[RF-09 Aplicar cooldown]
+    end
+
+    subgraph RF_DATOS[Persistencia y consulta]
+        RF10[RF-10 Guardar alertas]
+        RF11[RF-11 Clasificar trafico]
+        RF12[RF-12 Mostrar dashboard]
+        RF13[RF-13 Filtrar y paginar historial]
+        RF14[RF-14 Exportar alertas]
+        RF15[RF-15 Exportar trafico]
+    end
+
+    subgraph RF_LAB[Laboratorio e integraciones]
+        RF21[RF-21 Simulaciones locales]
+        RF22[RF-22 Attack Lab remoto]
+        RF24[RF-24 Escanear red local]
+        RF25[RF-25 Ejecutar Nmap validado]
+        RF26[RF-26 Consultar Suricata]
+        RF28[RF-28 Generar politicas IPS]
+        RF29[RF-29 Bloqueo SSH temporal]
+    end
+
+    subgraph RF_DEPLOY[Despliegue]
+        RF19[RF-19 Automatizar arranque Windows]
+        RF30[RF-30 Desplegar demo Render]
+    end
+
+    ACT --> RF01
+    RF01 --> RF02
+    RF01 --> RF03
+    RF01 --> RF04
+    RF01 --> RF05
+    RF02 --> RF09
+    RF03 --> RF09
+    RF04 --> RF09
+    RF05 --> RF09
+    RF09 --> RF10
+    RF10 --> RF12
+    RF11 --> RF12
+    RF12 --> RF13
+    RF12 --> RF14
+    RF12 --> RF15
+    ACT --> RF21
+    ACT --> RF22
+    ACT --> RF24
+    ACT --> RF25
+    ACT --> RF26
+    ACT --> RF28
+    ACT --> RF29
+    ACT --> RF19
+    ACT --> RF30
+```
 
 ## 6. Reglas de negocio IDS
 
