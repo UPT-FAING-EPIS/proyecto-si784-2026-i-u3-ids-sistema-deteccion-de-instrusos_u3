@@ -31,4 +31,17 @@ jobs:
           python -m pip install -r requirements-dev.txt
 
       - name: Run BDD scenarios
-        run: python -m behave features
+        run: |
+          mkdir -p reports/bdd
+          set +e
+          python -m behave -f json.pretty -o reports/bdd/report.json features
+          BEHAVE_EXIT_CODE=$?
+          python scripts/emit_github_annotations.py bdd reports/bdd/report.json
+          exit $BEHAVE_EXIT_CODE
+
+      - name: Upload BDD report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: bdd-json-report
+          path: reports/bdd/report.json

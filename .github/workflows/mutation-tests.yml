@@ -39,17 +39,23 @@ jobs:
         run: |
           set +e
           rm -rf mutants
-          mutmut run
+          mkdir -p reports/mutation
+          mutmut run > reports/mutation/run.log 2>&1
           MUTMUT_EXIT_CODE=$?
           echo "exit_code=${MUTMUT_EXIT_CODE}" >> "$GITHUB_OUTPUT"
           echo "Mutmut finished with exit code ${MUTMUT_EXIT_CODE}."
           exit 0
 
+      - name: Annotate mutation report
+        if: always()
+        run: python scripts/emit_github_annotations.py mutation reports/mutation/run.log
+
       - name: Show mutation results
         if: always()
         env:
           PYTHONPATH: ${{ github.workspace }}
-        run: mutmut results || true
+        run: |
+          mutmut results | tee reports/mutation/results.txt || true
 
       - name: Mutation testing summary
         if: always()
@@ -57,3 +63,10 @@ jobs:
           echo "Mutmut exit code: ${{ steps.mutmut_run.outputs.exit_code }}"
           echo "Exit code 0 means all evaluated mutants were killed."
           echo "Non-zero means review the mutation report; the workflow is kept green as an academic report job."
+
+      - name: Upload mutation report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: mutation-report
+          path: reports/mutation

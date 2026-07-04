@@ -35,4 +35,16 @@ jobs:
         run: python -m playwright install --with-deps chromium
 
       - name: Run UI tests
-        run: python -m pytest tests_ui -m ui
+        run: |
+          mkdir -p reports/ui-tests/screenshots reports/ui-tests/videos
+          UI_SCREENSHOT_DIR=reports/ui-tests/screenshots UI_VIDEO_DIR=reports/ui-tests/videos \
+            python -m pytest tests_ui -m ui
+
+      - name: Upload UI evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: ui-test-evidence
+          path: |
+            reports/ui-tests/screenshots
+            reports/ui-tests/videos

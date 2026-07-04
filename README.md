@@ -595,6 +595,8 @@ Configuracion complementaria:
 
 ```text
 docs/QA_ANALISIS_ESTATICO.md
+docs/GITHUB_PROJECT_TAREAS.md
+docs/CONTRIBUCIONES.md
 sonar-project.properties
 ```
 

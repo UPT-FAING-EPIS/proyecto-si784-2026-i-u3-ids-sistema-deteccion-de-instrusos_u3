@@ -106,7 +106,8 @@ th {
   grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
   gap: 14px;
 }
-.screenshots img {
+.screenshots img,
+.screenshots video {
   width: 100%;
   border: 1px solid var(--line);
   border-radius: 6px;
@@ -183,6 +184,7 @@ def render_test_report(
     raw_report_name: str,
     output_path: Path,
     screenshots_dir: Path | None = None,
+    videos_dir: Path | None = None,
 ) -> None:
     counts, rows = parse_junit(junit_path)
     total = sum(counts.values())
@@ -216,6 +218,22 @@ def render_test_report(
 </section>
 """
 
+    videos_html = ""
+    if videos_dir and videos_dir.exists():
+        videos = sorted(videos_dir.glob("*.webm"))
+        if videos:
+            videos_html = """
+<section>
+  <h2>Videos de ejecucion</h2>
+  <div class="screenshots">
+""" + "\n".join(
+                f'    <figure><video src="videos/{html.escape(video.name)}" controls></video><figcaption>{html.escape(video.stem)}</figcaption></figure>'
+                for video in videos
+            ) + """
+  </div>
+</section>
+"""
+
     status_text = "Aprobado" if failed == 0 and total > 0 else "Revisar"
     body = f"""
 <h1>{html.escape(title)}</h1>
@@ -238,6 +256,7 @@ def render_test_report(
   </table>
 </section>
 {screenshots_html}
+{videos_html}
 """
     write_page(output_path, title, body)
 
@@ -521,6 +540,7 @@ def main() -> None:
             raw_report_name=args["raw-report"],
             output_path=Path(args["output"]),
             screenshots_dir=Path(args["screenshots"]) if args.get("screenshots") else None,
+            videos_dir=Path(args["videos"]) if args.get("videos") else None,
         )
     elif report_type == "mutation":
         render_mutation_report(

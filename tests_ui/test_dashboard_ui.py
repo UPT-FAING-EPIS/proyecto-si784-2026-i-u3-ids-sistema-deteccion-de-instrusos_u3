@@ -19,6 +19,27 @@ def save_screenshot(page, name):
     page.screenshot(path=str(Path(screenshot_dir) / name), full_page=True)
 
 
+def new_context(browser):
+    video_dir = os.environ.get("UI_VIDEO_DIR")
+    if not video_dir:
+        return browser.new_context()
+    Path(video_dir).mkdir(parents=True, exist_ok=True)
+    return browser.new_context(
+        record_video_dir=video_dir,
+        record_video_size={"width": 1280, "height": 720},
+    )
+
+
+def save_video(page, name):
+    video_dir = os.environ.get("UI_VIDEO_DIR")
+    if not video_dir or page.video is None:
+        return
+    source = Path(page.video.path())
+    target = Path(video_dir) / name
+    if source.exists():
+        source.replace(target)
+
+
 @pytest.fixture(scope="session")
 def live_dashboard():
     temp_dir = TemporaryDirectory()
@@ -44,7 +65,8 @@ def live_dashboard():
 def test_dashboard_home_renders_main_navigation(live_dashboard):
     with sync_playwright() as playwright:
         browser = playwright.chromium.launch()
-        page = browser.new_page()
+        context = new_context(browser)
+        page = context.new_page()
 
         page.goto(live_dashboard, wait_until="networkidle")
 
@@ -55,6 +77,9 @@ def test_dashboard_home_renders_main_navigation(live_dashboard):
         expect(page.locator("#rulesNav")).to_contain_text("Reglas IDS")
         save_screenshot(page, "dashboard-home.png")
 
+        page.close()
+        context.close()
+        save_video(page, "trafficwatch-dashboard-home.webm")
         browser.close()
 
 
@@ -62,7 +87,8 @@ def test_dashboard_home_renders_main_navigation(live_dashboard):
 def test_attack_lab_renders_remote_lab_buttons(live_dashboard):
     with sync_playwright() as playwright:
         browser = playwright.chromium.launch()
-        page = browser.new_page()
+        context = new_context(browser)
+        page = context.new_page()
 
         page.goto(f"{live_dashboard}/attack-lab", wait_until="networkidle")
 
@@ -71,4 +97,7 @@ def test_attack_lab_renders_remote_lab_buttons(live_dashboard):
         expect(page.get_by_role("button", name="Enviar").first).to_be_visible()
         save_screenshot(page, "attack-lab.png")
 
+        page.close()
+        context.close()
+        save_video(page, "trafficwatch-attack-lab.webm")
         browser.close()

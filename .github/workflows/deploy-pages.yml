@@ -53,6 +53,8 @@ jobs:
           mkdir -p reports/snyk
           mkdir -p reports/static-analysis
           mkdir -p reports/sonarcloud
+          mkdir -p reports/github-project
+          mkdir -p reports/contributions
           touch reports/.nojekyll
 
       - name: Unit tests report
@@ -68,7 +70,8 @@ jobs:
 
       - name: Coverage HTML report
         run: |
-          python -m pytest tests -m "not integration" --cov=src --cov=web --cov-report=html:reports/coverage --cov-report=term > reports/coverage/coverage.txt 2>&1 || true
+          python -m pytest tests -m "not integration" --cov=src --cov=web --cov-report=xml:reports/coverage/coverage.xml --cov-report=html:reports/coverage --cov-report=term > reports/coverage/coverage.txt 2>&1 || true
+          python scripts/emit_github_annotations.py coverage reports/coverage/coverage.xml
           if [ ! -f reports/coverage/index.html ]; then
             cat > reports/coverage/index.html <<'EOF'
           <!doctype html><html lang="es"><meta charset="utf-8"><title>Cobertura de Codigo</title><body><h1>Cobertura de Codigo</h1><p>No se pudo generar el reporte HTML de cobertura. Revisa el log incluido abajo.</p><pre>
@@ -80,6 +83,7 @@ jobs:
       - name: BDD Behave report
         run: |
           python -m behave -f json.pretty -o reports/bdd/report.json features > reports/bdd/behave.txt 2>&1 || true
+          python scripts/emit_github_annotations.py bdd reports/bdd/report.json
           python - <<'PY'
           import json
           from html import escape
@@ -174,7 +178,8 @@ jobs:
       - name: UI tests report
         run: |
           mkdir -p reports/ui-tests/screenshots
-          UI_SCREENSHOT_DIR=reports/ui-tests/screenshots python -m pytest tests_ui -m ui --junitxml=reports/ui-tests/junit.xml --html=reports/ui-tests/pytest-report.html --self-contained-html || true
+          mkdir -p reports/ui-tests/videos
+          UI_SCREENSHOT_DIR=reports/ui-tests/screenshots UI_VIDEO_DIR=reports/ui-tests/videos python -m pytest tests_ui -m ui --junitxml=reports/ui-tests/junit.xml --html=reports/ui-tests/pytest-report.html --self-contained-html || true
           python scripts/generate_qa_report_pages.py \
             --type ui \
             --title "Pruebas de Interfaz - TrafficWatch IDS" \
@@ -182,6 +187,7 @@ jobs:
             --junit reports/ui-tests/junit.xml \
             --raw-report pytest-report.html \
             --screenshots reports/ui-tests/screenshots \
+            --videos reports/ui-tests/videos \
             --output reports/ui-tests/index.html
 
       - name: Mutation tests report
@@ -190,6 +196,7 @@ jobs:
           mutmut --version > reports/mutation/run.log 2>&1 || true
           mutmut run >> reports/mutation/run.log 2>&1 || true
           mutmut results > reports/mutation/results.txt 2>> reports/mutation/run.log || true
+          python scripts/emit_github_annotations.py mutation reports/mutation/run.log
           python scripts/generate_qa_report_pages.py \
             --type mutation \
             --results reports/mutation/results.txt \
@@ -289,6 +296,83 @@ jobs:
             --sonar-properties sonar-project.properties \
             --output reports/sonarcloud/index.html
 
+      - name: GitHub project and contributions evidence
+        run: |
+          git shortlog -sne --all > reports/contributions/shortlog.txt
+          cat > reports/github-project/index.html <<'EOF'
+          <!doctype html>
+          <html lang="es">
+          <head>
+            <meta charset="utf-8">
+            <meta name="viewport" content="width=device-width, initial-scale=1">
+            <title>Tareas GitHub Project - TrafficWatch IDS</title>
+            <style>
+              body { font-family: Arial, sans-serif; margin: 32px; color: #172033; background: #f6f8fb; }
+              h1 { color: #0f5f8f; }
+              table { border-collapse: collapse; width: 100%; background: #fff; }
+              th, td { border: 1px solid #d8e0ec; padding: 10px; text-align: left; }
+              th { background: #eef4fb; }
+            </style>
+          </head>
+          <body>
+            <h1>Tareas resueltas en GitHub Project</h1>
+            <p>Resumen de items que deben figurar como cerrados o en estado Done dentro del GitHub Project del curso.</p>
+            <table>
+              <thead><tr><th>Tarea</th><th>Evidencia</th><th>Estado esperado</th></tr></thead>
+              <tbody>
+                <tr><td>Portal de reportes QA en GitHub Pages</td><td>Deploy QA Portal to GitHub Pages</td><td>Done</td></tr>
+                <tr><td>Pruebas unitarias</td><td>unit-tests/index.html</td><td>Done</td></tr>
+                <tr><td>Cobertura</td><td>coverage/index.html</td><td>Done</td></tr>
+                <tr><td>BDD</td><td>bdd/index.html</td><td>Done</td></tr>
+                <tr><td>Interfaz Playwright</td><td>ui-tests/index.html, screenshots y videos</td><td>Done</td></tr>
+                <tr><td>Mutaciones</td><td>mutation/index.html</td><td>Done</td></tr>
+                <tr><td>Semgrep / Snyk</td><td>static-analysis/index.html</td><td>Done</td></tr>
+                <tr><td>SonarCloud</td><td>sonar-project.properties</td><td>Done tecnico / pendiente token</td></tr>
+              </tbody>
+            </table>
+          </body>
+          </html>
+          EOF
+          python - <<'PY'
+          from html import escape
+          from pathlib import Path
+
+          rows = []
+          for line in Path("reports/contributions/shortlog.txt").read_text(encoding="utf-8").splitlines():
+              parts = line.strip().split("\t", 1)
+              if len(parts) == 2:
+                  rows.append(f"<tr><td>{escape(parts[0])}</td><td>{escape(parts[1])}</td></tr>")
+          table_rows = "\n".join(rows) or '<tr><td colspan="2">No se encontraron contribuciones.</td></tr>'
+          html = f"""<!doctype html>
+          <html lang="es">
+          <head>
+            <meta charset="utf-8">
+            <meta name="viewport" content="width=device-width, initial-scale=1">
+            <title>Contribuciones - TrafficWatch IDS</title>
+            <style>
+              body {{ font-family: Arial, sans-serif; margin: 32px; color: #172033; background: #f6f8fb; }}
+              h1 {{ color: #0f5f8f; }}
+              table {{ border-collapse: collapse; width: 100%; background: #fff; }}
+              th, td {{ border: 1px solid #d8e0ec; padding: 10px; text-align: left; }}
+              th {{ background: #eef4fb; }}
+              pre {{ background: #0f172a; color: #dbeafe; padding: 14px; overflow: auto; }}
+            </style>
+          </head>
+          <body>
+            <h1>Contribuciones</h1>
+            <p>Autores visibles en el historial Git del repositorio.</p>
+            <table>
+              <thead><tr><th>Commits</th><th>Autor</th></tr></thead>
+              <tbody>{table_rows}</tbody>
+            </table>
+            <h2>Comando usado</h2>
+            <pre>git shortlog -sne --all</pre>
+          </body>
+          </html>
+          """
+          Path("reports/contributions/index.html").write_text(html, encoding="utf-8")
+          PY
+
       - name: Generate QA Portal index.html
         run: |
           cat << 'EOF' > reports/index.html
@@ -339,6 +423,16 @@ jobs:
                       <h3>Pruebas de Mutacion</h3>
                       <p>Resumen de mutantes generados, evaluados, eliminados y sobrevivientes.</p>
                       <a href="./mutation/index.html" class="btn">Ver Reporte</a>
+                  </div>
+                  <div class="card">
+                      <h3>Tareas GitHub Project</h3>
+                      <p>Evidencia de tareas resueltas que deben figurar como Done en el tablero.</p>
+                      <a href="./github-project/index.html" class="btn">Ver Tareas</a>
+                  </div>
+                  <div class="card">
+                      <h3>Contribuciones</h3>
+                      <p>Resumen de autores visibles en el historial Git del repositorio.</p>
+                      <a href="./contributions/index.html" class="btn">Ver Contribuciones</a>
                   </div>
                   <div class="card">
                       <h3>Seguridad - Snyk</h3>
