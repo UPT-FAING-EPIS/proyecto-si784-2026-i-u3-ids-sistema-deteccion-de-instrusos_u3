@@ -25,7 +25,7 @@ Integrantes:
 
 # Informe de Especificacion de Requerimientos
 
-Version: **2.6**
+Version: **2.7**
 
 | Version | Hecha por | Revisada por | Aprobada por | Fecha | Motivo |
 |:--:|:--:|:--:|:--:|:--:|:--|
@@ -37,6 +37,7 @@ Version: **2.6**
 | 2.4 | APO, ECA | APO, ECA | P. Cuadros Q. | 2026-07-04 | Se agrega modelo logico y analisis de objetos |
 | 2.5 | APO, ECA | APO, ECA | P. Cuadros Q. | 2026-07-04 | Se agrega diagrama de actividades con objetos |
 | 2.6 | APO, ECA | APO, ECA | P. Cuadros Q. | 2026-07-04 | Se agrega diagrama de secuencia y diagrama de clases |
+| 2.7 | APO, ECA | APO, ECA | P. Cuadros Q. | 2026-07-04 | Se ajusta el estilo de los diagramas de casos de uso |
 
 ## 1. Introduccion
 
@@ -252,26 +253,30 @@ flowchart TB
 
 ```mermaid
 flowchart LR
-    USR[Usuario]
-    ADM[Administrador]
-    REM[Usuario remoto autorizado]
-    RENDER[Render]
+    classDef actor fill:#ffffff,stroke:#cf4f7a,stroke-width:1.5px,color:#222222;
+    classDef usecase fill:#fff8c9,stroke:#cf4f7a,stroke-width:1.5px,color:#222222;
+
+    USR["Usuario<br/>(from Use Case View)"]:::actor
+    ADM["Administrador<br/>(from Use Case View)"]:::actor
+    REM["Usuario remoto autorizado<br/>(from Use Case View)"]:::actor
+    RENDER["Render<br/>(from Use Case View)"]:::actor
 
     subgraph SISTEMA[TrafficWatch IDS]
-        UC01[Iniciar dashboard]
-        UC02[Iniciar IDS]
-        UC03[Consultar alertas]
-        UC04[Ver graficos y estado]
-        UC05[Exportar evidencias]
-        UC06[Ejecutar simulaciones]
-        UC07[Usar Attack Lab]
-        UC08[Escanear red local]
-        UC09[Ejecutar Nmap validado]
-        UC10[Consultar Suricata IPS]
-        UC11[Generar politicas IPS]
-        UC12[Aplicar bloqueo SSH temporal]
-        UC13[Ver demo web]
+        UC01(["Iniciar dashboard"]):::usecase
+        UC02(["Iniciar IDS"]):::usecase
+        UC03(["Consultar alertas"]):::usecase
+        UC04(["Ver graficos y estado"]):::usecase
+        UC05(["Exportar evidencias"]):::usecase
+        UC06(["Ejecutar simulaciones"]):::usecase
+        UC07(["Usar Attack Lab"]):::usecase
+        UC08(["Escanear red local"]):::usecase
+        UC09(["Ejecutar Nmap validado"]):::usecase
+        UC10(["Consultar Suricata IPS"]):::usecase
+        UC11(["Generar politicas IPS"]):::usecase
+        UC12(["Aplicar bloqueo SSH temporal"]):::usecase
+        UC13(["Ver demo web"]):::usecase
     end
+    style SISTEMA fill:#ffffff,stroke:#cf4f7a,stroke-width:1px,stroke-dasharray: 5 5
 
     USR --> UC01
     USR --> UC03
@@ -286,46 +291,55 @@ flowchart LR
     ADM --> UC12
     REM --> UC07
     RENDER --> UC13
+
+    linkStyle default stroke:#cf4f7a,stroke-width:1.4px
 ```
 
 ##### Diagrama por Requerimientos
 
 ```mermaid
 flowchart TB
-    ACT[Usuario / Administrador]
+    classDef actor fill:#ffffff,stroke:#cf4f7a,stroke-width:1.5px,color:#222222;
+    classDef usecase fill:#fff8c9,stroke:#cf4f7a,stroke-width:1.5px,color:#222222;
+
+    ACT["Usuario / Administrador<br/>(from Use Case View)"]:::actor
 
     subgraph RF_CAPTURA[Captura y deteccion]
-        RF01[RF-01 Capturar paquetes]
-        RF02[RF-02 Detectar escaneo de puertos]
-        RF03[RF-03 Detectar SYN flood]
-        RF04[RF-04 Detectar ICMP flood]
-        RF05[RF-05 Detectar fuerza bruta]
-        RF09[RF-09 Aplicar cooldown]
+        RF01(["RF-01 Capturar paquetes"]):::usecase
+        RF02(["RF-02 Detectar escaneo de puertos"]):::usecase
+        RF03(["RF-03 Detectar SYN flood"]):::usecase
+        RF04(["RF-04 Detectar ICMP flood"]):::usecase
+        RF05(["RF-05 Detectar fuerza bruta"]):::usecase
+        RF09(["RF-09 Aplicar cooldown"]):::usecase
     end
 
     subgraph RF_DATOS[Persistencia y consulta]
-        RF10[RF-10 Guardar alertas]
-        RF11[RF-11 Clasificar trafico]
-        RF12[RF-12 Mostrar dashboard]
-        RF13[RF-13 Filtrar y paginar historial]
-        RF14[RF-14 Exportar alertas]
-        RF15[RF-15 Exportar trafico]
+        RF10(["RF-10 Guardar alertas"]):::usecase
+        RF11(["RF-11 Clasificar trafico"]):::usecase
+        RF12(["RF-12 Mostrar dashboard"]):::usecase
+        RF13(["RF-13 Filtrar y paginar historial"]):::usecase
+        RF14(["RF-14 Exportar alertas"]):::usecase
+        RF15(["RF-15 Exportar trafico"]):::usecase
     end
 
     subgraph RF_LAB[Laboratorio e integraciones]
-        RF21[RF-21 Simulaciones locales]
-        RF22[RF-22 Attack Lab remoto]
-        RF24[RF-24 Escanear red local]
-        RF25[RF-25 Ejecutar Nmap validado]
-        RF26[RF-26 Consultar Suricata]
-        RF28[RF-28 Generar politicas IPS]
-        RF29[RF-29 Bloqueo SSH temporal]
+        RF21(["RF-21 Simulaciones locales"]):::usecase
+        RF22(["RF-22 Attack Lab remoto"]):::usecase
+        RF24(["RF-24 Escanear red local"]):::usecase
+        RF25(["RF-25 Ejecutar Nmap validado"]):::usecase
+        RF26(["RF-26 Consultar Suricata"]):::usecase
+        RF28(["RF-28 Generar politicas IPS"]):::usecase
+        RF29(["RF-29 Bloqueo SSH temporal"]):::usecase
     end
 
     subgraph RF_DEPLOY[Despliegue]
-        RF19[RF-19 Automatizar arranque Windows]
-        RF30[RF-30 Desplegar demo Render]
+        RF19(["RF-19 Automatizar arranque Windows"]):::usecase
+        RF30(["RF-30 Desplegar demo Render"]):::usecase
     end
+    style RF_CAPTURA fill:#ffffff,stroke:#cf4f7a,stroke-width:1px,stroke-dasharray: 5 5
+    style RF_DATOS fill:#ffffff,stroke:#cf4f7a,stroke-width:1px,stroke-dasharray: 5 5
+    style RF_LAB fill:#ffffff,stroke:#cf4f7a,stroke-width:1px,stroke-dasharray: 5 5
+    style RF_DEPLOY fill:#ffffff,stroke:#cf4f7a,stroke-width:1px,stroke-dasharray: 5 5
 
     ACT --> RF01
     RF01 --> RF02
@@ -351,6 +365,8 @@ flowchart TB
     ACT --> RF29
     ACT --> RF19
     ACT --> RF30
+
+    linkStyle default stroke:#cf4f7a,stroke-width:1.4px
 ```
 
 ### 5.3 Modelo Logico
