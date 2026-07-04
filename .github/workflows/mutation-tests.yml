@@ -30,7 +30,7 @@ jobs:
           python -m pip install -r requirements-dev.txt
 
       - name: Check baseline tests
-        run: python -m pytest tests/test_storage.py tests/test_alert_manager.py tests/test_response_actions.py -x
+        run: PYTHONPATH=src python -m pytest tests_mutation -x
 
       - name: Run mutation tests
         id: mutmut_run

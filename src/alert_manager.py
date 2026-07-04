@@ -1,7 +1,10 @@
 from datetime import datetime
 import time
 
-from src.storage import AlertStorage
+try:
+    from storage import AlertStorage
+except ImportError:
+    from src.storage import AlertStorage
 
 
 class AlertManager:
