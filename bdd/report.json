@@ -21,7 +21,7 @@
           },
           "name": "el dashboard Flask esta disponible",
           "result": {
-            "duration": 0.004639625549316406,
+            "duration": 0.004721879959106445,
             "status": "passed"
           },
           "step_type": "given"
@@ -35,7 +35,7 @@
           },
           "name": "consulto la API de estado",
           "result": {
-            "duration": 0.001859903335571289,
+            "duration": 0.0019159317016601562,
             "status": "passed"
           },
           "step_type": "when"
@@ -49,7 +49,7 @@
           },
           "name": "recibo un estado valido del IDS",
           "result": {
-            "duration": 9.059906005859375e-05,
+            "duration": 9.179115295410156e-05,
             "status": "passed"
           },
           "step_type": "then"
@@ -73,7 +73,7 @@
           },
           "name": "el dashboard Flask esta disponible",
           "result": {
-            "duration": 0.0005807876586914062,
+            "duration": 0.0005903244018554688,
             "status": "passed"
           },
           "step_type": "given"
@@ -87,7 +87,7 @@
           },
           "name": "genero una simulacion de fuerza bruta SSH",
           "result": {
-            "duration": 0.0008940696716308594,
+            "duration": 0.0009682178497314453,
             "status": "passed"
           },
           "step_type": "when"
@@ -101,7 +101,7 @@
           },
           "name": "la alerta queda registrada en el historial",
           "result": {
-            "duration": 0.0005340576171875,
+            "duration": 0.0005321502685546875,
             "status": "passed"
           },
           "step_type": "then"
