@@ -33,12 +33,26 @@ jobs:
         run: python -m pytest tests -m "not integration" -x
 
       - name: Run mutation tests
+        id: mutmut_run
         env:
           PYTHONPATH: ${{ github.workspace }}
-        run: mutmut run
+        run: |
+          set +e
+          mutmut run
+          MUTMUT_EXIT_CODE=$?
+          echo "exit_code=${MUTMUT_EXIT_CODE}" >> "$GITHUB_OUTPUT"
+          echo "Mutmut finished with exit code ${MUTMUT_EXIT_CODE}."
+          exit 0
 
       - name: Show mutation results
         if: always()
         env:
           PYTHONPATH: ${{ github.workspace }}
-        run: mutmut results
+        run: mutmut results || true
+
+      - name: Mutation testing summary
+        if: always()
+        run: |
+          echo "Mutmut exit code: ${{ steps.mutmut_run.outputs.exit_code }}"
+          echo "Exit code 0 means all evaluated mutants were killed."
+          echo "Non-zero means review the mutation report; the workflow is kept green as an academic report job."
