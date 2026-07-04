@@ -31,6 +31,7 @@ web/app.py                      429    320    25%
 -------------------------------------------------
 TOTAL                          1112    729    34%
 Coverage HTML written to dir reports/coverage
+Coverage XML written to file reports/coverage/coverage.xml
 
 
-======================= 14 passed, 3 deselected in 0.93s =======================
+======================= 14 passed, 3 deselected in 1.09s =======================

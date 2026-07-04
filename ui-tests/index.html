@@ -102,7 +102,8 @@ th {
   grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
   gap: 14px;
 }
-.screenshots img {
+.screenshots img,
+.screenshots video {
   width: 100%;
   border: 1px solid var(--line);
   border-radius: 6px;
@@ -136,8 +137,8 @@ pre {
   <h2>Casos ejecutados</h2>
   <table>
     <thead><tr><th>Modulo</th><th>Prueba</th><th>Resultado</th><th>Tiempo</th></tr></thead>
-    <tbody><tr><td>tests_ui.test_dashboard_ui</td><td>test_dashboard_home_renders_main_navigation</td><td class='passed'>passed</td><td>1.207 s</td></tr>
-<tr><td>tests_ui.test_dashboard_ui</td><td>test_attack_lab_renders_remote_lab_buttons</td><td class='passed'>passed</td><td>1.356 s</td></tr></tbody>
+    <tbody><tr><td>tests_ui.test_dashboard_ui</td><td>test_dashboard_home_renders_main_navigation</td><td class='passed'>passed</td><td>1.370 s</td></tr>
+<tr><td>tests_ui.test_dashboard_ui</td><td>test_attack_lab_renders_remote_lab_buttons</td><td class='passed'>passed</td><td>1.360 s</td></tr></tbody>
   </table>
 </section>
 
@@ -146,6 +147,15 @@ pre {
   <div class="screenshots">
     <figure><img src="screenshots/attack-lab.png" alt="attack-lab"><figcaption>attack-lab</figcaption></figure>
     <figure><img src="screenshots/dashboard-home.png" alt="dashboard-home"><figcaption>dashboard-home</figcaption></figure>
+  </div>
+</section>
+
+
+<section>
+  <h2>Videos de ejecucion</h2>
+  <div class="screenshots">
+    <figure><video src="videos/trafficwatch-attack-lab.webm" controls></video><figcaption>trafficwatch-attack-lab</figcaption></figure>
+    <figure><video src="videos/trafficwatch-dashboard-home.webm" controls></video><figcaption>trafficwatch-dashboard-home</figcaption></figure>
   </div>
 </section>
 
