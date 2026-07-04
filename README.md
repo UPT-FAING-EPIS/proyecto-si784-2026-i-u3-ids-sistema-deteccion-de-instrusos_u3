@@ -575,6 +575,29 @@ nmap -p 31337 <gateway>
 
 Si no pasas `--host` en `simular_fuerza_bruta.py`, el script usa automaticamente el gateway detectado.
 
+## Calidad y seguridad en GitHub
+
+El repositorio incluye workflows de GitHub Actions para pruebas, reportes en GitHub Pages y analisis estatico.
+
+Reportes publicados:
+
+```text
+https://upt-faing-epis.github.io/proyecto-si784-2026-i-u3-ids-sistema-deteccion-de-instrusos_u3/
+```
+
+Secciones principales:
+
+- Pruebas unitarias, cobertura, BDD, interfaz y mutacion.
+- Analisis Estatico Detallado con SonarCloud, Semgrep y Snyk.
+- Escaneo en SonarCloud desde GitHub Actions.
+
+Configuracion complementaria:
+
+```text
+docs/QA_ANALISIS_ESTATICO.md
+sonar-project.properties
+```
+
 ## Importante sobre permisos
 
 - `python main.py` necesita permisos de administrador porque captura paquetes de red.

@@ -51,6 +51,8 @@ jobs:
           mkdir -p reports/mutation
           mkdir -p reports/semgrep
           mkdir -p reports/snyk
+          mkdir -p reports/static-analysis
+          mkdir -p reports/sonarcloud
           touch reports/.nojekyll
 
       - name: Unit tests report
@@ -256,11 +258,15 @@ jobs:
           SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
         run: |
           if [ -n "$SNYK_TOKEN" ]; then
-            snyk test --file=requirements.txt --json | snyk-to-html -o reports/snyk/dependencies.html || true
-            snyk code test --json | snyk-to-html -o reports/snyk/code.html || true
+            snyk test --file=requirements.txt --json > reports/snyk/dependencies.json || true
+            snyk-to-html -i reports/snyk/dependencies.json -o reports/snyk/dependencies.html || true
+            snyk code test --json > reports/snyk/code.json || true
+            snyk-to-html -i reports/snyk/code.json -o reports/snyk/code.html || true
           else
             echo "SNYK_TOKEN no configurado. Se omite el reporte de Snyk."
             echo "<h3>Snyk no configurado</h3><p>Registra el SNYK_TOKEN en tus GitHub Secrets para habilitar este reporte.</p>" > reports/snyk/dependencies.html
+            echo '{"vulnerabilities":[]}' > reports/snyk/dependencies.json
+            echo '{"runs":[]}' > reports/snyk/code.json
           fi
           if [ ! -f reports/snyk/dependencies.html ]; then
             echo "<h3>Snyk dependencias</h3><p>No se pudo generar el reporte de dependencias.</p>" > reports/snyk/dependencies.html
@@ -268,6 +274,20 @@ jobs:
           if [ ! -f reports/snyk/code.html ]; then
             echo "<h3>Snyk Code</h3><p>No se pudo generar el reporte de codigo o SNYK_TOKEN no esta configurado.</p>" > reports/snyk/code.html
           fi
+
+      - name: Static analysis consolidated report
+        run: |
+          python scripts/generate_qa_report_pages.py \
+            --type static \
+            --semgrep reports/semgrep/semgrep.json \
+            --snyk-dependencies reports/snyk/dependencies.json \
+            --snyk-code reports/snyk/code.json \
+            --sonar-properties sonar-project.properties \
+            --output reports/static-analysis/index.html
+          python scripts/generate_qa_report_pages.py \
+            --type sonarcloud \
+            --sonar-properties sonar-project.properties \
+            --output reports/sonarcloud/index.html
 
       - name: Generate QA Portal index.html
         run: |
@@ -324,6 +344,16 @@ jobs:
                       <h3>Seguridad - Snyk</h3>
                       <p>Reportes de vulnerabilidades detectadas en dependencias de Python.</p>
                       <a href="./snyk/dependencies.html" class="btn">Ver Dependencias</a>
+                  </div>
+                  <div class="card">
+                      <h3>Analisis Estatico Detallado</h3>
+                      <p>Resumen consolidado de SonarCloud, Semgrep y Snyk para calidad y seguridad.</p>
+                      <a href="./static-analysis/index.html" class="btn">Ver Informe</a>
+                  </div>
+                  <div class="card">
+                      <h3>Escaneo en SonarCloud</h3>
+                      <p>Configuracion y enlace del escaneo publicado desde GitHub Actions.</p>
+                      <a href="./sonarcloud/index.html" class="btn">Ver SonarCloud</a>
                   </div>
                   <div class="card">
                       <h3>Seguridad - Semgrep</h3>

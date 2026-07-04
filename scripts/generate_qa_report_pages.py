@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import html
+import json
 import re
 from collections import Counter
 from pathlib import Path
@@ -339,6 +340,169 @@ def render_mutation_report(results_path: Path, output_path: Path, run_log_path: 
     write_page(output_path, "Pruebas de Mutacion - TrafficWatch IDS", body)
 
 
+def read_properties(path: Path) -> dict[str, str]:
+    values: dict[str, str] = {}
+    if not path.exists():
+        return values
+
+    for raw_line in path.read_text(encoding="utf-8", errors="replace").splitlines():
+        line = raw_line.strip()
+        if not line or line.startswith("#") or "=" not in line:
+            continue
+        key, value = line.split("=", 1)
+        values[key.strip()] = value.strip()
+    return values
+
+
+def parse_semgrep_json(path: Path) -> list[dict[str, str]]:
+    if not path.exists():
+        return []
+
+    try:
+        data = json.loads(path.read_text(encoding="utf-8", errors="replace"))
+    except json.JSONDecodeError:
+        return []
+
+    findings = []
+    for item in data.get("results", []):
+        extra = item.get("extra", {})
+        findings.append(
+            {
+                "tool": "Semgrep",
+                "file": item.get("path", ""),
+                "line": str(item.get("start", {}).get("line", "")),
+                "severity": extra.get("severity", "INFO"),
+                "message": extra.get("message", ""),
+            }
+        )
+    return findings
+
+
+def parse_snyk_json(path: Path, label: str) -> tuple[str, int]:
+    if not path.exists():
+        return "No configurado", 0
+
+    try:
+        data = json.loads(path.read_text(encoding="utf-8", errors="replace"))
+    except json.JSONDecodeError:
+        text = path.read_text(encoding="utf-8", errors="replace")
+        return ("Sin hallazgos" if "no vulnerable paths" in text.lower() else "Revisar salida"), 0
+
+    vulnerabilities = data.get("vulnerabilities", [])
+    if isinstance(vulnerabilities, list):
+        return label, len(vulnerabilities)
+    runs = data.get("runs", [])
+    if isinstance(runs, list):
+        count = sum(len(run.get("results", [])) for run in runs)
+        return label, count
+    return label, 0
+
+
+def render_static_analysis_report(
+    semgrep_path: Path,
+    snyk_dependencies_path: Path,
+    snyk_code_path: Path,
+    sonar_properties_path: Path,
+    output_path: Path,
+) -> None:
+    semgrep_findings = parse_semgrep_json(semgrep_path)
+    dep_status, dep_count = parse_snyk_json(snyk_dependencies_path, "Dependencias analizadas")
+    code_status, code_count = parse_snyk_json(snyk_code_path, "Codigo analizado")
+    sonar = read_properties(sonar_properties_path)
+    sonar_key = sonar.get("sonar.projectKey", "No configurado")
+    sonar_org = sonar.get("sonar.organization", "No configurado")
+    sonar_url = f"https://sonarcloud.io/project/overview?id={html.escape(sonar_key)}"
+
+    finding_rows = "\n".join(
+        "<tr>"
+        f"<td>{html.escape(item['tool'])}</td>"
+        f"<td>{html.escape(item['severity'])}</td>"
+        f"<td>{html.escape(item['file'])}</td>"
+        f"<td>{html.escape(item['line'])}</td>"
+        f"<td>{html.escape(item['message'])}</td>"
+        "</tr>"
+        for item in semgrep_findings[:120]
+    ) or '<tr><td colspan="5">No se registraron hallazgos Semgrep en el reporte JSON.</td></tr>'
+
+    body = f"""
+<h1>Analisis Estatico Detallado</h1>
+<p>Resumen academico de SonarCloud, Semgrep y Snyk generado durante CI/CD para evaluar seguridad, mantenibilidad y dependencias.</p>
+<div class="summary">
+  <div class="metric"><strong>{len(semgrep_findings)}</strong>Hallazgos Semgrep</div>
+  <div class="metric"><strong>{dep_count}</strong>Vulnerabilidades Snyk deps</div>
+  <div class="metric"><strong>{code_count}</strong>Hallazgos Snyk Code</div>
+  <div class="metric"><strong>Configurado</strong>SonarCloud</div>
+</div>
+<div class="actions">
+  <a class="button" href="../semgrep/index.html">Ver Semgrep</a>
+  <a class="button" href="../snyk/dependencies.html">Ver Snyk dependencias</a>
+  <a class="button" href="../snyk/code.html">Ver Snyk Code</a>
+  <a class="button" href="{sonar_url}">Abrir SonarCloud</a>
+</div>
+<section>
+  <h2>SonarCloud</h2>
+  <table>
+    <tbody>
+      <tr><th>Proyecto</th><td>{html.escape(sonar_key)}</td></tr>
+      <tr><th>Organizacion</th><td>{html.escape(sonar_org)}</td></tr>
+      <tr><th>Cobertura enviada</th><td>coverage.xml</td></tr>
+      <tr><th>Estado</th><td>El workflow ejecuta el escaneo cuando existe el secreto SONAR_TOKEN.</td></tr>
+    </tbody>
+  </table>
+</section>
+<section>
+  <h2>Snyk</h2>
+  <table>
+    <tbody>
+      <tr><th>Dependencias</th><td>{html.escape(dep_status)} ({dep_count})</td></tr>
+      <tr><th>Codigo</th><td>{html.escape(code_status)} ({code_count})</td></tr>
+      <tr><th>Estado</th><td>El reporte se completa cuando existe el secreto SNYK_TOKEN.</td></tr>
+    </tbody>
+  </table>
+</section>
+<section>
+  <h2>Hallazgos Semgrep</h2>
+  <table>
+    <thead><tr><th>Herramienta</th><th>Severidad</th><th>Archivo</th><th>Linea</th><th>Mensaje</th></tr></thead>
+    <tbody>{finding_rows}</tbody>
+  </table>
+</section>
+"""
+    write_page(output_path, "Analisis Estatico Detallado - TrafficWatch IDS", body)
+
+
+def render_sonarcloud_report(sonar_properties_path: Path, output_path: Path) -> None:
+    sonar = read_properties(sonar_properties_path)
+    sonar_key = sonar.get("sonar.projectKey", "No configurado")
+    sonar_org = sonar.get("sonar.organization", "No configurado")
+    sonar_url = f"https://sonarcloud.io/project/overview?id={html.escape(sonar_key)}"
+    body = f"""
+<h1>Escaneo en SonarCloud</h1>
+<p>Configuracion del escaneo de SonarCloud ejecutado desde GitHub Actions.</p>
+<div class="summary">
+  <div class="metric"><strong>CI</strong>Origen</div>
+  <div class="metric"><strong>Python</strong>Lenguaje</div>
+  <div class="metric"><strong>coverage.xml</strong>Cobertura</div>
+</div>
+<div class="actions">
+  <a class="button" href="{sonar_url}">Abrir proyecto en SonarCloud</a>
+</div>
+<section>
+  <h2>Parametros</h2>
+  <table>
+    <tbody>
+      <tr><th>sonar.projectKey</th><td>{html.escape(sonar_key)}</td></tr>
+      <tr><th>sonar.organization</th><td>{html.escape(sonar_org)}</td></tr>
+      <tr><th>sonar.sources</th><td>{html.escape(sonar.get('sonar.sources', 'src,web,main.py,run_dashboard.py,trafficwatch_desktop.py'))}</td></tr>
+      <tr><th>sonar.tests</th><td>{html.escape(sonar.get('sonar.tests', 'tests,tests_ui,tests_mutation'))}</td></tr>
+      <tr><th>Secreto requerido</th><td>SONAR_TOKEN en GitHub Actions Secrets.</td></tr>
+    </tbody>
+  </table>
+</section>
+"""
+    write_page(output_path, "Escaneo SonarCloud - TrafficWatch IDS", body)
+
+
 def main() -> None:
     report_type = None
     args = {}
@@ -364,8 +528,18 @@ def main() -> None:
             Path(args["output"]),
             Path(args["run-log"]) if args.get("run-log") else None,
         )
+    elif report_type == "static":
+        render_static_analysis_report(
+            Path(args["semgrep"]),
+            Path(args["snyk-dependencies"]),
+            Path(args["snyk-code"]),
+            Path(args["sonar-properties"]),
+            Path(args["output"]),
+        )
+    elif report_type == "sonarcloud":
+        render_sonarcloud_report(Path(args["sonar-properties"]), Path(args["output"]))
     else:
-        raise SystemExit("Uso: --type unit|ui|mutation ...")
+        raise SystemExit("Uso: --type unit|ui|mutation|static|sonarcloud ...")
 
 
 if __name__ == "__main__":
