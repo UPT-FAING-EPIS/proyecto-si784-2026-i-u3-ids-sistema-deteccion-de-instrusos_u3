@@ -34,4 +34,4 @@ Coverage HTML written to dir reports/coverage
 Coverage XML written to file reports/coverage/coverage.xml
 
 
-======================= 14 passed, 3 deselected in 1.06s =======================
+======================= 14 passed, 3 deselected in 0.81s =======================
