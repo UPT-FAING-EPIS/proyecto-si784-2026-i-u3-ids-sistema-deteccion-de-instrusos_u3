@@ -1,7 +1,7 @@
-    86	Abel Pacompia O. <ap2023076797@virtual.upt.pe>
+    87	Abel Pacompia O. <ap2023076797@virtual.upt.pe>
     57	diegochara2019065026 <106203631+diegochara2019065026@users.noreply.github.com>
     18	Abel-GG-777 <Abel-GG-777@users.noreply.github.com>
      7	Abel-GG-777 <ap2023076797@virtual.upt.pe>
+     4	diegochara2019065026 <diegochara2019065026@users.noreply.github.com>
      3	AndreyAlva <aa2021069826@virtual.upt.pe>
-     3	diegochara2019065026 <diegochara2019065026@users.noreply.github.com>
      2	github-classroom[bot] <66690702+github-classroom[bot]@users.noreply.github.com>
