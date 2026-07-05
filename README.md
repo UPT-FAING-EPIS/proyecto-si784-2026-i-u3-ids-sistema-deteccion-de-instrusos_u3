@@ -23,11 +23,19 @@ Dashboard: https://proyecto-si784-2026-i-u1-ids.onrender.com/
 Simulador atacante: https://proyecto-si784-2026-i-u1-ids.onrender.com/attack-lab
 ```
 
-Carpeta de evidencias en Google Drive:
+Video demostrativo de la app:
 
 ```text
 https://drive.google.com/drive/folders/1Q2PTs7s7vJ1NTpOqziYL1PbAINZa8mvs
 ```
+
+## Informes academicos
+
+| Informe | PDF | Word | Markdown |
+|---|---|---|---|
+| FD01 - Informe de Factibilidad | [PDF](docs/FD01-EPIS-Informe%20de%20Factibilidad.pdf) | [DOCX](docs/FD01-EPIS-Informe%20de%20Factibilidad.docx) | [MD](docs/FD01-Informe-Factibilidad.md) |
+| FD03 - Especificacion de Requerimientos | [PDF](docs/FD03-EPIS-Informe%20Especificaci%C3%B3n%20Requerimientos.pdf) | [DOCX](docs/FD03-EPIS-Informe%20Especificaci%C3%B3n%20Requerimientos.docx) | [MD](docs/FD03-Informe-Especificaci%C3%B3n%20Requerimientos.md) |
+| FD04 - Arquitectura de Software | [PDF](docs/FD04-EPIS-Informe%20Arquitectura%20de%20Software.pdf) | [DOCX](docs/FD04-EPIS-Informe%20Arquitectura%20de%20Software.docx) | [MD](docs/FD04-Informe-Arquitectura%20de%20Software.md) |
 
 Ejecutable Windows:
 
